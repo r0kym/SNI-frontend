@@ -1,4 +1,4 @@
-SNI - backend part
+SNI - frontend part
 ==================
 
 [SNI backend part](https://github.com/altaris/seat-navy-issue)
