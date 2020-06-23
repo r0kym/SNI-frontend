@@ -27,3 +27,15 @@ def auth(request):
         <b>error code: {r.status_code} </b><br>
         error message: {r.json()}""")
 
+def sni_callback(request):
+    """
+    Handles the request when the SNI send back the informations and redirect to the character page of
+    the character that just logged in.
+    """
+
+    post_dic = request.POST
+
+    request.session["character_id"] = post_dic["character_id"]
+    request.session["user_token"] = post_dic["user_token"]
+
+    return redirect(f"/character/{post_dic['character_id']}")
