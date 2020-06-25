@@ -23,9 +23,6 @@ def post_universe_names(id):
 
     data = f"[{id}]"
 
-    r = requests.post(url, headers=headers, data=data)
-    try:
-        return r.json()[0]["name"]
-    except KeyError:
-        print("Error when getting name:" + id)
-        return "Couldn't get name"
+    response = requests.post(url, headers=headers, data=data)
+
+    return response
