@@ -16,6 +16,15 @@ virtualenv venv -p python3.8
 pip install -r requirements.txt
 ```
 
+# Set up:
+
+Run:
+```sh
+cp utils.py.template utils.py
+```
+
+Fill th new `utils.py` with relevent informations
+
 # Running:
 
 ```sh
