@@ -1,19 +1,23 @@
+<!doctype html>
 {% load static %}
+{% load bootstrap4 %}
 
-<!DOCTYPE html>
+{% bootstrap_messages %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
     <title>SeAT Navy Issue</title>
-    <link rel="stylesheet" href="{% static 'style/ridge-dark.css' %}">
-    <link rel="stylesheet" href="{% static 'style/ridge.css' %}">
+    <meta charset="utf-8">
   </head>
 
-  <body>
-    <h1>SeAT Navy Issue</h1>
+  <body style="background-color:#202b38;">
+    <h1 style="color:white;">SeAT Navy Issue</h1>
 
-    <vstack stretch="" align-x="center" align-y="center">
-      <a href="/auth"><img src="https://web.ccpgamescdn.com/eveonlineassets/developers/eve-sso-login-white-large.png" alt=""></a>
-    </vstack>
+    <div class="container" style="display: flex; justify-content: center; align-items: center; height: 90vh">
+      <a href="/auth" class="rounded mx-auto"><img src="https://web.ccpgamescdn.com/eveonlineassets/developers/eve-sso-login-white-large.png" alt=""></a>
+    </div>
+
   </body>
 </html>
