@@ -32,17 +32,17 @@ python3 manage.py runserver
 ```
 
 # TODO:
- - [ ] check that the callback is working (should deploy a live version to do this)
- - [x] `character/[player_id]` will diplay basic informations about a character
+- [ ] check that the callback is working (should deploy a live version to do this)
+- [x] `character/[player_id]` will diplay basic informations about a character
   - [ ] check if the character is registered and send 404 if he's not
   - [ ] fetch additional information through the ESI on the character
- - [ ] `character/` should display the list of characters registered
+- [ ] `character/` should display the list of characters registered
   - [ ] add ways to order the list
   - [ ] deny the list for those that doesn't have a certain clearence level? (or just diplay a part of them)
- - [ ] `groups` add a full group management
- - [ ] `coalitions` add a full coalition management
- - [ ] `teamspeak` add a full teamspeak management
- - [ ] **Imporve the layout of the backend** (for the moment it's a too basic -.-)
+- [ ] `groups` add a full group management
+- [ ] `coalitions` add a full coalition management
+- [ ] `teamspeak` add a full teamspeak management
+- [ ] **Imporve the layout of the backend** (for the moment it's a too basic -.-)
 
 # Web config:
 
