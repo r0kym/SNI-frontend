@@ -1,7 +1,71 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ character_name }}</h1>
+<h1><img src="https://images.evetech.net/characters/{{ character_id }}/portrait?size=64" alt="character_img"> {{ character_name }}</h1>
 
-<img src="https://images.evetech.net/characters/{{ character_id }}/portrait?size=256" alt="portrait">
+<div class="card-columns">
+  <div class="card">
+    <!--To do -->
+    <div class="card-header text-dark">
+      Real time informations:
+    </div>
+    <div class="card-body">
+      <h6 class="card-subtitle">Current ship:</h6>
+        ship_name
+      <h6 class="card-subtitle">Current position</h6>
+        position
+    </div>
+    <div class="card-footer text-muted">
+      update time
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header text-dark">
+      Useful links
+    </div>
+    <div class="card-body">
+      <ul class="list-group">
+        <li class="list-group-item"><a href="https://zkillboard.com/character/{{ character_id }}/" class="card-link">zKillboard</a></li>
+        <li class="list-group-item"><a href="https://evewho.com/character/{{ character_id }}" class="card-link">EveWho</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      Jump clones
+    </div>
+    <div class="card-body">
+      <ul>
+        <li>List of</li>
+        <li>stations</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      Corporation history
+    </div>
+    <div class="card-body">
+      <ul class="list-group list-group-flush">
+        {% for corp_entry in corp_history %}
+        <a href="https://evewho.com/corporation/{{ corp_entry.corporation_id }}" class="list-group-item list-group-item-action" target="_blank">
+          <img src="https://images.evetech.net/corporations/{{ corp_entry.corporation_id }}/logo" alt="corporation_logo" height="20" width="20">
+          {{ corp_entry.corporation_name }}
+          -
+          {{ corp_entry.start_date }}
+        </a>
+        {% endfor %}
+      </ul>
+    </div>
+    {% if shortend_corp_hist %}
+    <div class="card-footer">
+      Go to <a href="https://evewho.com/character/{{ character_id }}" class="card-link">EveWho</a> for the complete corporation history
+    </div>
+    {% endif %}
+  </div>
+</div>
+
 {% endblock content %}
