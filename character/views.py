@@ -12,7 +12,7 @@ import datetime
 CORPORATION_HISTORY_LIMIT = 15  # for not overloading the page when people went in way too much corporations
 
 
-def home(request, character_id):
+def sheet(request, character_id):
     """
     Will display the main page for accessing charachter informations
     """
@@ -46,7 +46,7 @@ def home(request, character_id):
         start_date = datetime.datetime.strptime(corp["start_date"], "%Y-%m-%dT%H:%M:%S%z")
         corp["start_date"] = f"{start_date.day}/{start_date.month}/{start_date.year} , {start_date.hour}/{start_date.minute}"
 
-    return render(request, 'character/home.html', {
+    return render(request, 'character/sheet.html', {
         "character_name": character_name,
         "character_id":character_id,
         "corp_history": corp_history,
