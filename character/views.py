@@ -19,7 +19,7 @@ def home(request):
     Will display all the characters registered on the SNI
     """
 
-    url = SNI_URL + "user"
+    url = SNI_URL + "user/"
     headers = {
         "accept": "application/json",
         "Authorization": f"Bearer {SNI_DYNAMIC_TOKEN}"
