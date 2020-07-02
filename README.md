@@ -30,7 +30,10 @@ python3 manage.py migrate
 ```
 This will initialize Django Database
 
-
+```sh
+python manage.py createsuperuser
+```
+This will create a new super user for Django admin panel
 
 # Running:
 
