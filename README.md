@@ -42,7 +42,7 @@ python3 manage.py runserver
 - [ ] `groups` add a full group management
 - [ ] `coalitions` add a full coalition management
 - [ ] `teamspeak` add a full teamspeak management
-- [ ] **Imporve the layout of the backend** (for the moment it's a too basic -.-)
+- [ ] **Improve the layout of the backend** (for the moment it's a too basic -.-)
 
 # Web config:
 
