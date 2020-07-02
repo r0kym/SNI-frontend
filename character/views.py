@@ -5,12 +5,37 @@ from django.views.defaults import bad_request
 from character.models import CorporationName
 
 import SNI.esi as esi
+from utils import SNI_URL, SNI_DYNAMIC_TOKEN
 
 import datetime
+import requests
 
 
 CORPORATION_HISTORY_LIMIT = 15  # for not overloading the page when people went in way too much corporations
 
+
+def home(request):
+    """
+    Will display all the characters registered on the SNI
+    """
+
+    url = SNI_URL + "user"
+    headers = {
+        "accept": "application/json",
+        "Authorization": f"Bearer {SNI_DYNAMIC_TOKEN}"
+    }
+
+    request_characters = requests.get(url, headers=headers)
+
+    if request_characters.status_code == 200:
+        print(request_characters)
+        print(request_characters.json())
+
+        return render(request, 'character/home.html', {})
+    else:
+        return HttpResponse(f"""
+        ERROR {request_characters.status_code} <br>
+        {request_characters.json()}""")
 
 def sheet(request, character_id):
     """
