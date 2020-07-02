@@ -17,14 +17,13 @@ def sheet(request, character_id):
     Will display the main page for accessing charachter informations
     """
 
-    request_name = esi.post_universe_names(character_id)
-    if request_name.status_code == 200:
-        if request_name.json()[0]["category"] == "character":
-            character_name = request_name.json()[0]["name"]
-        else:
-            raise Http404("Not a character id")
-    else:
+    request_name = esi.get_character_information(character_id)
+    if request_name.status_code != 200:
         raise Http404(request_name.json()["error"])
+
+    character_name = request_name.json()["name"]
+    character_gender = request_name.json()["gender"]
+    character_birthday = request_name.json()["birthday"]
 
     corp_history = esi.get_corporation_history(character_id).json()
     if len(corp_history) > CORPORATION_HISTORY_LIMIT:
@@ -48,7 +47,9 @@ def sheet(request, character_id):
 
     return render(request, 'character/sheet.html', {
         "character_name": character_name,
-        "character_id":character_id,
+        "character_id": character_id,
+        "character_gender": character_gender,
+        "character_birthday": character_birthday,
         "corp_history": corp_history,
         "shortend_corp_hist": shortend_corp_hist,
     })
