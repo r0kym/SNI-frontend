@@ -27,6 +27,22 @@ def post_universe_names(*args):
 
     return response
 
+def get_character_information(character_id):
+    """
+    Get Character public data
+    """
+
+    url = BASE_URL + f"characters/{character_id}?datasource=tranquility"
+    
+    headers = {
+        "accept": "application/json"
+    }
+
+    response = requests.get(url, headers=headers)
+
+    return response
+
+
 def get_corporation_history(character_id):
     """
     Retrieve the character's corporation histoy
