@@ -25,6 +25,11 @@ cp utils.py.template utils.py
 
 Fill th new `utils.py` with relevent informations
 
+```sh
+python3 manage.py migrate
+```
+This will initialize Django Database
+
 # Running:
 
 ```sh
