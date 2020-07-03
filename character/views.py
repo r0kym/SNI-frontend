@@ -7,6 +7,7 @@ from character.models import CorporationName
 import SNI.esi as esi
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 
+
 import datetime
 import requests
 
@@ -23,6 +24,7 @@ def home(request):
     headers = {
         "accept": "application/json",
         "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+
     }
 
     request_characters = requests.get(url, headers=headers)
