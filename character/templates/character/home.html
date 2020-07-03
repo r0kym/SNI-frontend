@@ -2,5 +2,11 @@
 
 {% block content %}
 
+<h1>List of Users</h1>
+<ul class="list-group list-group-flush">
+    {% for character in character_list %}
+      <li>{{ character }}</li>
+    {% endfor %}
+</ul>
 
 {% endblock content %}

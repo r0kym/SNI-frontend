@@ -19,7 +19,7 @@ def home(request):
     Will display all the characters registered on the SNI
     """
 
-    url = SNI_URL + "user/"
+    url = SNI_URL + "user"
     headers = {
         "accept": "application/json",
         "Authorization": f"Bearer {SNI_DYNAMIC_TOKEN}"
@@ -28,10 +28,12 @@ def home(request):
     request_characters = requests.get(url, headers=headers)
 
     if request_characters.status_code == 200:
-        print(request_characters)
-        print(request_characters.json())
+        character_list = request_characters.json()
 
-        return render(request, 'character/home.html', {})
+        if "root" in character_list:
+            character_list.remove("root")
+
+        return render(request, 'character/home.html', {"character_list": character_list})
     else:
         return HttpResponse(f"""
         ERROR {request_characters.status_code} <br>
@@ -42,14 +44,13 @@ def sheet(request, character_id):
     Will display the main page for accessing charachter informations
     """
 
-    request_name = esi.post_universe_names(character_id)
-    if request_name.status_code == 200:
-        if request_name.json()[0]["category"] == "character":
-            character_name = request_name.json()[0]["name"]
-        else:
-            raise Http404("Not a character id")
-    else:
+    request_name = esi.get_character_information(character_id)
+    if request_name.status_code != 200:
         raise Http404(request_name.json()["error"])
+
+    character_name = request_name.json()["name"]
+    character_gender = request_name.json()["gender"]
+    character_birthday = request_name.json()["birthday"]
 
     corp_history = esi.get_corporation_history(character_id).json()
     if len(corp_history) > CORPORATION_HISTORY_LIMIT:
@@ -69,11 +70,13 @@ def sheet(request, character_id):
             db_entry.save()
         corp["corporation_name"] = corp_name
         start_date = datetime.datetime.strptime(corp["start_date"], "%Y-%m-%dT%H:%M:%S%z")
-        corp["start_date"] = f"{start_date.day}/{start_date.month}/{start_date.year} , {start_date.hour}/{start_date.minute}"
+        corp["start_date"] = f"{start_date.day}/{start_date.month}/{start_date.year} , {start_date.hour}:{start_date.minute}"
 
     return render(request, 'character/sheet.html', {
         "character_name": character_name,
-        "character_id":character_id,
+        "character_id": character_id,
+        "character_gender": character_gender,
+        "character_birthday": character_birthday,
         "corp_history": corp_history,
         "shortend_corp_hist": shortend_corp_hist,
     })
