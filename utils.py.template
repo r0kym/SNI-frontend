@@ -4,3 +4,6 @@ SECRET_KEY = 'long_and_difficult_string'
 
 SNI_URL = "https://www.website.cool"
 SNI_DYNAMIC_TOKEN = "token_template"
+
+# to use before there's a live version and cookies can be used correctly
+SNI_TEMP_USER_TOKEN = ""
