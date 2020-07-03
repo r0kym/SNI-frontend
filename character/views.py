@@ -28,10 +28,12 @@ def home(request):
     request_characters = requests.get(url, headers=headers)
 
     if request_characters.status_code == 200:
-        print(request_characters)
-        print(request_characters.json())
+        character_list = request_characters.json()
 
-        return render(request, 'character/home.html', {})
+        if "root" in character_list:
+            character_list.remove("root")
+
+        return render(request, 'character/home.html', {"character_list": character_list})
     else:
         return HttpResponse(f"""
         ERROR {request_characters.status_code} <br>
@@ -69,7 +71,7 @@ def sheet(request, character_id):
             db_entry.save()
         corp["corporation_name"] = corp_name
         start_date = datetime.datetime.strptime(corp["start_date"], "%Y-%m-%dT%H:%M:%S%z")
-        corp["start_date"] = f"{start_date.day}/{start_date.month}/{start_date.year} , {start_date.hour}/{start_date.minute}"
+        corp["start_date"] = f"{start_date.day}/{start_date.month}/{start_date.year} , {start_date.hour}:{start_date.minute}"
 
     return render(request, 'character/sheet.html', {
         "character_name": character_name,
