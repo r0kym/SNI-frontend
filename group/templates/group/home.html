@@ -11,7 +11,7 @@
   <input type="text"  id="nameInput" onkeyup="mySearchFunction()" placeholder="Search for name...">
 </div>
 <br>
-<table id="groupList" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+<table id="groupList" class="table table-striped table-bordered table-sm table-hover" cellspacing="0" width="100%">
   <thead>
     <tr>
       <th scope="col" onclick="sortTable(0)">Group</th>
@@ -21,14 +21,14 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      {% for group, details in group_list.items %}
-      <td>{{ group }}</td>
+    {% for group, details in group_list.items %}
+    <tr style="position:relative">
+      <td><a href="/group/{{ group }}" class="stretched-link"></a>{{ group }}</a></td>
       <td>{{ details.description }}</td>
       <td>{{ details.owner }}</td>
       <td>{{ details.members|length }}</td>
     </tr>
-      {% endfor %}   
+    {% endfor %}   
   </tbody>
 </table>
 

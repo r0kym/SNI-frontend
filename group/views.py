@@ -9,7 +9,7 @@ import requests
 
 def home(request):
   """
-  Will display all the characters registered on the SNI
+  Will display all the groups registered on the SNI
   """
 
   url = SNI_URL + "group"
@@ -36,9 +36,31 @@ def home(request):
         ERROR {request_group_details.status_code} <br>
         {request_group_details.json()}""")
 
-    print(group_dict)
     return render(request, 'group/home.html', {"group_list": group_dict})
   else:
     return HttpResponse(f"""
     ERROR {request_groups.status_code} <br>
     {request_groups.json()}""")
+
+def sheet(request, group_name):
+    """
+    Will display the main page for accessing group informations
+    """
+
+    url = SNI_URL + f"group/{group_name}"
+    headers = {
+      "accept": "application/json",
+      "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
+
+    request_group = requests.get(url, headers=headers)
+    if request_group.status_code != 200:
+      return HttpResponse(f"""
+      ERROR {request_groups.status_code} <br>
+      {request_groups.json()}""")
+
+    print(request_group.json())
+
+    return render(request, 'group/sheet.html', {
+        "group": request_group.json()
+    })
