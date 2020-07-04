@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'homepage.apps.HomepageConfig',
     'character.apps.CharacterConfig',
+    'group.apps.GroupConfig',
     'bootstrap4',
 ]
 
