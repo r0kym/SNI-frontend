@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ group.name }}</h1>
+
+<div class="card-columns">
+    <div class="card">
+      <!--To do -->
+      <div class="card-header text-dark">
+        Details:
+      </div>
+      <div class="card-body">
+        <h6 class="card-subtitle">Description:</h6> {{ group.description }}
+        <h6 class="card-subtitle">Owner:</h6> {{ group.owner }}
+        <h6 class="card-subtitle">Created:</h6> {{ group.created_on }}
+        <h6 class="card-subtitle">Updated:</h6> {{ group.updated_on }}
+      </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+          Members
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            {% for member in group.members %}
+            <li>{{ member }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+</div>
+{% endblock content %}
