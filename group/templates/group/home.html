@@ -15,12 +15,18 @@
   <thead>
     <tr>
       <th scope="col" onclick="sortTable(0)">Group</th>
+      <th scope="col" onclick="sortTable(1)">Description</th>
+      <th scope="col" onclick="sortTable(2)">Owner</th>
+      <th scope="col" onclick="sortTable(2)">Members</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      {% for group in group_list %}
+      {% for group, details in group_list.items %}
       <td>{{ group }}</td>
+      <td>{{ details.description }}</td>
+      <td>{{ details.owner }}</td>
+      <td>{{ details.members|length }}</td>
     </tr>
       {% endfor %}   
   </tbody>

@@ -8,26 +8,37 @@ import datetime
 import requests
 
 def home(request):
-    """
-    Will display all the characters registered on the SNI
-    """
+  """
+  Will display all the characters registered on the SNI
+  """
 
-    url = SNI_URL + "group"
-    headers = {
-        "accept": "application/json",
-        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
-    }
+  url = SNI_URL + "group"
+  headers = {
+    "accept": "application/json",
+    "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+  }
 
-    request_groups = requests.get(url, headers=headers)
+  request_groups = requests.get(url, headers=headers)
 
-    if request_groups.status_code == 200:
-        group_list = request_groups.json()
+  if request_groups.status_code == 200:
+    group_list = request_groups.json()
 
-        if "root" in group_list:
-            group_list.remove("root")
+    group_dict = {}
 
-        return render(request, 'group/home.html', {"group_list": group_list})
-    else:
+    for group in group_list:
+      request_group_details = requests.get(f"{url}/{group}", headers=headers)
+
+      if request_group_details.status_code == 200:
+        group_details = request_group_details.json()
+        group_dict[group] = group_details
+      else:
         return HttpResponse(f"""
-        ERROR {request_groups.status_code} <br>
-        {request_groups.json()}""")
+        ERROR {request_group_details.status_code} <br>
+        {request_group_details.json()}""")
+
+    print(group_dict)
+    return render(request, 'group/home.html', {"group_list": group_dict})
+  else:
+    return HttpResponse(f"""
+    ERROR {request_groups.status_code} <br>
+    {request_groups.json()}""")
