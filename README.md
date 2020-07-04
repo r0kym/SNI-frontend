@@ -42,7 +42,7 @@ python3 manage.py runserver
   - [ ] check if the character is registered and send 404 if he's not
   - [ ] fetch additional information through the ESI on the character
 - [x] `character/` should display the list of characters registered
-  - [ ] add ways to order the list
+  - [x] add ways to order the list
   - [ ] deny the list for those that doesn't have a certain clearence level? (or just diplay a part of them)
 - [ ] `groups` add a full group management
 - [ ] `coalitions` add a full coalition management
