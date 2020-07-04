@@ -17,22 +17,22 @@
 <table id="userList" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
   <thead>
     <tr>
-      
+
       <th scope="col" onclick="sortTable(0)">User</th>
       <th scope="col" onclick="sortTable(1)">Corporation</th>
-     
+
     </tr>
   </thead>
   <tbody>
     <tr>
-      
+
       {% for character in character_list %}
-      <td>{{ character }}
-      
+      <td>
+      <a href="{{ character.character_id }}">{{ character.character_name }}</a>
  	 </td>
       <td>todo : baliseCorpo</td>
     </tr>
-      {% endfor %}   
+      {% endfor %}
   </tbody>
 </table>
 
@@ -63,7 +63,7 @@ function mySearchFunction() {
 <script>
 	/*Fonction pour trier les résultats d'un tableau */
 function sortTable(n) {
-	// on déclare 
+	// on déclare
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("userList");
   switching = true;
