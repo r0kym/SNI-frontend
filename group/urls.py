@@ -10,5 +10,5 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('<str:group_name>', views.sheet, name='group-sheet')
+    path('<str:group_id>', views.sheet, name='group-sheet')
 ]

@@ -44,12 +44,12 @@ def home(request):
     ERROR {request_groups.status_code} <br>
     {request_groups.json()}""")
 
-def sheet(request, group_name):
+def sheet(request, group_id):
     """
     Will display the main page for accessing group informations
     """
 
-    url = SNI_URL + f"group/{group_name}"
+    url = SNI_URL + f"group/{group_id}"
     headers = {
       "accept": "application/json",
       "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
