@@ -22,9 +22,7 @@ def home(request):
   if request.GET.get('delete', None):
     url=f"{global_url}/{request.GET.get('delete')}"
     request_groups = requests.delete(url, headers=global_headers)
-    if request_groups.status_code == 200:
-      print("group deleted")
-    else:
+    if request_groups.status_code != 200:
       return HttpResponse(f"""
       ERROR {request_group_details.status_code} <br>
       {request_group_details.json()}""")
@@ -65,8 +63,6 @@ def sheet(request, group_id):
       return HttpResponse(f"""
       ERROR {request_groups.status_code} <br>
       {request_groups.json()}""")
-
-    print(request_group.json())
 
     return render(request, 'group/sheet.html', {
         "group": request_group.json()
