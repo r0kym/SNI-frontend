@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ coaliton.name }}</h1>
+
+<div class="card-columns">
+    <div class="card">
+      <!--To do -->
+      <div class="card-header text-dark">
+        Details:
+      </div>
+      <div class="card-body">
+        <h6 class="card-subtitle">Ticker:</h6> {{ coaliton.ticker }}
+        <h6 class="card-subtitle">Owner:</h6> {{ coaliton.owner }}
+        <h6 class="card-subtitle">Created:</h6> {{ coaliton.created_on }}
+        <h6 class="card-subtitle">Updated:</h6> {{ coaliton.updated_on }}
+      </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+          Members
+        </div>
+        <div class="card-body">
+          <ul class="list-coaliton list-coaliton-flush">
+            {% for member in coaliton.members %}
+            <li>{{ member }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+</div>
+{% endblock content %}

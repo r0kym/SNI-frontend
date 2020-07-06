@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'homepage.apps.HomepageConfig',
     'character.apps.CharacterConfig',
     'group.apps.GroupConfig',
+    'coalition.apps.CoalitionConfig',
     'bootstrap4',
 ]
 
