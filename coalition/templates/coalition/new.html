@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>New Coalition</h1>
+
+<form class="coalition-create" action="create" method="get">
+  <div class="coalition-create">
+    <label for="name">Coalition name: </label>
+    <input type="text" name="name" id="name" required>
+  </div>
+  <div class="coalition-create">
+    <label for="ticker">Ticker: </label>
+    <input type="text" name="ticker" id="ticker" required>
+  </div>
+  <div class="coalition-create">
+    <!-- <button type="button" name="Create" class="btn btn-primary">Create</button> -->
+    <input type="submit" value="Create coalition">
+  </div>
+</form>
+
+{% endblock %}
