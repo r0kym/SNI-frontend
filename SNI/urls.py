@@ -21,5 +21,6 @@ urlpatterns = [
     path('', include('homepage.urls')),
     path('character/', include('character.urls')),
     path('group/', include('group.urls')),
-    path('coalition/', include('coalition.urls'))
+    path('coalition/', include('coalition.urls')),
+    path('teamspeak/', include('teamspeak.urls'))
 ]
