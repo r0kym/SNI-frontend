@@ -9,7 +9,7 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', views.home, name='coalition-home'),
     path('new', views.new, name='coalition-new'),
     path('create', views.create, name='coalition-create'),
     path('<str:coalition_id>', views.sheet, name='coalition-sheet'),

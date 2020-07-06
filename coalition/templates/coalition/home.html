@@ -2,6 +2,16 @@
 
 {% block content %}
 
+{% if new_coalition != None %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  Coalition <strong>{{ new_coalition }}</strong> successfully created. Time to fill it.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+{{ new_coa }}
+
 <h1>List of Coalitions</h1>
 <div class="d-flex justify-content-between">
   <div class="input-group mb-3">

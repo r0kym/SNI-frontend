@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpResponseBadRequest
 from django.views.defaults import bad_request
+from django.urls import reverse
 
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 
 import datetime
 import requests
+from urllib.parse import urlencode
+
 
 def home(request):
   """
@@ -36,7 +39,10 @@ def home(request):
         ERROR {request_coalition_details.status_code} <br>
         {request_coalition_details.json()}""")
 
-    return render(request, 'coalition/home.html', {"coalition_list": coalition_dict})
+    return render(request, 'coalition/home.html', {
+        "coalition_list": coalition_dict,
+        "new_coalition": request.GET.get("new_coa")
+        })
   else:
     return HttpResponse(f"""
     ERROR {request_coalitions.status_code} <br>
@@ -99,4 +105,9 @@ def create(request):
         return HttpResponse(f"""
         ERROR {request_create_coalition.status_code} <br>
         {request_create_coalition.json()}""")
-    return redirection("/coalition")
+
+    return_url = reverse("coalition-home")
+    params = urlencode({"new_coa":request.GET.get("name")})
+    url = f"{return_url}?{params}"
+
+    return redirection(url)
