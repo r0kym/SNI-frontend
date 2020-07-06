@@ -22,15 +22,17 @@ def home(request):
 
   if request_groups.status_code == 200:
     group_list = request_groups.json()
+    print(group_list)
+    print(group_list[0])
 
     group_dict = {}
 
     for group in group_list:
-      request_group_details = requests.get(f"{url}/{group}", headers=headers)
+      request_group_details = requests.get(f"{url}/{group['group_id']}", headers=headers)
 
       if request_group_details.status_code == 200:
         group_details = request_group_details.json()
-        group_dict[group] = group_details
+        group_dict[group['group_id']] = group_details
       else:
         return HttpResponse(f"""
         ERROR {request_group_details.status_code} <br>
@@ -42,12 +44,12 @@ def home(request):
     ERROR {request_groups.status_code} <br>
     {request_groups.json()}""")
 
-def sheet(request, group_name):
+def sheet(request, group_id):
     """
     Will display the main page for accessing group informations
     """
 
-    url = SNI_URL + f"group/{group_name}"
+    url = SNI_URL + f"group/{group_id}"
     headers = {
       "accept": "application/json",
       "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
