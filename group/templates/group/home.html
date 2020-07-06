@@ -28,7 +28,11 @@
       <td>{{ details.description }}</td>
       <td>{{ details.owner }}</td>
       <td>{{ details.members|length }}</td>
-      <td style="position:relative"><a href="?delete={{ details.group_id }}" class="stretched-link"><button class="btn"><i class="fa fa-trash text-danger"></i></button></a></td>
+      <td style="position:relative">
+        <a href="?delete={{ details.group_id }}" class="stretched-link">
+          <button class="btn"><i class="fa fa-trash text-danger"></i></button>
+        </a>
+      </td>
     </tr>
     {% endfor %}   
   </tbody>
