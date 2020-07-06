@@ -23,7 +23,7 @@
   <tbody>
     {% for group, details in group_list.items %}
     <tr style="position:relative">
-      <td><a href="/group/{{ group }}" class="stretched-link"></a>{{ group }}</a></td>
+      <td><a href="/group/{{ details.group_id }}" class="stretched-link"></a>{{ details.group_name }}</a></td>
       <td>{{ details.description }}</td>
       <td>{{ details.owner }}</td>
       <td>{{ details.members|length }}</td>
