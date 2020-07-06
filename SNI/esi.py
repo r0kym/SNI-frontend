@@ -33,7 +33,7 @@ def get_character_information(character_id):
     """
 
     url = BASE_URL + f"characters/{character_id}?datasource=tranquility"
-    
+
     headers = {
         "accept": "application/json"
     }
@@ -55,5 +55,32 @@ def get_corporation_history(character_id):
     }
 
     response = requests.get(url, headers=headers)
+
+    return response
+
+def get_search(search, categories):
+    """
+    Search for entities that match the given string.
+
+    params:
+        search: the string you're looking for
+        categories: Type of entities to search for.
+            Available values : agent, alliance, character, constellation, corporation, faction, inventory_type,
+            region, solar_system, station
+            Must be entered as a string seperated by commas. ex: categories="alliance,corporation"
+    """
+
+    url = BASE_URL + "search/"
+
+    headers = {
+        "accept": "application/json"
+    }
+
+    params = {
+        "search": search,
+        "categories": categories
+    }
+
+    response = requests.get(url, headers=headers, params=params)
 
     return response
