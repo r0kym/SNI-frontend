@@ -22,7 +22,6 @@ def home(request):
 
   if request_teamspeak_auth.status_code == 200:
     teamspeak_auth = request_teamspeak_auth.json()
-    print(teamspeak_auth)
 
     return render(request, 'teamspeak/home.html', {"teamspeak_auth": teamspeak_auth})
   else:
