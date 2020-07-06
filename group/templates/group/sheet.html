@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ group.name }}</h1>
+<h1>{{ group.group_name }}</h1>
 
 <div class="card-columns">
     <div class="card">
-      <!--To do -->
       <div class="card-header text-dark">
         Details:
       </div>
@@ -14,6 +13,11 @@
         <h6 class="card-subtitle">Owner:</h6> {{ group.owner }}
         <h6 class="card-subtitle">Created:</h6> {{ group.created_on }}
         <h6 class="card-subtitle">Updated:</h6> {{ group.updated_on }}
+      </div>
+      <div class="card-footer">
+        <a href="/group/?delete={{ group.group_id }}" class="stretched-link text-danger">
+          Delete this group<button class="btn"><i class="fa fa-trash text-danger"></i></button>
+        </a>
       </div>
     </div>
 

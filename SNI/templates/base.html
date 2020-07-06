@@ -1,6 +1,7 @@
 <!doctype html>
 {% load static %}
 {% load bootstrap4 %}
+{% with request.resolver_match.route as route %}
 <html lang="en">
   <head>
   	<title>SeAT Navy Issue</title>
@@ -13,7 +14,6 @@
 		<link rel="stylesheet" href="{% static 'sidebar/css/style.css' %}">
   </head>
   <body>
-
 		<div class="wrapper d-flex align-items-stretch">
 			<nav id="sidebar">
 				<div class="custom-menu">
@@ -24,23 +24,39 @@
         </div>
 	  		<h1><a href="index.html" class="logo">SNI</a></h1>
         <ul class="list-unstyled components mb-5">
+          <li>
+            <a href="/"><span class="fa fa-home mr-3"></span>Homepage</a>
+          </li>
+          {% if "character" in route %}
           <li class="active">
-            <a href="/"><span class="fa fa-home mr-3"></span> Homepage</a>
+          {% else %}
+          <li>
+          {% endif %}
+              <a href="/character/"><span class="fa fa-user mr-3"></span>Characters</a>
           </li>
           <li>
-              <a href="/character/"><span class="fa fa-user mr-3"></span> Characters</a>
+            <a href="#"><span class="fa fa-users mr-3"></span>Corporations</a>
           </li>
+          {% if "coalition" in route %}
+          <li class="active">
+          {% else %}
           <li>
-            <a href="#"><span class="fa fa-users mr-3"></span> Corporations</a>
+          {% endif %}
+            <a href="/coalition/"><span class="fa fa-users mr-3"></span>Coalitions</a>
           </li>
+          {% if "group" in route %}
+          <li class="active">
+          {% else %}
           <li>
-            <a href="/coalition/"><span class="fa fa-users mr-3"></span> Coalitions</a>
+          {% endif %}
+            <a href="/group/"><span class="fa fa-group mr-3"></span>Groups</a>
           </li>
+          {% if "teamspeak" in route %}
+          <li class="active">
+          {% else %}
           <li>
-            <a href="/group/"><span class="fa fa-group mr-3"></span> Groups</a>
-          </li>
-          <li>
-            <a href="/teamspeak/"><span class="fa fa-microphone mr-3"></span> Teamspeak</a>
+          {% endif %}
+            <a href="/teamspeak/"><span class="fa fa-microphone mr-3"></span>Teamspeak</a>
           </li>
         </ul>
 
@@ -60,3 +76,4 @@
     <script src="{% static 'sidebar/js/main.js' %}"></script>
   </body>
 </html>
+{% endwith %}

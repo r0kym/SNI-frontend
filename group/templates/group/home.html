@@ -11,13 +11,14 @@
   <input type="text"  id="nameInput" onkeyup="mySearchFunction()" placeholder="Search for name...">
 </div>
 <br>
-<table id="groupList" class="table table-striped table-bordered table-sm table-hover" cellspacing="0" width="100%">
-  <thead>
+<table id="groupList" class="table table-striped table-sm table-hover table-borderless" cellspacing="0" width="100%">
+  <thead class="thead-light">
     <tr>
       <th scope="col" onclick="sortTable(0)">Group</th>
       <th scope="col" onclick="sortTable(1)">Description</th>
       <th scope="col" onclick="sortTable(2)">Owner</th>
       <th scope="col" onclick="sortTable(3)">Members</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -27,6 +28,11 @@
       <td>{{ details.description }}</td>
       <td>{{ details.owner }}</td>
       <td>{{ details.members|length }}</td>
+      <td style="position:relative">
+        <a href="?delete={{ details.group_id }}" class="stretched-link">
+          <button class="btn"><i class="fa fa-trash text-danger"></i></button>
+        </a>
+      </td>
     </tr>
     {% endfor %}   
   </tbody>
