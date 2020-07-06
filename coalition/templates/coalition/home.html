@@ -2,13 +2,25 @@
 
 {% block content %}
 
-<h1>List of Coalitions</h1>
+{% if new_coalition != None %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  Coalition <strong>{{ new_coalition }}</strong> successfully created. Time to fill it.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+{{ new_coa }}
 
-<div class="input-group mb-3">
-  <div class="input-group-prepend">
-    <span class="input-group-text" id="basic-addon1"><i class="fa fa-search" aria-hidden="true"></i></span>
+<h1>List of Coalitions</h1>
+<div class="d-flex justify-content-between">
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="basic-addon1"><i class="fa fa-search" aria-hidden="true"></i></span>
+    </div>
+    <input type="text"  id="nameInput" onkeyup="mySearchFunction()" placeholder="Search for name...">
   </div>
-  <input type="text"  id="nameInput" onkeyup="mySearchFunction()" placeholder="Search for name...">
+  <a class="btn btn-success" role="button" href="new">New</a>
 </div>
 <br>
 <table id="coalitionList" class="table table-striped table-bordered table-sm table-hover" cellspacing="0" width="100%">
@@ -28,7 +40,7 @@
       <td>{{ details.owner }}</td>
       <td>{{ details.members|length }}</td>
     </tr>
-    {% endfor %}   
+    {% endfor %}
   </tbody>
 </table>
 
@@ -59,7 +71,7 @@ function mySearchFunction() {
 <script>
 	/*Fonction pour trier les résultats d'un tableau */
 function sortTable(n) {
-	// on déclare 
+	// on déclare
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("coalitionList");
   switching = true;

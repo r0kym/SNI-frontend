@@ -1,11 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpResponseBadRequest
 from django.views.defaults import bad_request
+from django.urls import reverse
 
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 
 import datetime
 import requests
+from urllib.parse import urlencode
+
 
 def home(request):
   """
@@ -36,7 +39,10 @@ def home(request):
         ERROR {request_coalition_details.status_code} <br>
         {request_coalition_details.json()}""")
 
-    return render(request, 'coalition/home.html', {"coalition_list": coalition_dict})
+    return render(request, 'coalition/home.html', {
+        "coalition_list": coalition_dict,
+        "new_coalition": request.GET.get("new_coa")
+        })
   else:
     return HttpResponse(f"""
     ERROR {request_coalitions.status_code} <br>
@@ -64,3 +70,44 @@ def sheet(request, coalition_id):
     return render(request, 'coalition/sheet.html', {
         "coalition": request_coalition.json()
     })
+
+def new(request):
+    """
+    Display tools to create a new coalition
+    """
+
+    return render(request, 'coalition/new.html', {})
+
+def create(request):
+    """
+    Create a new coalition
+    This link should only be accessed by a redirection from coalition/new
+
+    note: maybe use a post or something to make sure the coalition isn't created several times?
+    """
+
+    url = SNI_URL + "coalition"
+
+    headers = {
+        "accept": "application/json",
+        "Content-type": "application/json",
+        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
+
+    data = "{\"coalition_name\":\"" + request.GET.get("name") + "\",\"ticker\":\"" + request.GET.get("ticker") + "\"}"
+
+    request_create_coalition = requests.post(url, headers=headers, data=data)
+
+    print(request_create_coalition)
+    print(request_create_coalition.json())
+
+    if request_create_coalition.status_code != 201:
+        return HttpResponse(f"""
+        ERROR {request_create_coalition.status_code} <br>
+        {request_create_coalition.json()}""")
+
+    return_url = reverse("coalition-home")
+    params = urlencode({"new_coa":request.GET.get("name")})
+    url = f"{return_url}?{params}"
+
+    return redirection(url)

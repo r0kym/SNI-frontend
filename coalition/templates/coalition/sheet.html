@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ coaliton.name }}</h1>
+<h1>{{ coalition.coalition_name }}</h1>
 
 <div class="card-columns">
     <div class="card">
@@ -10,10 +10,10 @@
         Details:
       </div>
       <div class="card-body">
-        <h6 class="card-subtitle">Ticker:</h6> {{ coaliton.ticker }}
-        <h6 class="card-subtitle">Owner:</h6> {{ coaliton.owner }}
-        <h6 class="card-subtitle">Created:</h6> {{ coaliton.created_on }}
-        <h6 class="card-subtitle">Updated:</h6> {{ coaliton.updated_on }}
+        <h6 class="card-subtitle">Ticker:</h6> {{ coalition.ticker }}
+        <h6 class="card-subtitle">Owner:</h6> {{ coalition.owner }}
+        <h6 class="card-subtitle">Created:</h6> {{ coalition.created_on }}
+        <h6 class="card-subtitle">Updated:</h6> {{ coalition.updated_on }}
       </div>
     </div>
 
@@ -22,8 +22,8 @@
           Members
         </div>
         <div class="card-body">
-          <ul class="list-coaliton list-coaliton-flush">
-            {% for member in coaliton.members %}
+          <ul class="list-coalition list-coalition-flush">
+            {% for member in coalition.members %}
             <li>{{ member }}</li>
             {% endfor %}
           </ul>
