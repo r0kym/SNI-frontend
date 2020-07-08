@@ -33,8 +33,8 @@
         </div>
         <div class="card-body">
           <ul class="list-coalition list-coalition-flush">
-            {% for member in coalition.members %}
-            <li>{{ member }}</li>
+            {% for member in members_names %}
+            <li>{{ member.name }}</li>
             {% endfor %}
           </ul>
         </div>

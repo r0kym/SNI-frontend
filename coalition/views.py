@@ -4,6 +4,7 @@ from django.views.defaults import bad_request
 from django.urls import reverse
 
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
+from SNI.esi import post_universe_names
 
 import datetime
 import requests
@@ -67,9 +68,19 @@ def sheet(request, coalition_id):
 
     print(request_coalition.json())
 
+    coalition_members = [int(i) for  i in request_coalition.json()["members"]]
+    coalition_members_names = post_universe_names(*coalition_members)
+
+    if coalition_members_names.status_code != 200:
+        return HttpResponse(f"""
+        ERROR {coalition_members_names.status_code} <br>
+        {coalition_members_names.json()}""")
+
+
     return render(request, 'coalition/sheet.html', {
         "coalition": request_coalition.json(),
-        "new_alliance": request.GET.get("new_ally")
+        "new_alliance": request.GET.get("new_ally"),
+        "members_names": coalition_members_names.json()
 
     })
 
