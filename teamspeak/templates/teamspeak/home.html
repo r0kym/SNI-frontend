@@ -4,10 +4,12 @@
 
 <h1>Teamspeak Authentication</h1>
 <p>
-Login with this username: {{ teamspeak_auth.challenge_nickname }}<br/>
+Login with this username: <b>{{ teamspeak_auth.challenge_nickname }}</b><br/>
 Once you logged in, click here to complete the process<br/>
 <form method="GET" action="completed">
-    <button type="submit" class="btn btn-secondary">Complete authentication process</button>
+    <button type="submit" class="text-center btn btn-success">
+        <i class="fa fa-check" aria-hidden="true"></i>
+        Complete authentication process</button>
 </form> 
 </p>
 
