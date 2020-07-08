@@ -68,7 +68,9 @@ def sheet(request, coalition_id):
     print(request_coalition.json())
 
     return render(request, 'coalition/sheet.html', {
-        "coalition": request_coalition.json()
+        "coalition": request_coalition.json(),
+        "new_alliance": request.GET.get("new_ally")
+
     })
 
 def new(request):
@@ -111,3 +113,42 @@ def create(request):
     url = f"{return_url}?{params}"
 
     return redirection(url)
+
+def add(request, coalition_id):
+    """
+    Displays informations to add a new alliance to the coalition
+    """
+
+    return render(request, 'coalition/add.html', {})
+
+def add_alliance(request, coalition_id):
+    """
+    Add an alliance to the coalition
+    """
+
+    url = SNI_URL + f"coalition/{coalition_id}"
+
+    headers = {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
+
+    data = "{\"add_members\": [\"" + request.POST.get("name") + "\"]}"
+
+    request_new = requests.put(url, headers=headers, data=data)
+
+    if request_new.status_code != 200:
+        return HttpResponse(f"""
+        ERROR {request_new.status_code} <br>
+        {request_new.json()}""")
+
+    print(request_new.status_code)
+    print(request_new.json())
+
+    params = urlencode({"new_ally": request.POST.get("name")})
+    return_url = reverse("coalition-home") + coalition_id + "?" + params
+
+    return redirect(return_url)
+
+    return HttpResponse(request_new.json())

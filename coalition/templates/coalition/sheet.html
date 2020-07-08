@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+{% if new_alliance != None %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  Alliance <strong>{{ new_alliance }}</strong> successfully added.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
 <h1>{{ coalition.coalition_name }}</h1>
 
 <div class="card-columns">
@@ -29,5 +39,7 @@
           </ul>
         </div>
       </div>
+
+    <a class="btn btn-success" role="button" href="{{ coalition.coalition_id }}/add">Add alliance</a>
 </div>
 {% endblock content %}
