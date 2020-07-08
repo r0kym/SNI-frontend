@@ -27,18 +27,25 @@
       </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">
-          Members
-        </div>
-        <div class="card-body">
-          <ul class="list-coalition list-coalition-flush">
-            {% for member in members_names %}
-            <li>{{ member.name }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
+    <table id="memberList" class="table table-striped table-bordered table-sm table-hover" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th scope="col" onclick="sortTable(0)">Logo</th>
+          <th scope="col" onclick="sortTable(1)">Name</th>
+          <th scope="col" onclick="sortTable(2)">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for member in members_names %}
+        <tr style="position:relative">
+          <td><img src="https://images.evetech.net/alliances/{{ member.id }}/logo?size=32" alt="Alliance logo"></td>
+          <td>{{ member.name }}</td>
+          <td>Todo</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
 
     <a class="btn btn-success" role="button" href="{{ coalition.coalition_id }}/add">Add alliance</a>
 </div>
