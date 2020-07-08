@@ -40,7 +40,11 @@
         <tr style="position:relative">
           <td><img src="https://images.evetech.net/alliances/{{ member.id }}/logo?size=32" alt="Alliance logo"></td>
           <td>{{ member.name }}</td>
-          <td>Todo</td>
+          <td>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#RemoveModal{{ member.id }}">
+              Remove
+            </button>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -48,5 +52,28 @@
 
 
     <a class="btn btn-success" role="button" href="{{ coalition.coalition_id }}/add">Add alliance</a>
+
+
+    {% for member in members_names %}
+      <div class="modal fade" id="RemoveModal{{ member.id }}" tabindex="-1" role="dialog" aria-labelledby="{{ member.id }}ModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="{{ member.id }}ModalLabel">Remove alliance</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to remove <b>{{ member.name }}</b> from <b>{{ coalition.coalition_name }}</b>?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-warning">Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
 </div>
 {% endblock content %}
