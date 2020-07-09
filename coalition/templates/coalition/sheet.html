@@ -11,6 +11,15 @@
 </div>
 {% endif %}
 
+{% if removed_alliance != None %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  Alliance <strong>{{ removed_alliance }}</strong> successfully removed.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
 <h1>{{ coalition.coalition_name }}</h1>
 
 <div class="card-columns">
@@ -69,7 +78,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-warning">Confirm</button>
+              <a class="btn btn-warning" href="{{ coalition.coalition_id }}/remove/{{ member.id}}" role="button">Confirm</a>
             </div>
           </div>
         </div>

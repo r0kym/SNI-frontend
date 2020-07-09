@@ -68,19 +68,24 @@ def sheet(request, coalition_id):
 
     print(request_coalition.json())
 
-    coalition_members = [int(i) for  i in request_coalition.json()["members"]]
-    coalition_members_names = post_universe_names(*coalition_members)
+    if len(request_coalition.json()["members"]) != 0:
+        coalition_members = [int(i) for  i in request_coalition.json()["members"]]
+        coalition_members_names = post_universe_names(*coalition_members)
 
-    if coalition_members_names.status_code != 200:
-        return HttpResponse(f"""
-        ERROR {coalition_members_names.status_code} <br>
-        {coalition_members_names.json()}""")
+        if coalition_members_names.status_code != 200:
+            return HttpResponse(f"""
+            ERROR {coalition_members_names.status_code} <br>
+            {coalition_members_names.json()}""")
+        members_names = coalition_members_names.json()
+    else:
+        members_names = []
 
 
     return render(request, 'coalition/sheet.html', {
         "coalition": request_coalition.json(),
         "new_alliance": request.GET.get("new_ally"),
-        "members_names": coalition_members_names.json()
+        "removed_alliance": request.GET.get("rem_ally"),
+        "members_names": members_names
 
     })
 
@@ -162,4 +167,40 @@ def add_alliance(request, coalition_id):
 
     return redirect(return_url)
 
-    return HttpResponse(request_new.json())
+def remove_alliance(request, coalition_id, alliance_id):
+    """
+    Removes an alliance from the coalition
+    """
+
+    url = SNI_URL + f"coalition/{coalition_id}"
+
+    headers = {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
+
+    request_alliance_name = post_universe_names(alliance_id)
+
+    if request_alliance_name.status_code != 200:
+        return HttpResponse(f"""
+        ERROR {request_alliance_name.status_code} <br>
+        {request_alliance_name.json()}""")
+
+    alliance_name = request_alliance_name.json()[0]["name"]
+    data = "{\"remove_members\": [\"" + alliance_name + "\"]}"
+
+    request_remove= requests.put(url, headers=headers, data=data)
+
+    if request_remove.status_code != 200:
+        return HttpResponse(f"""
+        ERROR {request_new.status_code} <br>
+        {request_new.json()}""")
+
+    print(request_remove.status_code)
+    print(request_remove.json())
+
+    params = urlencode({"rem_ally": alliance_name})
+    return_url = reverse("coalition-home") + coalition_id + "?" + params
+
+    return redirect(return_url)
