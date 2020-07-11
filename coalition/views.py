@@ -187,6 +187,18 @@ def remove_alliance(request, coalition_id, alliance_id):
         "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
     }
 
+    data = "{\"remove_members\": [\"" + str(alliance_id) + "\"]}"
+
+    request_remove= requests.put(url, headers=headers, data=data)
+
+    if request_remove.status_code != 200:
+        return HttpResponse(f"""
+        ERROR {request_remove.status_code} <br>
+        {request_remove.json()}""")
+
+    print(request_remove.status_code)
+    print(request_remove.json())
+
     request_alliance_name = post_universe_names(alliance_id)
 
     if request_alliance_name.status_code != 200:
@@ -195,17 +207,6 @@ def remove_alliance(request, coalition_id, alliance_id):
         {request_alliance_name.json()}""")
 
     alliance_name = request_alliance_name.json()[0]["name"]
-    data = "{\"remove_members\": [\"" + alliance_name + "\"]}"
-
-    request_remove= requests.put(url, headers=headers, data=data)
-
-    if request_remove.status_code != 200:
-        return HttpResponse(f"""
-        ERROR {request_new.status_code} <br>
-        {request_new.json()}""")
-
-    print(request_remove.status_code)
-    print(request_remove.json())
 
     params = urlencode({"rem_ally": alliance_name})
     return_url = reverse("coalition-home") + coalition_id + "?" + params
