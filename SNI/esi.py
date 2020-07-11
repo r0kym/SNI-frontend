@@ -27,6 +27,29 @@ def post_universe_names(*args):
 
     return response
 
+def post_universe_ids(*args):
+    """
+    Resolve a set of names to IDs in the following categories: agents, alliances, characters, constellations,
+    corporations factions, inventory_types, regions, stations, and systems.
+    Only exact matches will be returned.
+    """
+
+    url = BASE_URL + "universe/ids?datasource=tranquility"
+
+    headers = {
+        "accept": "application/json",
+        "Content-Type": "application/json"
+    }
+
+    data = "["
+    for name in args:
+        data += f"\"{name}\","
+    data = data[:-1] + "]"
+
+    response = requests.post(url, headers=headers, data=data)
+
+    return response
+
 def get_character_information(character_id):
     """
     Get Character public data
