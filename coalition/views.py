@@ -42,7 +42,8 @@ def home(request):
 
     return render(request, 'coalition/home.html', {
         "coalition_list": coalition_dict,
-        "new_coalition": request.GET.get("new_coa")
+        "new_coalition": request.GET.get("new_coa"),
+        "deleted_coalition": request.GET.get("del_coa")
         })
   else:
     return HttpResponse(f"""
@@ -128,7 +129,38 @@ def create(request):
     params = urlencode({"new_coa":request.GET.get("name")})
     url = f"{return_url}?{params}"
 
-    return redirection(url)
+    return redirect(url)
+
+def delete(request, coalition_id):
+    """
+    Deletes a coaliton
+    """
+
+    url = SNI_URL + f"coalition/{coalition_id}"
+
+    headers = {
+        "accept": "application/json",
+        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
+
+    request_coalition = requests.get(url, headers=headers)  # stores coalition params
+
+    if request_coalition.status_code != 200:
+        return HttpResponse(f"""<h1>Error during inital request</h1>
+        ERROR {request_coalition.status_code} <br>
+        {request_coalition.json()}""")
+
+    request_delete_coalition = requests.delete(url, headers=headers)
+
+    if request_delete_coalition.status_code != 200:
+        return HttpResponse(f"""<h1>Error during deletation request</h1>
+        ERROR {request_delete_coalition.status_code} <br>
+        {request_delete_coalition.json()}""")
+
+    params = urlencode({"del_coa": request_coalition.json()["coalition_name"]})
+    return_url = f"{reverse('coalition-home')}?{params}"
+
+    return redirect(return_url)
 
 def add(request, coalition_id):
     """

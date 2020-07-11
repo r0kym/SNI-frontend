@@ -10,7 +10,15 @@
   </button>
 </div>
 {% endif %}
-{{ new_coa }}
+
+{% if deleted_coalition != None %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  Coalition <strong>{{ deleted_coalition }}</strong> successfully deleted.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
 
 <h1>List of Coalitions</h1>
 <div class="d-flex justify-content-between">
