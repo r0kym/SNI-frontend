@@ -4,7 +4,7 @@ from django.views.defaults import bad_request
 from django.urls import reverse
 
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
-from SNI.esi import post_universe_names
+from SNI.esi import post_universe_names, post_universe_ids
 
 import datetime
 import requests
@@ -150,7 +150,14 @@ def add_alliance(request, coalition_id):
         "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
     }
 
-    data = "{\"add_members\": [\"" + request.POST.get("name") + "\"]}"
+    request_alliance_id = post_universe_ids(request.POST.get("name"))
+
+    if request_alliance_id.status_code != 200:
+        return HttpResponse(f"""
+        ERROR {request_alliance_id.status_code} <br>
+        {request_alliance_id.json()}""")
+
+    data = "{\"add_members\": [\"" + str(request_alliance_id.json()["alliances"][0]["id"]) + "\"]}"
 
     request_new = requests.put(url, headers=headers, data=data)
 
