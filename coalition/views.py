@@ -128,7 +128,7 @@ def create(request):
     params = urlencode({"new_coa":request.GET.get("name")})
     url = f"{return_url}?{params}"
 
-    return redirection(url)
+    return redirect(url)
 
 def add(request, coalition_id):
     """
