@@ -68,7 +68,7 @@
 
     {% for member in members_names %}
       <div class="modal fade" id="RemoveModal{{ member.id }}" tabindex="-1" role="dialog" aria-labelledby="{{ member.id }}ModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="{{ member.id }}ModalLabel">Remove alliance</h5>
@@ -89,7 +89,7 @@
     {% endfor %}
 
     <div class="modal fade" id="DeleteCoalitionModal" tabindex="-1" role="dialog" aria-labelledby="DeleteCoalitionModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="DeleteCoalitionModalLabel">Delete coalition</h5>
