@@ -14,7 +14,6 @@ urlpatterns = [
     path('create', views.create, name='coalition-create'),
     path('<str:coalition_id>', views.sheet, name='coalition-sheet'),
     path('<str:coalition_id>/add', views.add, name='coalition-add'),
-    path('<str:coalition_id>/add/alliance', views.add_alliance, name='coalition-add-alliance'),
     path('<str:coalition_id>/remove/<int:alliance_id>', views.remove_alliance, name='coalition-remove-alliance'),
     path('<str:coalition_id>/delete', views.delete, name='coalition-delete'),
     path('<str:coalition_id>/ticker', views.ticker, name='coalition-ticker'),
