@@ -41,10 +41,7 @@ def post_universe_ids(*args):
         "Content-Type": "application/json"
     }
 
-    data = "["
-    for name in args:
-        data += f"\"{name}\","
-    data = data[:-1] + "]"
+    data = "[\"" + "\",\"".join(args) + "\"]"
 
     response = requests.post(url, headers=headers, data=data)
 

@@ -86,6 +86,7 @@ def sheet(request, coalition_id):
         "coalition": request_coalition.json(),
         "new_alliance": request.GET.get("new_ally"),
         "removed_alliance": request.GET.get("rem_ally"),
+        "new_ticker": request.GET.get("new_ticker"),
         "members_names": members_names
 
     })
@@ -164,13 +165,6 @@ def delete(request, coalition_id):
 
 def add(request, coalition_id):
     """
-    Displays informations to add a new alliance to the coalition
-    """
-
-    return render(request, 'coalition/add.html', {})
-
-def add_alliance(request, coalition_id):
-    """
     Add an alliance to the coalition
     """
 
@@ -182,7 +176,7 @@ def add_alliance(request, coalition_id):
         "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
     }
 
-    request_alliance_id = post_universe_ids(request.POST.get("name"))
+    request_alliance_id = post_universe_ids(request.POST.get("alliance"))
 
     if request_alliance_id.status_code != 200:
         return HttpResponse(f"""
@@ -201,7 +195,7 @@ def add_alliance(request, coalition_id):
     print(request_new.status_code)
     print(request_new.json())
 
-    params = urlencode({"new_ally": request.POST.get("name")})
+    params = urlencode({"new_ally": request.POST.get("alliance")})
     return_url = reverse("coalition-home") + coalition_id + "?" + params
 
     return redirect(return_url)
@@ -243,4 +237,28 @@ def remove_alliance(request, coalition_id, alliance_id):
     params = urlencode({"rem_ally": alliance_name})
     return_url = reverse("coalition-home") + coalition_id + "?" + params
 
+    return redirect(return_url)
+
+def ticker(request, coalition_id):
+    """
+    Change a coalition ticker
+    """
+
+    url = SNI_URL + f"coalition/{coalition_id}"
+    headers = {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
+
+    data = "{\"ticker\":\"" + request.POST.get("ticker") + "\"}"
+    request_ticker = requests.put(url, headers=headers, data=data)
+
+    if request_ticker.status_code != 200:
+        return HttpResponse(f"""
+        ERROR {request_ticker.status_code} <br>
+        {request_ticker.json()}""")
+
+    params = urlencode({"new_ticker": request.POST.get("ticker")})
+    return_url = reverse("coalition-home") + coalition_id + "?" + params
     return redirect(return_url)

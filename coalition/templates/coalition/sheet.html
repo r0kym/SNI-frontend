@@ -20,6 +20,15 @@
 </div>
 {% endif %}
 
+{% if new_ticker != None %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  Ticker successfully changed to <b>{{ coalition.ticker }}</b>.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
 <h1>{{ coalition.coalition_name }}</h1>
 
 <div class="card-columns">
@@ -59,53 +68,112 @@
       </tbody>
     </table>
 
-
-    <a class="btn btn-success" role="button" href="{{ coalition.coalition_id }}/add">Add alliance</a>
-    <br><br>
-    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#DeleteCoalitionModal">
-      Delete Coaliton
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddAllianceModal">
+      Add Alliance
     </button>
 
-    {% for member in members_names %}
-      <div class="modal fade" id="RemoveModal{{ member.id }}" tabindex="-1" role="dialog" aria-labelledby="{{ member.id }}ModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="{{ member.id }}ModalLabel">Remove alliance</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              Are you sure you want to remove <b>{{ member.name }}</b> from <b>{{ coalition.coalition_name }}</b>?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <a class="btn btn-warning" href="{{ coalition.coalition_id }}/remove/{{ member.id}}" role="button">Confirm</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    {% endfor %}
+  </div>
 
-    <div class="modal fade" id="DeleteCoalitionModal" tabindex="-1" role="dialog" aria-labelledby="DeleteCoalitionModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="DeleteCoalitionModalLabel">Delete coalition</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            Are you sure you want to delete the coalition <b>{{ coalition.coalition_name }}</b>?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <a class="btn btn-danger" href="{{ coalition.coalition_id }}/delete" role="button">Confirm</a>
-          </div>
+{% for member in members_names %}
+  <div class="modal fade" id="RemoveModal{{ member.id }}" tabindex="-1" role="dialog" aria-labelledby="{{ member.id }}ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="{{ member.id }}ModalLabel">Remove alliance</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to remove <b>{{ member.name }}</b> from <b>{{ coalition.coalition_name }}</b>?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <a class="btn btn-warning" href="{{ coalition.coalition_id }}/remove/{{ member.id}}" role="button">Confirm</a>
         </div>
       </div>
     </div>
+  </div>
+{% endfor %}
+
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModifyTickerModal">
+  Modify Ticker
+</button>
+
+<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#DeleteCoalitionModal">
+  Delete Coaliton
+</button>
+
+
+<div class="modal fade" id="DeleteCoalitionModal" tabindex="-1" role="dialog" aria-labelledby="DeleteCoalitionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DeleteCoalitionModalLabel">Delete coalition</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete the coalition <b>{{ coalition.coalition_name }}</b>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a class="btn btn-danger" href="{{ coalition.coalition_id }}/delete" role="button">Confirm</a>
+      </div>
+    </div>
+  </div>
 </div>
+
+<form class="AddAlliance" action="{{ coalition.coalition_id }}/add" method="post">{% csrf_token %}
+  <div class="modal fade" id="AddAllianceModal" tabindex="-1" role="dialog" aria-labelledby="AddAllianceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="AddAllianceModalLabel">Add alliance</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="AddAlliance">
+              <label for="Alliance">New alliance: </label>
+              <input type="text" name="alliance" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" name="button" class="btn btn-success">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</form>
+<form class="ModifyTicker" action="{{coalition.coalition_id }}/ticker" method="post">{% csrf_token %}
+  <div class="modal fade" id="ModifyTickerModal" tabindex="-1" role="dialog" aria-labelledby="ModifyTickerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ModifyTickerModalLabel">Modify ticker</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="ModifyTicker">
+              <label for="ticker">New ticker: </label>
+              <input type="text" name="ticker" value="{{ coalition.ticker }}" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" name="button" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
 {% endblock content %}
