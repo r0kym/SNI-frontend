@@ -3,12 +3,14 @@
 {% block content %}
 
 <h1>List of Groups</h1>
-
-<div class="input-group mb-3">
-  <div class="input-group-prepend">
-    <span class="input-group-text" id="basic-addon1"><i class="fa fa-search" aria-hidden="true"></i></span>
+<div class="d-flex justify-content-between mb-3">
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="basic-addon1"><i class="fa fa-search" aria-hidden="true"></i></span>
+    </div>
+    <input type="text" id="nameInput" onkeyup="mySearchFunction()" placeholder="Search for name...">
   </div>
-  <input type="text"  id="nameInput" onkeyup="mySearchFunction()" placeholder="Search for name...">
+  <a class="btn btn-success" role="button" href="new">New</a>
 </div>
 <br>
 <table id="groupList" class="table table-striped table-sm table-hover table-borderless" cellspacing="0" width="100%">
