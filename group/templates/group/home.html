@@ -43,7 +43,7 @@
         <tr style="position:relative">
             <td><a href="/group/{{ details.group_id }}" class="stretched-link"></a>{{ details.group_name }}</a></td>
             <td style="position:relative; border-left: 3px solid #e9ecef;">
-                <button class="btn stretched-link" id="deleteGroupButton" data-toggle="modal" data-target="#DeleteGroupModal" data-group-id="{{ details.group_id }}" data-group-name="{{ details.group_name }}">
+                <button class="btn stretched-link" id="ButtonDeleteGroup" data-toggle="modal" data-target="#ModalDeleteGroup" data-group-id="{{ details.group_id }}" data-group-name="{{ details.group_name }}">
                     <i class="fa fa-trash text-danger"></i>
                 </button>
             </td>
@@ -52,21 +52,21 @@
     </tbody>
 </table>
 
-<div class="modal fade" id="DeleteGroupModal" tabindex="-1" role="dialog" aria-labelledby="DeleteGroupModalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalDeleteGroup" tabindex="-1" role="dialog" aria-labelledby="ModalLabelDeleteGroup" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="DeleteGroupModalLabel">Delete group</h5>
+                <h5 class="modal-title" id="ModalLabelDeleteGroup">Delete group</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete the group <b><span id="DeleteGroupModalName"></span></b>?
+                Are you sure you want to delete the group <b><span id="ModalDeleteGroupName"></span></b>?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a class="btn btn-danger" id="DeleteGroupModalLink" href="" role="button">Confirm</a>
+                <a class="btn btn-danger" id="ModaDeleteGrouplLink" href="" role="button">Confirm</a>
             </div>
         </div>
     </div>
@@ -74,14 +74,14 @@
 
 <script>
     /* Function to assign data into the modal popup */
-    $(document).on("click", "#deleteGroupButton", function () {
+    $(document).on("click", "#ButtonDeleteGroup", function () {
         // Extract info from data-* attributes
         var group_id = $(this).data('group-id') 
         var group_name = $(this).data('group-name')
         
         // Update the modal's content
-        $("#DeleteGroupModalName").text(group_name)
-        $("#DeleteGroupModalLink").attr("href", group_id+"/delete")
+        $("#ModalDeleteGroupName").text(group_name)
+        $("#ModaDeleteGrouplLink").attr("href", group_id+"/delete")
     })
 </script>
 
