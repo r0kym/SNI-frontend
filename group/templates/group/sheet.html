@@ -15,7 +15,7 @@
         <h6 class="card-subtitle">Updated:</h6> {{ group.updated_on }}
       </div>
       <div class="card-footer">
-        <a href="/group/?delete={{ group.group_id }}" class="stretched-link text-danger">
+        <a href="/group/{{ group.group_id }}/delete" class="stretched-link text-danger">
           Delete this group<button class="btn"><i class="fa fa-trash text-danger"></i></button>
         </a>
       </div>
