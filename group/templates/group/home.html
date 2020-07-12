@@ -42,7 +42,7 @@
         {% for details in group_list %}
         <tr style="position:relative">
             <td><a href="/group/{{ details.group_id }}" class="stretched-link"></a>{{ details.group_name }}</a></td>
-            <td style="position:relative">
+            <td style="position:relative; border-left: 3px solid #e9ecef;">
                 <button class="btn stretched-link" id="deleteGroupButton" data-toggle="modal" data-target="#DeleteGroupModal" data-group-id="{{ details.group_id }}" data-group-name="{{ details.group_name }}">
                     <i class="fa fa-trash text-danger"></i>
                 </button>
@@ -73,7 +73,7 @@
 </div>
 
 <script>
-    /* Function to assign data into th modal popup */
+    /* Function to assign data into the modal popup */
     $(document).on("click", "#deleteGroupButton", function () {
         // Extract info from data-* attributes
         var group_id = $(this).data('group-id') 
