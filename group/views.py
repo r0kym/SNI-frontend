@@ -34,6 +34,8 @@ def home(request):
         "group_list": group_list,
         "new_group": request.GET.get("new_group"),
         "deleted_group": request.GET.get("del_group")
+        "new_member": request.GET.get("new_member"),
+        "removed_member": request.GET.get("rem_member"),
     })
 
 def sheet(request, group_id):
@@ -124,5 +126,61 @@ def delete(request, group_id):
 
     params = urlencode({"del_group": request_group.json()["group_name"]})
     return_url = f"{reverse('group-home')}?{params}"
+
+    return redirect(return_url)
+
+def add_member(request, group_id):
+    """
+    Add an member to the group
+    """
+
+    headers = {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
+
+    data = "{\"add_members\": [\"{" + str(request.POST.get("member")) + "}\"]}"
+
+    request_new = requests.put(global_url, headers=headers, data=data)
+
+    if request_new.status_code != 200:
+        return HttpResponse(f"""
+        ERROR {request_new.status_code} <br>
+        {request_new.json()}""")
+
+    print(request_new.status_code)
+    print(request_new.json())
+
+    params = urlencode({"new_member": request.POST.get("member")})
+    return_url = reverse("group-home") + group_id + "?" + params
+
+    return redirect(return_url)
+
+def remove_member(request, group_id, member):
+    """
+    Removes an member from the group
+    """
+
+    headers = {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
+
+    data = "{\"remove_members\": [\"" + str(member) + "\"]}"
+
+    request_remove= requests.put(global_url, headers=headers, data=data)
+
+    if request_remove.status_code != 200:
+        return HttpResponse(f"""
+        ERROR {request_remove.status_code} <br>
+        {request_remove.json()}""")
+
+    print(request_remove.status_code)
+    print(request_remove.json())
+
+    params = urlencode({"rem_member": member})
+    return_url = reverse("group-home") + group_id + "?" + params
 
     return redirect(return_url)
