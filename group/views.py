@@ -46,8 +46,8 @@ def sheet(request, group_id):
     request_group = requests.get(url, headers=global_headers)
     if request_group.status_code != 200:
         return HttpResponse(f"""
-        ERROR {request_groups.status_code} <br>
-        {request_groups.json()}""")
+        ERROR {request_group.status_code} <br>
+        {request_group.json()}""")
 
     request_group_json = request_group.json()
     if "root" in request_group_json["members"]:
