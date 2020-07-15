@@ -17,4 +17,5 @@ urlpatterns = [
     path('<str:coalition_id>/remove/<int:alliance_id>', views.remove_alliance, name='coalition-remove-alliance'),
     path('<str:coalition_id>/delete', views.delete, name='coalition-delete'),
     path('<str:coalition_id>/ticker', views.ticker, name='coalition-ticker'),
+    path('<str:coalition_id>/scopes', views.scopes, name='coaliton-scopes'),
 ]
