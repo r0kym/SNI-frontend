@@ -72,6 +72,19 @@
       Add Alliance
     </button>
 
+    <div class="card">
+      <div class="card-header text-dark">
+        Required ESI scopes
+      </div>
+      <div class="card-body">
+        <ul>
+          {% for scope in coalition.mandatory_esi_scopes %}
+          <li>{{ scope }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    
   </div>
 
 {% for member in members_names %}
