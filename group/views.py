@@ -8,6 +8,7 @@ import datetime
 import requests
 
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
+from SNI.error import render_error
 
 global_url = SNI_URL + "group"
 
@@ -24,16 +25,14 @@ def home(request):
     request_groups = requests.get(global_url, headers=global_headers)
 
     if request_groups.status_code != 200:
-        return HttpResponse(f"""
-        ERROR {request_group_details.status_code} <br>
-        {request_group_details.json()}""")
+        return render_error(request_group)
     
     group_list = request_groups.json()
     print(group_list)
     return render(request, 'group/home.html', {
         "group_list": group_list,
         "new_group": request.GET.get("new_group"),
-        "deleted_group": request.GET.get("del_group")
+        "deleted_group": request.GET.get("del_group"),
         "new_member": request.GET.get("new_member"),
         "removed_member": request.GET.get("rem_member"),
     })
@@ -47,9 +46,7 @@ def sheet(request, group_id):
 
     request_group = requests.get(url, headers=global_headers)
     if request_group.status_code != 200:
-        return HttpResponse(f"""
-        ERROR {request_group.status_code} <br>
-        {request_group.json()}""")
+        return render_error(request_group)
 
     request_group_json = request_group.json()
     if "root" in request_group_json["members"]:
@@ -88,9 +85,7 @@ def create(request):
     print(request_create_group.json())
 
     if request_create_group.status_code != 201:
-        return HttpResponse(f"""
-        ERROR {request_create_group.status_code} <br>
-        {request_create_group.json()}""")
+        return render_error(request_create_group)
 
     return_url = reverse("group-home")
     params = urlencode({"new_group":request.GET.get("name")})
@@ -113,16 +108,12 @@ def delete(request, group_id):
     request_group = requests.get(url, headers=headers)  # stores group params
 
     if request_group.status_code != 200:
-        return HttpResponse(f"""<h1>Error during inital request</h1>
-        ERROR {request_group.status_code} <br>
-        {request_group.json()}""")
+        return render_error(request_group)
 
     request_delete_group = requests.delete(url, headers=headers)
 
     if request_delete_group.status_code != 200:
-        return HttpResponse(f"""<h1>Error during deletation request</h1>
-        ERROR {request_delete_group.status_code} <br>
-        {request_delete_group.json()}""")
+        return render_error(request_delete_group)
 
     params = urlencode({"del_group": request_group.json()["group_name"]})
     return_url = f"{reverse('group-home')}?{params}"
@@ -145,9 +136,7 @@ def add_member(request, group_id):
     request_new = requests.put(global_url, headers=headers, data=data)
 
     if request_new.status_code != 200:
-        return HttpResponse(f"""
-        ERROR {request_new.status_code} <br>
-        {request_new.json()}""")
+        return render_error(request_new)
 
     print(request_new.status_code)
     print(request_new.json())
@@ -173,9 +162,7 @@ def remove_member(request, group_id, member):
     request_remove= requests.put(global_url, headers=headers, data=data)
 
     if request_remove.status_code != 200:
-        return HttpResponse(f"""
-        ERROR {request_remove.status_code} <br>
-        {request_remove.json()}""")
+        return render_error(request_remove)
 
     print(request_remove.status_code)
     print(request_remove.json())
