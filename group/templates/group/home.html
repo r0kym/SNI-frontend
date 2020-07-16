@@ -2,43 +2,88 @@
 
 {% block content %}
 
+{% if new_group != None %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    group <strong>{{ new_group }}</strong> successfully created. Time to fill it.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+{% if deleted_group != None %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    group <strong>{{ deleted_group }}</strong> successfully deleted.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
 <h1>List of Groups</h1>
 <div class="d-flex justify-content-between mb-3">
-  <div class="input-group">
-    <div class="input-group-prepend">
-      <span class="input-group-text" id="basic-addon1"><i class="fa fa-search" aria-hidden="true"></i></span>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1"><i class="fa fa-search" aria-hidden="true"></i></span>
+        </div>
+        <input type="text" id="nameInput" onkeyup="mySearchFunction()" placeholder="Search for name...">
     </div>
-    <input type="text" id="nameInput" onkeyup="mySearchFunction()" placeholder="Search for name...">
-  </div>
-  <a class="btn btn-success" role="button" href="new">New</a>
+    <a class="btn btn-success" role="button" href="new">New</a>
 </div>
 <br>
 <table id="groupList" class="table table-striped table-sm table-hover table-borderless" cellspacing="0" width="100%">
-  <thead class="thead-light">
-    <tr>
-      <th scope="col" onclick="sortTable(0)">Group</th>
-      <th scope="col" onclick="sortTable(1)">Description</th>
-      <th scope="col" onclick="sortTable(2)">Owner</th>
-      <th scope="col" onclick="sortTable(3)">Members</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for group, details in group_list.items %}
-    <tr style="position:relative">
-      <td><a href="/group/{{ details.group_id }}" class="stretched-link"></a>{{ details.group_name }}</a></td>
-      <td>{{ details.description }}</td>
-      <td>{{ details.owner }}</td>
-      <td>{{ details.members|length }}</td>
-      <td style="position:relative">
-        <a href="?delete={{ details.group_id }}" class="stretched-link">
-          <button class="btn"><i class="fa fa-trash text-danger"></i></button>
-        </a>
-      </td>
-    </tr>
-    {% endfor %}   
-  </tbody>
+    <thead class="thead-light">
+        <tr>
+            <th scope="col" onclick="sortTable(0)">Group</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for details in group_list %}
+        <tr style="position:relative">
+            <td><a href="/group/{{ details.group_id }}" class="stretched-link"></a>{{ details.group_name }}</a></td>
+            <td style="position:relative; border-left: 3px solid #e9ecef;">
+                <button class="btn stretched-link" id="ButtonDeleteGroup" data-toggle="modal" data-target="#ModalDeleteGroup" data-group-id="{{ details.group_id }}" data-group-name="{{ details.group_name }}">
+                    <i class="fa fa-trash text-danger"></i>
+                </button>
+            </td>
+        </tr>
+        {% endfor %}   
+    </tbody>
 </table>
+
+<div class="modal fade" id="ModalDeleteGroup" tabindex="-1" role="dialog" aria-labelledby="ModalLabelDeleteGroup" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabelDeleteGroup">Delete group</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the group <b><span id="ModalDeleteGroupName"></span></b>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a class="btn btn-danger" id="ModalDeleteGrouplLink" href="" role="button">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* Function to assign data into the modal popup */
+    $(document).on("click", "#ButtonDeleteGroup", function () {
+        // Extract info from data-* attributes
+        var group_id = $(this).data('group-id') 
+        var group_name = $(this).data('group-name')
+        
+        // Update the modal's content
+        $("#ModalDeleteGroupName").text(group_name)
+        $("#ModalDeleteGrouplLink").attr("href", group_id+"/delete")
+    })
+</script>
 
 <script>
 	/*Fonction pour effectuer une recherche dans le tableau  */
