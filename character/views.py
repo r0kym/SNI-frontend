@@ -50,10 +50,6 @@ def sheet(request, character_id):
     if request_name.status_code != 200:
         raise Http404(request_name.json()["error"])
 
-    character_name = request_name.json()["name"]
-    character_gender = request_name.json()["gender"]
-    character_birthday = request_name.json()["birthday"]
-
     corp_history = esi.get_corporation_history(character_id).json()
     if len(corp_history) > CORPORATION_HISTORY_LIMIT:
         corp_history = corp_history[0:CORPORATION_HISTORY_LIMIT-1]
@@ -75,10 +71,64 @@ def sheet(request, character_id):
         corp["start_date"] = f"{start_date.day}/{start_date.month}/{start_date.year} , {start_date.hour}:{start_date.minute}"
 
     return render(request, 'character/sheet.html', {
-        "character_name": character_name,
+        "character": request_name.json(),
         "character_id": character_id,
-        "character_gender": character_gender,
-        "character_birthday": character_birthday,
         "corp_history": corp_history,
         "shortend_corp_hist": shortend_corp_hist,
+    })
+
+def assets(request, character_id):
+    """
+    Displays character assets
+    """
+
+    request_name = esi.get_character_information(character_id)
+    if request_name.status_code != 200:
+        raise Http404(request_name.json()["error"])
+
+    return render(request, 'character/assets.html', {
+        "character": request_name.json(),
+        "character_id": character_id,
+    })
+
+def contracts(request, character_id):
+    """
+    Displays character contracts
+    """
+
+    request_name = esi.get_character_information(character_id)
+    if request_name.status_code != 200:
+        raise Http404(request_name.json()["error"])
+
+    return render(request, 'character/contracts.html', {
+        "character": request_name.json(),
+        "character_id": character_id,
+    })
+
+def mails(request, character_id):
+    """
+    Displays character mails
+    """
+
+    request_name = esi.get_character_information(character_id)
+    if request_name.status_code != 200:
+        raise Http404(request_name.json()["error"])
+
+    return render(request, 'character/mails.html', {
+        "character": request_name.json(),
+        "character_id": character_id,
+    })
+
+def wallet(request, character_id):
+    """
+    Displays character wallet
+    """
+
+    request_name = esi.get_character_information(character_id)
+    if request_name.status_code != 200:
+        raise Http404(request_name.json()["error"])
+
+    return render(request, 'character/wallet.html', {
+        "character": request_name.json(),
+        "character_id": character_id,
     })

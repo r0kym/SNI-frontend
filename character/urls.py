@@ -19,5 +19,9 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('<int:character_id>', views.sheet, name='character-sheet')
+    path('<int:character_id>', views.sheet, name='character-sheet'),
+    path('<int:character_id>/assets', views.assets, name='character-assets'),
+    path('<int:character_id>/contracts', views.contracts, name='character-contracts'),
+    path('<int:character_id>/mails', views.mails, name='character-mails'),
+    path('<int:character_id>/wallet', views.wallet, name='character-wallet'),
 ]
