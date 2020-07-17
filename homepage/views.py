@@ -1,14 +1,27 @@
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN
 from SNI.esi import ESI_SCOPES
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 
 import requests
 
 
 def home(request):
-    # print(request.GET)   # access the get
+
+    if (user_token := request.session.get("user_token")):
+
+        headers = {"Authorization": f"Bearer {user_token}"}
+        url = SNI_URL + "token"
+        request_token = requests.get(url, headers=headers)
+
+        if request_token.status_code != 200:
+            return HttpResponse(f"""
+            ERROR {request_token.status_code} <br>
+            {request_token.json()}""")
+
+        return redirect(reverse("character-sheet", args=[request_token.json()["owner_character_id"]]))
+
     return render(request, 'home.html', {})
 
 def auth_public(request):
