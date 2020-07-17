@@ -119,6 +119,20 @@ def mails(request, character_id):
         "character_id": character_id,
     })
 
+def skills(request, character_id):
+    """
+    Displays character skils
+    """
+
+    request_name = esi.get_character_information(character_id)
+    if request_name.status_code != 200:
+        raise Http404(request_name.json()["error"])
+
+    return render(request, 'character/skills.html', {
+        "character": request_name.json(),
+        "character_id": character_id,
+    })
+
 def wallet(request, character_id):
     """
     Displays character wallet
