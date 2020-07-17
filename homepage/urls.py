@@ -10,6 +10,7 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('auth', views.auth, name='auth'),
+    path('auth/public', views.auth_public, name='auth-public'),
+    path('auth/full', views.auth_full, name='auth-full'),
     path('callback/sni', views.sni_callback, name='sni_callback'),
 ]
