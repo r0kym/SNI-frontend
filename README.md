@@ -46,8 +46,10 @@ python3 manage.py runserver
   - [ ] deny the list for those that doesn't have a certain clearence level? (or just diplay a part of them)
 - [x] `groups` add a full group management
   - [ ] Allow for existing characters to be selected when adding members (auto-completion)
+  - [ ] When adding a new group, display sheet page rather than going back to main list
 - [x] `coalitions` add a full coalition management
   - [ ] Allow for existing alliances to be selected when adding to coalition (auto-completion)
+  - [ ] When adding a new coalition, display sheet page rather than going back to main list
 - [x] `teamspeak` add a full teamspeak management
 - [ ] `alliance` add alliance management
 
