@@ -3,6 +3,24 @@
 {% block content %}
 <h1>{{ group.group_name }}</h1>
 
+{% if new_member != None %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>{{ new_member }}</strong> successfully added.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
+{% if removed_member != None %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>{{ removed_member }}</strong> successfully removed.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
 <div class="card-columns">
   <div class="card">
     <div class="card-header text-dark">
@@ -48,11 +66,11 @@
   </div>
 </div>
 
-<div class="modal fade" id="ModalDeleteMember" tabindex="-1" role="dialog" aria-labelledby="ModalLabelDeleteGroup" aria-hidden="true">
+<div class="modal fade" id="ModalDeleteMember" tabindex="-1" role="dialog" aria-labelledby="ModalLabelDeleteMember" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
           <div class="modal-header">
-              <h5 class="modal-title" id="ModalLabelDeleteGroup">Delete group</h5>
+              <h5 class="modal-title" id="ModalLabelDeleteMember">Delete group member</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
               </button>
@@ -68,6 +86,31 @@
   </div>
 </div>
 
+<form class="AddMember" action="{{ group.group_id }}/add_member" method="post">{% csrf_token %}
+  <div class="modal fade" id="ModalAddMember" tabindex="-1" role="dialog" aria-labelledby="ModalLabelAddMember" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ModalLabelAddAMember">Add group member</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="AddMember">
+              <label for="Alliance">New member: </label>
+              <input type="text" name="member" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" name="button" class="btn btn-success">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
 <script>
   /* Function to assign data into the modal popup */
   $(document).on("click", "#ButtonDeleteMember", function () {
@@ -76,7 +119,7 @@
       
       // Update the modal's content
       $("#ModalDeleteMemberName").text(member)
-      //$("#ModalDeleteGrouplLink").attr("href", group_id+"/delete")
+      $("#ModalDeleteGrouplLink").attr("href", "{{ group.group_id }}/remove/"+member)
   })
 </script>
 
