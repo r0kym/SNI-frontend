@@ -53,7 +53,9 @@ def sheet(request, group_id):
       request_group_json["members"].remove("root")
 
     return render(request, 'group/sheet.html', {
-        "group": request_group_json
+        "group": request_group_json,
+        "new_member": request.GET.get("new_member"),
+        "removed_member": request.GET.get("rem_member"),
     })
 
 def new(request):
@@ -125,19 +127,21 @@ def add_member(request, group_id):
     Add an member to the group
     """
 
+    url = f"{global_url}/{group_id}"
+
     headers = {
         "accept": "application/json",
         "Content-Type": "application/json",
         "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
     }
 
-    data = "{\"add_members\": [\"{" + str(request.POST.get("member")) + "}\"]}"
+    data = "{\"add_members\": [\"" + str(request.POST.get("member")) + "\"]}"
 
-    request_new = requests.put(global_url, headers=headers, data=data)
+    request_new = requests.put(url, headers=headers, data=data)
 
     if request_new.status_code != 200:
         return render_error(request_new)
-
+    
     print(request_new.status_code)
     print(request_new.json())
 
@@ -151,6 +155,8 @@ def remove_member(request, group_id, member):
     Removes an member from the group
     """
 
+    url = f"{global_url}/{group_id}"
+
     headers = {
         "accept": "application/json",
         "Content-Type": "application/json",
@@ -159,7 +165,7 @@ def remove_member(request, group_id, member):
 
     data = "{\"remove_members\": [\"" + str(member) + "\"]}"
 
-    request_remove= requests.put(global_url, headers=headers, data=data)
+    request_remove= requests.put(url, headers=headers, data=data)
 
     if request_remove.status_code != 200:
         return render_error(request_remove)
