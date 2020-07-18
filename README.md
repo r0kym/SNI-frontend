@@ -44,9 +44,11 @@ python3 manage.py runserver
 - [x] `character/` should display the list of characters registered
   - [x] add ways to order the list
   - [ ] deny the list for those that doesn't have a certain clearence level? (or just diplay a part of them)
-- [ ] `groups` add a full group management
-- [ ] `coalitions` add a full coalition management
-- [ ] `teamspeak` add a full teamspeak management
+- [x] `groups` add a full group management
+  - [ ] Allow for existing characters to be selected when adding members (auto-completion)
+- [x] `coalitions` add a full coalition management
+  - [ ] Allow for existing alliances to be selected when adding to coalition (auto-completion)
+- [x] `teamspeak` add a full teamspeak management
 - [ ] `alliance` add alliance management
 
 # Web config:
