@@ -65,25 +65,23 @@ git clone https://github.com/altaris/pumba.git
 ```
 
 Create the container's volume:
-
 ```sh
 docker volume create pumba-test-volume
 ```
 
 Build the container:
-
 ```sh
 docker build -t pumba .
 ```
 
 Copy utils.py to container:
-
 ```sh
 docker cp /dest/to/utils.py pumba-test-volume:/usr/src/app/
 ```
 
-Run the docker (need to fix port assignment):
+# Docker run / stop
 
+Run the container (need to fix port assignment):
 ```sh
 docker run --rm \
     --env "GIT_URL=https://github.com/r0kym/SNI-frontend.git" \
@@ -93,4 +91,9 @@ docker run --rm \
     --name "SNI-frontend" \
     --net=host \
     altaris/pumba
+```
+
+Stop the container:
+```sh
+docker stop SNI-frontend
 ```
