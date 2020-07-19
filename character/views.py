@@ -11,6 +11,7 @@ from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 import datetime
 import requests
 
+from SNI.error import render_error
 
 CORPORATION_HISTORY_LIMIT = 15  # for not overloading the page when people went in way too much corporations
 
@@ -29,17 +30,16 @@ def home(request):
 
     request_characters = requests.get(url, headers=headers)
 
-    if request_characters.status_code == 200:
-        character_list = request_characters.json()
+    if request_characters.status_code != 200:
+        return render_error(request_characters)
 
-        if "root" in character_list:
-            character_list.remove("root")
+    character_list = request_characters.json()
 
-        return render(request, 'character/home.html', {"character_list": character_list})
-    else:
-        return HttpResponse(f"""
-        ERROR {request_characters.status_code} <br>
-        {request_characters.json()}""")
+    if "root" in character_list:
+        character_list.remove("root")
+
+    return render(request, 'character/home.html', {"character_list": character_list})
+
 
 def sheet(request, character_id):
     """

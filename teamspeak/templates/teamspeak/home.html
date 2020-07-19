@@ -2,15 +2,63 @@
 
 {% block content %}
 
+
+<!-- Stylesheet -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<!-- JavaScript -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
 <h1>Teamspeak Authentication</h1>
 <p>
 Login with this username: <b>{{ teamspeak_auth.challenge_nickname }}</b><br/>
 Once you logged in, click here to complete the process<br/>
+<div class="text-center"><div id="countdown"></div>
+<progress value="0" max="59" id="progressBar"></progress>
+<div class="row">
+    
+    <div class="col">
 <form method="GET" action="completed">
     <button type="submit" class="text-center btn btn-success">
         <i class="fa fa-check" aria-hidden="true"></i>
         Complete authentication process</button>
 </form> 
+    </div>
+<div class="col">
+        <form action="/teamspeak/">
+            <button id="repeatProcess" type="submit" class="btn btn-warning" disabled><i class="fa fa-refresh" aria-hidden="true"></i> Repeat the authentication process</button>
+        </form>
+    </div>
+</div>
+</div>
+
+
+
+<script>var timeleft = 60;
+var downloadTimer = setInterval(function(){
+  if(timeleft <= 0){
+    clearInterval(downloadTimer);
+    document.getElementById("countdown").innerHTML = "Time up.If you were unable to complete the process in time, please try again.";
+    //document.getElementById("repeatProcess").innerHTML = "<button type=\"button\" class=\"btn btn-warning\" disabled><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Repeat the authentication process</button>";
+    document.getElementById("repeatProcess").removeAttribute("disabled");
+  } else {
+    document.getElementById("countdown").innerHTML = timeleft + " seconds remaining to complete the process";
+  }
+  timeleft -= 1;
+}, 1000);
+
+var timeleftProgress = 60;
+var downloadTimer = setInterval(function(){
+  if(timeleftProgress <= 0){
+    clearInterval(downloadTimer);
+  }
+  document.getElementById("progressBar").value = 60 - timeleftProgress;
+  timeleftProgress -= 1;
+}, 1000);
+</script>
+
 </p>
 
 {% endblock content %}

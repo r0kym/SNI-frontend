@@ -44,11 +44,56 @@ python3 manage.py runserver
 - [x] `character/` should display the list of characters registered
   - [x] add ways to order the list
   - [ ] deny the list for those that doesn't have a certain clearence level? (or just diplay a part of them)
-- [ ] `groups` add a full group management
-- [ ] `coalitions` add a full coalition management
-- [ ] `teamspeak` add a full teamspeak management
+- [x] `groups` add a full group management
+  - [ ] Allow for existing characters to be selected when adding members (auto-completion)
+  - [ ] When adding a new group, display sheet page rather than going back to main list
+- [x] `coalitions` add a full coalition management
+  - [ ] Allow for existing alliances to be selected when adding to coalition (auto-completion)
+  - [ ] When adding a new coalition, display sheet page rather than going back to main list
+- [x] `teamspeak` add a full teamspeak management
 - [ ] `alliance` add alliance management
 
 # Web config:
 
 No idea how to do it atm, come back later pls ^-^
+
+# Docker initialization
+
+get Pumba:
+```sh
+git clone https://github.com/altaris/pumba.git
+```
+
+Create the container's volume:
+```sh
+docker volume create pumba-test-volume
+```
+
+Build the container:
+```sh
+docker build -t pumba .
+```
+
+Copy utils.py to container:
+```sh
+docker cp /dest/to/utils.py pumba-test-volume:/usr/src/app/
+```
+
+# Docker run / stop
+
+Run the container:
+```sh
+docker run --rm \
+    --env "GIT_URL=https://github.com/r0kym/SNI-frontend.git" \
+    --env "GIT_BRANCH=master" \
+    --env "PYTHON_MAIN=manage.py runserver 0.0.0.0:8000" \
+    --volume "pumba-test-volume:/usr/src/app/" \
+    --name "SNI-frontend" \
+    -p 8000:8000 \
+    altaris/pumba
+```
+
+Stop the container:
+```sh
+docker stop SNI-frontend
+```
