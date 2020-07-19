@@ -81,15 +81,15 @@ docker cp /dest/to/utils.py pumba-test-volume:/usr/src/app/
 
 # Docker run / stop
 
-Run the container (need to fix port assignment):
+Run the container:
 ```sh
 docker run --rm \
     --env "GIT_URL=https://github.com/r0kym/SNI-frontend.git" \
     --env "GIT_BRANCH=master" \
-    --env "PYTHON_MAIN=manage.py runserver" \
+    --env "PYTHON_MAIN=manage.py runserver 0.0.0.0:8000" \
     --volume "pumba-test-volume:/usr/src/app/" \
     --name "SNI-frontend" \
-    --net=host \
+    -p 8000:8000 \
     altaris/pumba
 ```
 
