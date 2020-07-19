@@ -10,13 +10,31 @@
   <head>
     <title>SeAT Navy Issue</title>
     <meta charset="utf-8">
+    <style>
+      h2 {
+        color: white;
+      }
+    </style>
   </head>
 
   <body style="background-color:#202b38;">
     <h1 style="color:white;">SeAT Navy Issue</h1>
 
     <div class="container" style="display: flex; justify-content: center; align-items: center; height: 90vh">
-      <a href="/auth" class="rounded mx-auto"><img src="https://web.ccpgamescdn.com/eveonlineassets/developers/eve-sso-login-white-large.png" alt=""></a>
+      <div class="d-flex flex-column">
+        <div class="p-2">
+          <h2>Public:</h2>
+        </div>
+        <div class="p-2">
+          <a href="{% url 'auth-public' %}"><img src="https://web.ccpgamescdn.com/eveonlineassets/developers/eve-sso-login-white-large.png" alt=""></a>
+        </div>
+        <div class="p-2">
+          <h2>Full ESI:</h2>
+        </div>
+        <div class="p-2">
+          <a href="{% url 'auth-full' %}"><img src="https://web.ccpgamescdn.com/eveonlineassets/developers/eve-sso-login-white-large.png" alt=""></a>
+        </div>
+      </div>
     </div>
 
   </body>

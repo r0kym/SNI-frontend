@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1><img src="https://images.evetech.net/characters/{{ character_id }}/portrait?size=64" alt="character_img"> {{ character_name }}</h1>
+
+{% include "character/navbar.html" %}
 
 <div class="card-columns">
   <div class="card">
@@ -10,8 +11,8 @@
       Background:
     </div>
     <div class="card-body">
-      <h6 class="card-subtitle">Birthday:</h6> {{ character_birthday }}
-      <h6 class="card-subtitle">Gender:</h6> {{ character_gender }}
+      <h6 class="card-subtitle">Birthday:</h6> {{ character.birthday }}
+      <h6 class="card-subtitle">Gender:</h6> {{ character.gender }}
     </div>
     <div class="card-footer text-muted">
       update time

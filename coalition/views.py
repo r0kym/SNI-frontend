@@ -4,7 +4,8 @@ from django.views.defaults import bad_request
 from django.urls import reverse
 
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
-from SNI.esi import post_universe_names, post_universe_ids
+
+from SNI.esi import post_universe_names, post_universe_ids, ESI_SCOPES
 from SNI.error import render_error
 
 import datetime
@@ -24,6 +25,7 @@ def home(request):
   }
 
   request_coalitions = requests.get(url, headers=headers)
+
 
   if request_coalitions.status_code != 200:
     return render_error(request_coalitions)
@@ -75,15 +77,14 @@ def sheet(request, coalition_id):
   else:
     members_names = []
 
-
-  return render(request, 'coalition/sheet.html', {
-    "coalition": request_coalition.json(),
-    "new_alliance": request.GET.get("new_ally"),
-    "removed_alliance": request.GET.get("rem_ally"),
-    "new_ticker": request.GET.get("new_ticker"),
-    "members_names": members_names
-
-  })
+    return render(request, 'coalition/sheet.html', {
+        "coalition": request_coalition.json(),
+        "new_alliance": request.GET.get("new_ally"),
+        "removed_alliance": request.GET.get("rem_ally"),
+        "new_ticker": request.GET.get("new_ticker"),
+        "members_names": members_names,
+        "scopes": ESI_SCOPES,
+    })
 
 def new(request):
     """
@@ -237,6 +238,35 @@ def ticker(request, coalition_id):
   if request_ticker.status_code != 200:
     return render_error(request_ticker)
 
-  params = urlencode({"new_ticker": request.POST.get("ticker")})
-  return_url = reverse("coalition-home") + coalition_id + "?" + params
-  return redirect(return_url)
+    params = urlencode({"new_ticker": request.POST.get("ticker")})
+    return_url = reverse("coalition-home") + coalition_id + "?" + params
+    return redirect(return_url)
+
+def scopes(request, coalition_id):
+    """
+    Update coalition required scopes
+    """
+
+    scopes = []
+    for key in request.POST:
+        if key in ESI_SCOPES:
+            scopes.append(key)
+
+    url = SNI_URL + f"coalition/{coalition_id}"
+    headers = {
+        "accpet": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
+    data = "{\"mandatory_esi_scopes\": [\"" + "\",\"".join(scopes) + "\"]}"
+
+    request_change_scopes = requests.put(url, headers=headers, data=data)
+
+    if request_change_scopes.status_code != 200:
+        return HttpResponse(f"""
+        ERROR {request_change_scopes.status_code} <br>
+        {request_change_scopes.json()}""")
+
+    params = urlencode({"changed_scopes": "true"})
+    return_url = reverse("coalition-home") + coalition_id + "?" + params
+    return redirect(return_url)

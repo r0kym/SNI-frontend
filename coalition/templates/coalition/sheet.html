@@ -29,6 +29,15 @@
 </div>
 {% endif %}
 
+{% if changed_scopes == "true" %}
+<div class="alert alert-success alert-dissmissible fade show" role="alert">
+  Scopes successfully eddited
+  <button type="button" class="close" data-dissmiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
 <h1>{{ coalition.coalition_name }}</h1>
 
 <div class="card-columns">
@@ -71,6 +80,23 @@
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddAllianceModal">
       Add Alliance
     </button>
+
+    <div class="card">
+      <div class="card-header text-dark">
+        Required ESI scopes
+      </div>
+      <div class="card-body">
+        <ul>
+          {% for scope in coalition.mandatory_esi_scopes %}
+          <li>{{ scope }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="card-footer">
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#ManageScopesModal">Manage scopes</button>
+      </div>
+    </div>
+
 
   </div>
 
@@ -176,4 +202,31 @@
   </div>
 </form>
 
+<form class="ManageScopes" action="{{ coalition.coalition_id }}/scopes" method="post">{% csrf_token %}
+  <div class="modal fade" id="ManageScopesModal" tabindex="-1" role="dialog" aria-labelledby="ManageScopesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centerd" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Modify ESI-scopes</h5>
+          <button type="button"class="close" data-dismiss="modal" aira-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {% for scope in scopes %}
+            <div class="ManageScopes">
+              <div class="checkbox">
+                <label><input type="checkbox" name="{{ scope }}" value=""{% if scope in coalition.mandatory_esi_scopes %} checked {% endif %}>{{ scope }}</label>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" name="button" class="btn btn-primary">Change required scopes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
 {% endblock content %}
