@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'group.apps.GroupConfig',
     'coalition.apps.CoalitionConfig',
     'teamspeak.apps.TeamspeakConfig',
+    'discord.apps.DiscordConfig',
     'bootstrap4',
 ]
 
