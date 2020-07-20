@@ -21,7 +21,7 @@ Once you logged in, click here to complete the process<br/>
     
     <div class="col">
 <form method="GET" action="completed">
-    <button type="submit" class="text-center btn btn-success">
+    <button id="processValidation" type="submit" class="text-center btn btn-success">
         <i class="fa fa-check" aria-hidden="true"></i>
         Complete authentication process</button>
 </form> 
@@ -40,10 +40,19 @@ Once you logged in, click here to complete the process<br/>
 var downloadTimer = setInterval(function(){
   if(timeleft <= 0){
     clearInterval(downloadTimer);
-    document.getElementById("countdown").innerHTML = "Time up.If you were unable to complete the process in time, please try again.";
-    //document.getElementById("repeatProcess").innerHTML = "<button type=\"button\" class=\"btn btn-warning\" disabled><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Repeat the authentication process</button>";
+    document.getElementById("countdown").classList.remove("text-danger");
+    document.getElementById("countdown").innerHTML = "Sorry, time up.If you were unable to complete the process in time, please try again.";
     document.getElementById("repeatProcess").removeAttribute("disabled");
-  } else {
+    document.getElementById("processValidation").setAttribute("disabled","");
+  }
+  else {
+    if(timeleft <= 20 && timeleft > 0 ){
+      document.getElementById("countdown").classList.remove("text-warning");
+    document.getElementById("countdown").classList.add("text-danger");
+    }
+    if(timeleft <= 40 && timeleft > 20 ){
+    document.getElementById("countdown").classList.add("text-warning");
+  }
     document.getElementById("countdown").innerHTML = timeleft + " seconds remaining to complete the process";
   }
   timeleft -= 1;
