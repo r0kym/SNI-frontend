@@ -50,32 +50,32 @@ def home(request):
     })
 
 def sheet(request, coalition_id):
-  """
-  Will display the main page for accessing coalition informations
-  """
+    """
+    Will display the main page for accessing coalition informations
+    """
 
-  url = SNI_URL + f"coalition/{coalition_id}"
-  headers = {
-    "accept": "application/json",
-    "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
-  }
+    url = SNI_URL + f"coalition/{coalition_id}"
+    headers = {
+        "accept": "application/json",
+        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
 
-  request_coalition = requests.get(url, headers=headers)
-  if request_coalition.status_code != 200:
-      return render_error(request_coalition)
+    request_coalition = requests.get(url, headers=headers)
+    if request_coalition.status_code != 200:
+        return render_error(request_coalition)
 
-  print(request_coalition.json())
+    print(request_coalition.json())
 
-  if len(request_coalition.json()["members"]) != 0:
-    coalition_members = [int(i) for  i in request_coalition.json()["members"]]
-    coalition_members_names = post_universe_names(*coalition_members)
+    if len(request_coalition.json()["members"]) != 0:
+        coalition_members = [int(i) for  i in request_coalition.json()["members"]]
+        coalition_members_names = post_universe_names(*coalition_members)
 
-    if coalition_members_names.status_code != 200:
-      return render_error(coalition_members_names)
+        if coalition_members_names.status_code != 200:
+            return render_error(coalition_members_names)
 
-    members_names = coalition_members_names.json()
-  else:
-    members_names = []
+        members_names = coalition_members_names.json()
+    else:
+        members_names = []
 
     return render(request, 'coalition/sheet.html', {
         "coalition": request_coalition.json(),
@@ -94,149 +94,149 @@ def new(request):
     return render(request, 'coalition/new.html', {})
 
 def create(request):
-  """
-  Create a new coalition
-  This link should only be accessed by a redirection from coalition/new
+    """
+    Create a new coalition
+    This link should only be accessed by a redirection from coalition/new
 
-  note: maybe use a post or something to make sure the coalition isn't created several times?
-  """
+    note: maybe use a post or something to make sure the coalition isn't created several times?
+    """
 
-  url = SNI_URL + "coalition"
+    url = SNI_URL + "coalition"
 
-  headers = {
-    "accept": "application/json",
-    "Content-type": "application/json",
-    "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
-  }
+    headers = {
+        "accept": "application/json",
+        "Content-type": "application/json",
+        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
 
-  data = "{\"coalition_name\":\"" + request.GET.get("name") + "\",\"ticker\":\"" + request.GET.get("ticker") + "\"}"
+    data = "{\"coalition_name\":\"" + request.GET.get("name") + "\",\"ticker\":\"" + request.GET.get("ticker") + "\"}"
 
-  request_create_coalition = requests.post(url, headers=headers, data=data)
+    request_create_coalition = requests.post(url, headers=headers, data=data)
 
-  print(request_create_coalition)
-  print(request_create_coalition.json())
+    print(request_create_coalition)
+    print(request_create_coalition.json())
 
-  if request_create_coalition.status_code != 201:
-    return render_error(request_create_coalition)
+    if request_create_coalition.status_code != 201:
+        return render_error(request_create_coalition)
 
-  return_url = reverse("coalition-home")
-  params = urlencode({"new_coa":request.GET.get("name")})
-  url = f"{return_url}?{params}"
+    return_url = reverse("coalition-home")
+    params = urlencode({"new_coa":request.GET.get("name")})
+    url = f"{return_url}?{params}"
 
-  return redirect(url)
+    return redirect(url)
 
 def delete(request, coalition_id):
-  """
-  Deletes a coaliton
-  """
+    """
+    Deletes a coaliton
+    """
 
-  url = SNI_URL + f"coalition/{coalition_id}"
+    url = SNI_URL + f"coalition/{coalition_id}"
 
-  headers = {
-    "accept": "application/json",
-    "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
-  }
+    headers = {
+        "accept": "application/json",
+        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
 
-  request_coalition = requests.get(url, headers=headers)  # stores coalition params
+    request_coalition = requests.get(url, headers=headers)  # stores coalition params
 
-  if request_coalition.status_code != 200:
-    return render_error(request_coalition)
+    if request_coalition.status_code != 200:
+        return render_error(request_coalition)
 
-  request_delete_coalition = requests.delete(url, headers=headers)
+    request_delete_coalition = requests.delete(url, headers=headers)
 
-  if request_delete_coalition.status_code != 200:
-    return render_error(request_delete_coalition)
+    if request_delete_coalition.status_code != 200:
+        return render_error(request_delete_coalition)
 
-  params = urlencode({"del_coa": request_coalition.json()["coalition_name"]})
-  return_url = f"{reverse('coalition-home')}?{params}"
+    params = urlencode({"del_coa": request_coalition.json()["coalition_name"]})
+    return_url = f"{reverse('coalition-home')}?{params}"
 
-  return redirect(return_url)
+    return redirect(return_url)
 
 def add(request, coalition_id):
-  """
-  Add an alliance to the coalition
-  """
+    """
+    Add an alliance to the coalition
+    """
 
-  url = SNI_URL + f"coalition/{coalition_id}"
+    url = SNI_URL + f"coalition/{coalition_id}"
 
-  headers = {
-    "accept": "application/json",
-    "Content-Type": "application/json",
-    "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
-  }
+    headers = {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
 
-  request_alliance_id = post_universe_ids(request.POST.get("alliance"))
+    request_alliance_id = post_universe_ids(request.POST.get("alliance"))
 
-  if request_alliance_id.status_code != 200:
-    return render_error(request_alliance_id)
+    if request_alliance_id.status_code != 200:
+        return render_error(request_alliance_id)
 
-  data = "{\"add_members\": [\"" + str(request_alliance_id.json()["alliances"][0]["id"]) + "\"]}"
+    data = "{\"add_members\": [\"" + str(request_alliance_id.json()["alliances"][0]["id"]) + "\"]}"
 
-  request_new = requests.put(url, headers=headers, data=data)
+    request_new = requests.put(url, headers=headers, data=data)
 
-  if request_new.status_code != 200:
-    return render_error(request_new)
+    if request_new.status_code != 200:
+        return render_error(request_new)
 
-  print(request_new.status_code)
-  print(request_new.json())
+    print(request_new.status_code)
+    print(request_new.json())
 
-  params = urlencode({"new_ally": request.POST.get("alliance")})
-  return_url = reverse("coalition-home") + coalition_id + "?" + params
+    params = urlencode({"new_ally": request.POST.get("alliance")})
+    return_url = reverse("coalition-home") + coalition_id + "?" + params
 
-  return redirect(return_url)
+    return redirect(return_url)
 
 def remove_alliance(request, coalition_id, alliance_id):
-  """
-  Removes an alliance from the coalition
-  """
+    """
+    Removes an alliance from the coalition
+    """
 
-  url = SNI_URL + f"coalition/{coalition_id}"
+    url = SNI_URL + f"coalition/{coalition_id}"
 
-  headers = {
-    "accept": "application/json",
-    "Content-Type": "application/json",
-    "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
-  }
+    headers = {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
 
-  data = "{\"remove_members\": [\"" + str(alliance_id) + "\"]}"
+    data = "{\"remove_members\": [\"" + str(alliance_id) + "\"]}"
 
-  request_remove= requests.put(url, headers=headers, data=data)
+    request_remove= requests.put(url, headers=headers, data=data)
 
-  if request_remove.status_code != 200:
-    return render_error(request_remove)
+    if request_remove.status_code != 200:
+        return render_error(request_remove)
 
-  print(request_remove.status_code)
-  print(request_remove.json())
+    print(request_remove.status_code)
+    print(request_remove.json())
 
-  request_alliance_name = post_universe_names(alliance_id)
+    request_alliance_name = post_universe_names(alliance_id)
 
-  if request_alliance_name.status_code != 200:
-    return render_error(request_alliance_name)
+    if request_alliance_name.status_code != 200:
+        return render_error(request_alliance_name)
 
-  alliance_name = request_alliance_name.json()[0]["name"]
+    alliance_name = request_alliance_name.json()[0]["name"]
 
-  params = urlencode({"rem_ally": alliance_name})
-  return_url = reverse("coalition-home") + coalition_id + "?" + params
+    params = urlencode({"rem_ally": alliance_name})
+    return_url = reverse("coalition-home") + coalition_id + "?" + params
 
-  return redirect(return_url)
+    return redirect(return_url)
 
 def ticker(request, coalition_id):
-  """
-  Change a coalition ticker
-  """
+    """
+    Change a coalition ticker
+    """
 
-  url = SNI_URL + f"coalition/{coalition_id}"
-  headers = {
-    "accept": "application/json",
-    "Content-Type": "application/json",
-    "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
-  }
+    url = SNI_URL + f"coalition/{coalition_id}"
+    headers = {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    }
 
-  data = "{\"ticker\":\"" + request.POST.get("ticker") + "\"}"
-  request_ticker = requests.put(url, headers=headers, data=data)
+    data = "{\"ticker\":\"" + request.POST.get("ticker") + "\"}"
+    request_ticker = requests.put(url, headers=headers, data=data)
 
-  if request_ticker.status_code != 200:
-    return render_error(request_ticker)
+    if request_ticker.status_code != 200:
+        return render_error(request_ticker)
 
     params = urlencode({"new_ticker": request.POST.get("ticker")})
     return_url = reverse("coalition-home") + coalition_id + "?" + params
