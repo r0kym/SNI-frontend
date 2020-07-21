@@ -14,9 +14,14 @@ def home(request):
 
     url = SNI_URL + "discord/auth/start"
 
+    try:
+        token = request.session["user_token"]
+    except KeyError:
+        return render(request, 'discord/home.html', {"error": "Error when reading user token"})
+
     headers = {
         "accept": "application/json",
-        "Authorization": f"Bearer {request.session['user_token']}"
+        "Authorization": f"Bearer {token}"
     }
 
     request_auth_code = requests.post(url, headers=headers)
