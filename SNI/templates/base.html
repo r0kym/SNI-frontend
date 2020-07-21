@@ -7,7 +7,7 @@
   	<title>SeAT Navy Issue</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
+
     <script src="{% static 'sidebar/js/jquery.min.js' %}"></script>
 
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
@@ -49,6 +49,13 @@
           <li>
           {% endif %}
             <a href="/group/"><span class="fa fa-group mr-3"></span>Groups</a>
+          </li>
+          {% if "discord" in route %}
+          <li class="active">
+          {% else %}
+          <li>
+          {% endif %}
+            <a href="/discord/"><span class="fa fa-microphone mr-3"></span>Discord</a>
           </li>
           {% if "teamspeak" in route %}
           <li class="active">
