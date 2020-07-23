@@ -7,12 +7,14 @@ from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 
 from SNI.esi import post_universe_names, post_universe_ids, ESI_SCOPES
 from SNI.error import render_error
+from SNI.check import check_tokens
 
 import datetime
 import requests
 from urllib.parse import urlencode
 
 
+@check_tokens
 def home(request):
   """
   Will display all the coalitions registered on the SNI
@@ -21,7 +23,7 @@ def home(request):
   url = SNI_URL + "coalition"
   headers = {
     "accept": "application/json",
-    "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+    "Authorization": f"Bearer {request.session.get('user_token')}"
   }
 
   request_coalitions = requests.get(url, headers=headers)
@@ -49,6 +51,7 @@ def home(request):
     "deleted_coalition": request.GET.get("del_coa")
     })
 
+@check_tokens
 def sheet(request, coalition_id):
     """
     Will display the main page for accessing coalition informations
@@ -57,7 +60,7 @@ def sheet(request, coalition_id):
     url = SNI_URL + f"coalition/{coalition_id}"
     headers = {
         "accept": "application/json",
-        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+        "Authorization": f"Bearer {request.session.get('user_token')}"
     }
 
     request_coalition = requests.get(url, headers=headers)
@@ -86,6 +89,7 @@ def sheet(request, coalition_id):
         "scopes": ESI_SCOPES,
     })
 
+@check_tokens
 def new(request):
     """
     Display tools to create a new coalition
@@ -93,6 +97,7 @@ def new(request):
 
     return render(request, 'coalition/new.html', {})
 
+@check_tokens
 def create(request):
     """
     Create a new coalition
@@ -106,7 +111,7 @@ def create(request):
     headers = {
         "accept": "application/json",
         "Content-type": "application/json",
-        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+        "Authorization": f"Bearer {request.session.get('user_token')}"
     }
 
     data = "{\"coalition_name\":\"" + request.GET.get("name") + "\",\"ticker\":\"" + request.GET.get("ticker") + "\"}"
@@ -125,6 +130,7 @@ def create(request):
 
     return redirect(url)
 
+@check_tokens
 def delete(request, coalition_id):
     """
     Deletes a coaliton
@@ -134,7 +140,7 @@ def delete(request, coalition_id):
 
     headers = {
         "accept": "application/json",
-        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+        "Authorization": f"Bearer {request.session.get('user_token')}"
     }
 
     request_coalition = requests.get(url, headers=headers)  # stores coalition params
@@ -152,6 +158,7 @@ def delete(request, coalition_id):
 
     return redirect(return_url)
 
+@check_tokens
 def add(request, coalition_id):
     """
     Add an alliance to the coalition
@@ -162,7 +169,7 @@ def add(request, coalition_id):
     headers = {
         "accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+        "Authorization": f"Bearer {request.session.get('user_token')}"
     }
 
     request_alliance_id = post_universe_ids(request.POST.get("alliance"))
@@ -185,6 +192,7 @@ def add(request, coalition_id):
 
     return redirect(return_url)
 
+@check_tokens
 def remove_alliance(request, coalition_id, alliance_id):
     """
     Removes an alliance from the coalition
@@ -195,7 +203,7 @@ def remove_alliance(request, coalition_id, alliance_id):
     headers = {
         "accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+        "Authorization": f"Bearer {request.session.get('user_token')}"
     }
 
     data = "{\"remove_members\": [\"" + str(alliance_id) + "\"]}"
@@ -220,6 +228,7 @@ def remove_alliance(request, coalition_id, alliance_id):
 
     return redirect(return_url)
 
+@check_tokens
 def ticker(request, coalition_id):
     """
     Change a coalition ticker
@@ -229,7 +238,7 @@ def ticker(request, coalition_id):
     headers = {
         "accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+        "Authorization": f"Bearer {request.session.get('user_token')}"
     }
 
     data = "{\"ticker\":\"" + request.POST.get("ticker") + "\"}"
@@ -242,6 +251,7 @@ def ticker(request, coalition_id):
     return_url = reverse("coalition-home") + coalition_id + "?" + params
     return redirect(return_url)
 
+@check_tokens
 def scopes(request, coalition_id):
     """
     Update coalition required scopes
@@ -256,7 +266,7 @@ def scopes(request, coalition_id):
     headers = {
         "accpet": "application/json",
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+        "Authorization": f"Bearer {request.session.get('user_token')}"
     }
     data = "{\"mandatory_esi_scopes\": [\"" + "\",\"".join(scopes) + "\"]}"
 

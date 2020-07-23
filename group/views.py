@@ -9,24 +9,31 @@ import requests
 
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 from SNI.error import render_error
+from SNI.check import check_tokens
 
-global_url = SNI_URL + "group"
 
-global_headers = {
-    "accept": "application/json",
-    "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
-}
+GLOBAL_URL = SNI_URL + "group"
 
+
+def global_headers(request):
+    """Give the headers that can be used everywhere here"""
+
+    return {
+        "accept": "application/json",
+        "Authorization": f"Bearer {request.session.get('user_token')}"
+    }
+
+@check_tokens
 def home(request):
     """
     Will display all the groups registered on the SNI
     """
 
-    request_groups = requests.get(global_url, headers=global_headers)
+    request_groups = requests.get(GLOBAL_URL, headers=global_headers(request))
 
     if request_groups.status_code != 200:
         return render_error(request_group)
-    
+
     group_list = request_groups.json()
     print(group_list)
     return render(request, 'group/home.html', {
@@ -37,14 +44,15 @@ def home(request):
         "removed_member": request.GET.get("rem_member"),
     })
 
+@check_tokens
 def sheet(request, group_id):
     """
     Will display the main page for accessing group informations
     """
 
-    url = f"{global_url}/{group_id}"
+    url = f"{GLOBAL_URL}/{group_id}"
 
-    request_group = requests.get(url, headers=global_headers)
+    request_group = requests.get(url, headers=global_headers(request))
     if request_group.status_code != 200:
         return render_error(request_group)
 
@@ -58,6 +66,7 @@ def sheet(request, group_id):
         "removed_member": request.GET.get("rem_member"),
     })
 
+@check_tokens
 def new(request):
     """
     Display tools to create a new group
@@ -65,6 +74,7 @@ def new(request):
 
     return render(request, 'group/new.html', {})
 
+@check_tokens
 def create(request):
     """
     Create a new group
@@ -76,12 +86,12 @@ def create(request):
     headers = {
         "accept": "application/json",
         "Content-type": "application/json",
-        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+        "Authorization": f"Bearer {request.session.get('user_token')}"
     }
 
     data = "{\"group_name\":\"" + request.GET.get("name") + "\"}"
 
-    request_create_group = requests.post(global_url, headers=headers, data=data)
+    request_create_group = requests.post(GLOBAL_URL, headers=headers, data=data)
 
     print(request_create_group)
     print(request_create_group.json())
@@ -95,16 +105,17 @@ def create(request):
 
     return redirect(url)
 
+@check_tokens
 def delete(request, group_id):
     """
     Deletes a group
     """
 
-    url = f"{global_url}/{group_id}"
+    url = f"{GLOBAL_URL}/{group_id}"
 
     headers = {
         "accept": "application/json",
-        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+        "Authorization": f"Bearer {request.session.get('user_token')}"
     }
 
     request_group = requests.get(url, headers=headers)  # stores group params
@@ -122,17 +133,18 @@ def delete(request, group_id):
 
     return redirect(return_url)
 
+@check_tokens
 def add_member(request, group_id):
     """
     Add an member to the group
     """
 
-    url = f"{global_url}/{group_id}"
+    url = f"{GLOBAL_URL}/{group_id}"
 
     headers = {
         "accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+        "Authorization": f"Bearer {request.session.get('user_token')}"
     }
 
     data = "{\"add_members\": [\"" + str(request.POST.get("member")) + "\"]}"
@@ -141,7 +153,7 @@ def add_member(request, group_id):
 
     if request_new.status_code != 200:
         return render_error(request_new)
-    
+
     print(request_new.status_code)
     print(request_new.json())
 
@@ -150,17 +162,18 @@ def add_member(request, group_id):
 
     return redirect(return_url)
 
+@check_tokens
 def remove_member(request, group_id, member):
     """
     Removes an member from the group
     """
 
-    url = f"{global_url}/{group_id}"
+    url = f"{GLOBAL_URL}/{group_id}"
 
     headers = {
         "accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+        "Authorization": f"Bearer {request.session.get('user_token')}"
     }
 
     data = "{\"remove_members\": [\"" + str(member) + "\"]}"
