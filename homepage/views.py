@@ -72,10 +72,18 @@ def sni_callback(request):
 
     if request.COOKIES["state_code"] == get_dic["state_code"]:
 
-        request.session["character_id"] = get_dic["character_id"]
         request.session["user_token"] = get_dic["user_token"]
 
-        return redirect(f"/character/{get_dic['character_id']}")
+        headers = {
+            "accept": "application/json",
+            "Authorization": f"Bearer {get_dic['user_token']}"
+        }
+        request_token = requests.get(SNI_URL+"token", headers=headers)
+
+        if request_token.status_code != 200:
+            return render_error(request_token)
+
+        return redirect(f"/character/{request_token.json()["owner_character_id"]}")
 
     else:
         redirect("/")
