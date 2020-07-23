@@ -83,7 +83,7 @@ def sni_callback(request):
         if request_token.status_code != 200:
             return render_error(request_token)
 
-        return redirect(f"/character/{request_token.json()["owner_character_id"]}")
+        return redirect(f"/character/{request_token.json()['owner_character_id']}")
 
     else:
         redirect("/")
