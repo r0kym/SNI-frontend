@@ -36,7 +36,7 @@ def auth_public(request):
 
     if r.status_code == 200:
         response = redirect(r.json()["login_url"])
-        response.set_cookie("status_code", r.json()["status_code"], max_age=300)  # the login must be made in 5 minutes
+        response.set_cookie("state_code", r.json()["state_code"], max_age=300)  # the login must be made in 5 minutes
         return response
     else:
         return HttpResponse(f"""T'rahk messed up (as usual) go and blame him pls <br>
@@ -55,7 +55,7 @@ def auth_full(request):
 
     if r.status_code == 200:
         response = redirect(r.json()["login_url"])
-        response.set_cookie("status_code", r.json()["status_code"], max_age=300)  # the login must be made in 5 minutes
+        response.set_cookie("state_code", r.json()["state_code"], max_age=300)  # the login must be made in 5 minutes
         return response
     else:
         return HttpResponse(f"""T'rahk messed up (as usual) go and blame him pls <br>
@@ -70,7 +70,7 @@ def sni_callback(request):
 
     get_dic = request.GET
 
-    if request.COOKIES["status_code"] == get_dic["status_code"]:
+    if request.COOKIES["state_code"] == get_dic["state_code"]:
 
         request.session["character_id"] = post_dic["character_id"]
         request.session["user_token"] = post_dic["user_token"]
