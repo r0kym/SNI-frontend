@@ -72,10 +72,10 @@ def sni_callback(request):
 
     if request.COOKIES["state_code"] == get_dic["state_code"]:
 
-        request.session["character_id"] = post_dic["character_id"]
-        request.session["user_token"] = post_dic["user_token"]
+        request.session["character_id"] = get_dic["character_id"]
+        request.session["user_token"] = get_dic["user_token"]
 
-        return redirect(f"/character/{post_dic['character_id']}")
+        return redirect(f"/character/{get_dic['character_id']}")
 
     else:
         redirect("/")
