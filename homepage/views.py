@@ -35,7 +35,9 @@ def auth_public(request):
     r = requests.post(url, headers=headers, json=json)
 
     if r.status_code == 200:
-        return redirect(r.json()["login_url"])
+        response = redirect(r.json()["login_url"])
+        response.set_cookie("status_code", r.json()["status_code"], max_age=300)  # the login must be made in 5 minutes
+        return response
     else:
         return HttpResponse(f"""T'rahk messed up (as usual) go and blame him pls <br>
         <b>error code: {r.status_code} </b><br>
@@ -52,7 +54,9 @@ def auth_full(request):
     r = requests.post(url, headers=headers, json=json)
 
     if r.status_code == 200:
-        return redirect(r.json()["login_url"])
+        response = redirect(r.json()["login_url"])
+        response.set_cookie("status_code", r.json()["status_code"], max_age=300)  # the login must be made in 5 minutes
+        return response
     else:
         return HttpResponse(f"""T'rahk messed up (as usual) go and blame him pls <br>
         <b>error code: {r.status_code} </b><br>
@@ -64,9 +68,14 @@ def sni_callback(request):
     the character that just logged in.
     """
 
-    post_dic = request.POST
+    get_dic = request.GET
 
-    request.session["character_id"] = post_dic["character_id"]
-    request.session["user_token"] = post_dic["user_token"]
+    if request.COOKIES["status_code"] == get_dic["status_code"]:
 
-    return redirect(f"/character/{post_dic['character_id']}")
+        request.session["character_id"] = post_dic["character_id"]
+        request.session["user_token"] = post_dic["user_token"]
+
+        return redirect(f"/character/{post_dic['character_id']}")
+
+    else:
+        redirect("/")
