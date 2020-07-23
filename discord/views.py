@@ -2,11 +2,13 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from utils import SNI_URL
+from SNI.check import check_tokens
 
 import requests
 
 # Create your views here.
 
+@check_tokens
 def home(request):
     """
     Home view of discord
@@ -14,14 +16,9 @@ def home(request):
 
     url = SNI_URL + "discord/auth/start"
 
-    try:
-        token = request.session["user_token"]
-    except KeyError:
-        return render(request, 'discord/home.html', {"error": "Error when reading user token"})
-
     headers = {
         "accept": "application/json",
-        "Authorization": f"Bearer {token}"
+        "Authorization": f"Bearer {request.session['user_token']}"
     }
 
     request_auth_code = requests.post(url, headers=headers)

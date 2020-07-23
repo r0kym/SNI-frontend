@@ -5,6 +5,7 @@ from django.views.defaults import bad_request
 from character.models import CorporationName
 
 import SNI.esi as esi
+from SNI.check import check_tokens
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 
 
@@ -16,6 +17,7 @@ from SNI.error import render_error
 CORPORATION_HISTORY_LIMIT = 15  # for not overloading the page when people went in way too much corporations
 
 
+@check_tokens
 def home(request):
     """
     Will display all the characters registered on the SNI
@@ -24,7 +26,7 @@ def home(request):
     url = SNI_URL + "user"
     headers = {
         "accept": "application/json",
-        "Authorization": f"Bearer {SNI_TEMP_USER_TOKEN}"
+        "Authorization": f"Bearer {request.session.get('user_token')}"
 
     }
 
@@ -41,6 +43,7 @@ def home(request):
     return render(request, 'character/home.html', {"character_list": character_list})
 
 
+@check_tokens
 def sheet(request, character_id):
     """
     Will display the main page for accessing charachter informations
@@ -77,6 +80,7 @@ def sheet(request, character_id):
         "shortend_corp_hist": shortend_corp_hist,
     })
 
+@check_tokens
 def assets(request, character_id):
     """
     Displays character assets
@@ -91,6 +95,7 @@ def assets(request, character_id):
         "character_id": character_id,
     })
 
+@check_tokens
 def contracts(request, character_id):
     """
     Displays character contracts
@@ -105,6 +110,7 @@ def contracts(request, character_id):
         "character_id": character_id,
     })
 
+@check_tokens
 def mails(request, character_id):
     """
     Displays character mails
@@ -119,6 +125,7 @@ def mails(request, character_id):
         "character_id": character_id,
     })
 
+@check_tokens
 def skills(request, character_id):
     """
     Displays character skils
@@ -133,6 +140,7 @@ def skills(request, character_id):
         "character_id": character_id,
     })
 
+@check_tokens
 def wallet(request, character_id):
     """
     Displays character wallet
