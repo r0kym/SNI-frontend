@@ -40,8 +40,8 @@
     </thead>
     <tbody>
         {% for details in group_list %}
-        <tr style="position:relative">
-            <td><a href="/group/{{ details.group_id }}" class="stretched-link"></a>{{ details.group_name }}</a></td>
+        <tr class="clickable" onclick="window.location='/group/{{ details.group_id }}'">
+            <td>{{ details.group_name }}</td>
             <td style="position:relative; border-left: 3px solid #e9ecef;">
                 <button class="btn stretched-link" id="ButtonDeleteGroup" data-toggle="modal" data-target="#ModalDeleteGroup" data-group-id="{{ details.group_id }}" data-group-name="{{ details.group_name }}">
                     <i class="fa fa-trash text-danger"></i>
