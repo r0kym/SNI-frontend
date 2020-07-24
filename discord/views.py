@@ -4,6 +4,7 @@ from django.shortcuts import render
 from utils import SNI_URL
 from SNI.check import check_tokens
 from SNI.error import render_error
+from SNI.lib import global_headers
 
 import requests
 
@@ -17,12 +18,7 @@ def home(request):
 
     url = SNI_URL + "discord/auth/start"
 
-    headers = {
-        "accept": "application/json",
-        "Authorization": f"Bearer {request.session['user_token']}"
-    }
-
-    request_auth_code = requests.post(url, headers=headers)
+    request_auth_code = requests.post(url, headers=global_headers(request))
 
     if request_auth_code.status_code == 200:
         return render(request, 'discord/home.html', {

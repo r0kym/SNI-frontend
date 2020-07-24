@@ -8,10 +8,14 @@ from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 from SNI.esi import post_universe_names, post_universe_ids, ESI_SCOPES
 from SNI.error import render_error
 from SNI.check import check_tokens
+from SNI.lib import global_headers
 
 import datetime
 import requests
 from urllib.parse import urlencode
+
+
+GLOBAL_URL = SNI_URL + "coalition"
 
 
 @check_tokens()
@@ -20,13 +24,7 @@ def home(request):
   Will display all the coalitions registered on the SNI
   """
 
-  url = SNI_URL + "coalition"
-  headers = {
-    "accept": "application/json",
-    "Authorization": f"Bearer {request.session.get('user_token')}"
-  }
-
-  request_coalitions = requests.get(url, headers=headers)
+  request_coalitions = requests.get(GLOBAL_URL , headers=global_headers(request))
 
 
   if request_coalitions.status_code != 200:
@@ -37,7 +35,7 @@ def home(request):
   coalition_dict = {}
 
   for coalition in coalition_list:
-    request_coalition_details = requests.get(f"{url}/{coalition['coalition_id']}", headers=headers)
+    request_coalition_details = requests.get(f"{GLOBAL_URL}/{coalition['coalition_id']}", headers=global_headers(request))
 
     if request_coalition_details.status_code != 200:
       return render_error(request_coalition_details)
@@ -57,13 +55,9 @@ def sheet(request, coalition_id):
     Will display the main page for accessing coalition informations
     """
 
-    url = SNI_URL + f"coalition/{coalition_id}"
-    headers = {
-        "accept": "application/json",
-        "Authorization": f"Bearer {request.session.get('user_token')}"
-    }
+    url = f"{GLOBAL_URL}/{coalition_id}"
 
-    request_coalition = requests.get(url, headers=headers)
+    request_coalition = requests.get(url, headers=global_headers(request))
     if request_coalition.status_code != 200:
         return render_error(request_coalition)
 
@@ -106,17 +100,12 @@ def create(request):
     note: maybe use a post or something to make sure the coalition isn't created several times?
     """
 
-    url = SNI_URL + "coalition"
-
-    headers = {
-        "accept": "application/json",
-        "Content-type": "application/json",
-        "Authorization": f"Bearer {request.session.get('user_token')}"
-    }
+    headers = global_headers(request)
+    headers.update({"Content-type": "application/json"})
 
     data = "{\"coalition_name\":\"" + request.GET.get("name") + "\",\"ticker\":\"" + request.GET.get("ticker") + "\"}"
 
-    request_create_coalition = requests.post(url, headers=headers, data=data)
+    request_create_coalition = requests.post(GLOBAL_URL, headers=headers, data=data)
 
     print(request_create_coalition)
     print(request_create_coalition.json())
@@ -136,14 +125,9 @@ def delete(request, coalition_id):
     Deletes a coaliton
     """
 
-    url = SNI_URL + f"coalition/{coalition_id}"
+    url = f"{GLOBAL_URL}/{coalition_id}"
 
-    headers = {
-        "accept": "application/json",
-        "Authorization": f"Bearer {request.session.get('user_token')}"
-    }
-
-    request_coalition = requests.get(url, headers=headers)  # stores coalition params
+    request_coalition = requests.get(url, headers=global_headers(request))  # stores coalition params
 
     if request_coalition.status_code != 200:
         return render_error(request_coalition)
@@ -164,13 +148,10 @@ def add(request, coalition_id):
     Add an alliance to the coalition
     """
 
-    url = SNI_URL + f"coalition/{coalition_id}"
+    url = f"{GLOBAL_URL}/{coalition_id}"
 
-    headers = {
-        "accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {request.session.get('user_token')}"
-    }
+    headers = global_headers(request)
+    headers.update({"Content-type": "application/json"})
 
     request_alliance_id = post_universe_ids(request.POST.get("alliance"))
 
@@ -198,13 +179,10 @@ def remove_alliance(request, coalition_id, alliance_id):
     Removes an alliance from the coalition
     """
 
-    url = SNI_URL + f"coalition/{coalition_id}"
+    url = f"{GLOBAL_URL}/{coalition_id}"
 
-    headers = {
-        "accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {request.session.get('user_token')}"
-    }
+    headers = global_headers(request)
+    headers.update({"Content-type": "application/json"})
 
     data = "{\"remove_members\": [\"" + str(alliance_id) + "\"]}"
 
@@ -234,12 +212,10 @@ def ticker(request, coalition_id):
     Change a coalition ticker
     """
 
-    url = SNI_URL + f"coalition/{coalition_id}"
-    headers = {
-        "accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {request.session.get('user_token')}"
-    }
+    url = f"{GLOBAL_URL}/{coalition_id}"
+
+    headers = global_headers(request)
+    headers.update({"Content-type": "application/json"})
 
     data = "{\"ticker\":\"" + request.POST.get("ticker") + "\"}"
     request_ticker = requests.put(url, headers=headers, data=data)
@@ -262,12 +238,11 @@ def scopes(request, coalition_id):
         if key in ESI_SCOPES:
             scopes.append(key)
 
-    url = SNI_URL + f"coalition/{coalition_id}"
-    headers = {
-        "accpet": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {request.session.get('user_token')}"
-    }
+    url = f"{GLOBAL_URL}/{coalition_id}"
+
+    headers = global_headers(request)
+    headers.update({"Content-type": "application/json"})
+
     data = "{\"mandatory_esi_scopes\": [\"" + "\",\"".join(scopes) + "\"]}"
 
     request_change_scopes = requests.put(url, headers=headers, data=data)

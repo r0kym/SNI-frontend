@@ -10,18 +10,11 @@ import requests
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 from SNI.error import render_error
 from SNI.check import check_tokens
+from SNI.lib import global_headers
 
 
 GLOBAL_URL = SNI_URL + "group"
 
-
-def global_headers(request):
-    """Give the headers that can be used everywhere here"""
-
-    return {
-        "accept": "application/json",
-        "Authorization": f"Bearer {request.session.get('user_token')}"
-    }
 
 @check_tokens()
 def home(request):
@@ -83,11 +76,8 @@ def create(request):
     note: maybe use a post or something to make sure the group isn't created several times?
     """
 
-    headers = {
-        "accept": "application/json",
-        "Content-type": "application/json",
-        "Authorization": f"Bearer {request.session.get('user_token')}"
-    }
+    headers = global_headers(request)
+    headers.update({"Content-type": "application/json"})
 
     data = "{\"group_name\":\"" + request.GET.get("name") + "\"}"
 
@@ -113,17 +103,12 @@ def delete(request, group_id):
 
     url = f"{GLOBAL_URL}/{group_id}"
 
-    headers = {
-        "accept": "application/json",
-        "Authorization": f"Bearer {request.session.get('user_token')}"
-    }
-
-    request_group = requests.get(url, headers=headers)  # stores group params
+    request_group = requests.get(url, headers=global_headers(request))  # stores group params
 
     if request_group.status_code != 200:
         return render_error(request_group)
 
-    request_delete_group = requests.delete(url, headers=headers)
+    request_delete_group = requests.delete(url, headers=global_headers(request))
 
     if request_delete_group.status_code != 200:
         return render_error(request_delete_group)
@@ -141,11 +126,8 @@ def add_member(request, group_id):
 
     url = f"{GLOBAL_URL}/{group_id}"
 
-    headers = {
-        "accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {request.session.get('user_token')}"
-    }
+    headers = global_headers(request)
+    headers.update({"Content-type": "application/json"})
 
     data = "{\"add_members\": [\"" + str(request.POST.get("member")) + "\"]}"
 
@@ -170,11 +152,8 @@ def remove_member(request, group_id, member):
 
     url = f"{GLOBAL_URL}/{group_id}"
 
-    headers = {
-        "accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {request.session.get('user_token')}"
-    }
+    headers = global_headers(request)
+    headers.update({"Content-type": "application/json"})
 
     data = "{\"remove_members\": [\"" + str(member) + "\"]}"
 

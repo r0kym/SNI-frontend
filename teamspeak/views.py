@@ -5,9 +5,12 @@ from django.views.defaults import bad_request
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 from SNI.error import render_error
 from SNI.check import check_tokens
+from SNI.lib import global_headers
 
 import datetime
 import requests
+
+GLOBAL_URL = SNI_URL + "teamspeak"
 
 @check_tokens()
 def home(request):
@@ -15,13 +18,9 @@ def home(request):
   Will start authentictaion to TeamSpeak
   """
 
-  url = SNI_URL + "teamspeak/auth/start"
-  headers = {
-    "accept": "application/json",
-    "Authorization": f"Bearer {request.session.get('user_token')}"
-  }
+  url = GLOBAL_URL + "/auth/start"
 
-  request_teamspeak_auth = requests.post(url, headers=headers)
+  request_teamspeak_auth = requests.post(url, headers=global_headers(request))
 
   if request_teamspeak_auth.status_code != 200:
     return render_error(request_teamspeak_auth)
@@ -37,13 +36,9 @@ def completed(request):
   Will complete authentictaion to TeamSpeak
   """
 
-  url = SNI_URL + "teamspeak/auth/complete"
-  headers = {
-    "accept": "application/json",
-    "Authorization": f"Bearer {request.session.get('user_token')}"
-  }
+  url = GLOBAL_URL + "/auth/complete"
 
-  request_teamspeak_auth = requests.post(url, headers=headers)
+  request_teamspeak_auth = requests.post(url, headers=global_headers(request))
 
   if request_teamspeak_auth.status_code != 201:
     return render_error(request_teamspeak_auth)
