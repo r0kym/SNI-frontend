@@ -42,7 +42,7 @@
   </thead>
   <tbody>
     {% for coalition, details in coalition_list.items %}
-    <tr class="clickable" onclick="window.location='/coalition/{{ details.group_id }}'">
+    <tr class="clickable" onclick="window.location='/coalition/{{ details.coalition_id }}'">
       <td>{{ details.coalition_name }}</td>
       <td>{{ details.ticker }}</td>
       <td>{{ details.owner }}</td>
