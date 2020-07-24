@@ -83,7 +83,22 @@ def sni_callback(request):
         if request_token.status_code != 200:
             return render_error(request_token)
 
+        request.session["user_id"] = request_token.json()["owner_character_id"]
+
         return redirect(f"/character/{request_token.json()['owner_character_id']}")
 
     else:
         redirect("/")
+
+def logout(request):
+    """
+    Will delete the current session and redirect toward the home page
+    """
+    request.session.flush()
+    return redirect('/')
+
+def no_perm(request):
+    """
+    General view when a user is trying something he shouldn't be able to do
+    """
+    return render(request, "403.html")
