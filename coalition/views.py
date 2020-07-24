@@ -8,7 +8,7 @@ from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 from SNI.esi import post_universe_names, post_universe_ids, ESI_SCOPES
 from SNI.error import render_error
 from SNI.check import check_tokens
-from SNI.lib import global_headers
+from SNI.lib import global_headers, get_clearance_level
 
 import datetime
 import requests
@@ -46,7 +46,8 @@ def home(request):
   return render(request, 'coalition/home.html', {
     "coalition_list": coalition_dict,
     "new_coalition": request.GET.get("new_coa"),
-    "deleted_coalition": request.GET.get("del_coa")
+    "deleted_coalition": request.GET.get("del_coa"),
+    "clearance_level": get_clearance_level(request)
     })
 
 @check_tokens()
@@ -81,6 +82,7 @@ def sheet(request, coalition_id):
         "new_ticker": request.GET.get("new_ticker"),
         "members_names": members_names,
         "scopes": ESI_SCOPES,
+        "clearance_level": get_clearance_level(request)
     })
 
 @check_tokens()

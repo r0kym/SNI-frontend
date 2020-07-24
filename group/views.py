@@ -10,7 +10,7 @@ import requests
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 from SNI.error import render_error
 from SNI.check import check_tokens
-from SNI.lib import global_headers
+from SNI.lib import global_headers, get_clearance_level
 
 
 GLOBAL_URL = SNI_URL + "group"
@@ -35,6 +35,7 @@ def home(request):
         "deleted_group": request.GET.get("del_group"),
         "new_member": request.GET.get("new_member"),
         "removed_member": request.GET.get("rem_member"),
+        "clearance_level": get_clearance_level(request)
     })
 
 @check_tokens()
@@ -57,6 +58,7 @@ def sheet(request, group_id):
         "group": request_group_json,
         "new_member": request.GET.get("new_member"),
         "removed_member": request.GET.get("rem_member"),
+        "clearance_level": get_clearance_level(request)
     })
 
 @check_tokens()
