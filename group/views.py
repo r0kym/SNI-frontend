@@ -23,7 +23,7 @@ def global_headers(request):
         "Authorization": f"Bearer {request.session.get('user_token')}"
     }
 
-@check_tokens
+@check_tokens()
 def home(request):
     """
     Will display all the groups registered on the SNI
@@ -44,7 +44,7 @@ def home(request):
         "removed_member": request.GET.get("rem_member"),
     })
 
-@check_tokens
+@check_tokens()
 def sheet(request, group_id):
     """
     Will display the main page for accessing group informations
@@ -66,7 +66,7 @@ def sheet(request, group_id):
         "removed_member": request.GET.get("rem_member"),
     })
 
-@check_tokens
+@check_tokens()
 def new(request):
     """
     Display tools to create a new group
@@ -74,7 +74,7 @@ def new(request):
 
     return render(request, 'group/new.html', {})
 
-@check_tokens
+@check_tokens()
 def create(request):
     """
     Create a new group
@@ -105,7 +105,7 @@ def create(request):
 
     return redirect(url)
 
-@check_tokens
+@check_tokens()
 def delete(request, group_id):
     """
     Deletes a group
@@ -133,7 +133,7 @@ def delete(request, group_id):
 
     return redirect(return_url)
 
-@check_tokens
+@check_tokens()
 def add_member(request, group_id):
     """
     Add an member to the group
@@ -162,7 +162,7 @@ def add_member(request, group_id):
 
     return redirect(return_url)
 
-@check_tokens
+@check_tokens()
 def remove_member(request, group_id, member):
     """
     Removes an member from the group

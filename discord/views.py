@@ -8,7 +8,7 @@ import requests
 
 # Create your views here.
 
-@check_tokens
+@check_tokens()
 def home(request):
     """
     Home view of discord

@@ -9,7 +9,7 @@ from SNI.check import check_tokens
 import datetime
 import requests
 
-@check_tokens
+@check_tokens()
 def home(request):
   """
   Will start authentictaion to TeamSpeak
@@ -31,7 +31,7 @@ def home(request):
 
   return render(request, 'teamspeak/home.html', {"teamspeak_auth": teamspeak_auth})
 
-@check_tokens
+@check_tokens()
 def completed(request):
   """
   Will complete authentictaion to TeamSpeak

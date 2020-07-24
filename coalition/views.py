@@ -14,7 +14,7 @@ import requests
 from urllib.parse import urlencode
 
 
-@check_tokens
+@check_tokens()
 def home(request):
   """
   Will display all the coalitions registered on the SNI
@@ -51,7 +51,7 @@ def home(request):
     "deleted_coalition": request.GET.get("del_coa")
     })
 
-@check_tokens
+@check_tokens()
 def sheet(request, coalition_id):
     """
     Will display the main page for accessing coalition informations
@@ -89,7 +89,7 @@ def sheet(request, coalition_id):
         "scopes": ESI_SCOPES,
     })
 
-@check_tokens
+@check_tokens()
 def new(request):
     """
     Display tools to create a new coalition
@@ -97,7 +97,7 @@ def new(request):
 
     return render(request, 'coalition/new.html', {})
 
-@check_tokens
+@check_tokens()
 def create(request):
     """
     Create a new coalition
@@ -130,7 +130,7 @@ def create(request):
 
     return redirect(url)
 
-@check_tokens
+@check_tokens()
 def delete(request, coalition_id):
     """
     Deletes a coaliton
@@ -158,7 +158,7 @@ def delete(request, coalition_id):
 
     return redirect(return_url)
 
-@check_tokens
+@check_tokens()
 def add(request, coalition_id):
     """
     Add an alliance to the coalition
@@ -192,7 +192,7 @@ def add(request, coalition_id):
 
     return redirect(return_url)
 
-@check_tokens
+@check_tokens()
 def remove_alliance(request, coalition_id, alliance_id):
     """
     Removes an alliance from the coalition
@@ -228,7 +228,7 @@ def remove_alliance(request, coalition_id, alliance_id):
 
     return redirect(return_url)
 
-@check_tokens
+@check_tokens()
 def ticker(request, coalition_id):
     """
     Change a coalition ticker
@@ -251,7 +251,7 @@ def ticker(request, coalition_id):
     return_url = reverse("coalition-home") + coalition_id + "?" + params
     return redirect(return_url)
 
-@check_tokens
+@check_tokens()
 def scopes(request, coalition_id):
     """
     Update coalition required scopes
