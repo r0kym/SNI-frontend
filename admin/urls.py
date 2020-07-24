@@ -1,4 +1,4 @@
-"""SNI URL Configuration
+"""administration URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -13,15 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.urls import path
 
-from django.urls import include, path
+from . import views
 
 urlpatterns = [
-    path('admin/', include('admin.urls')),
-    path('', include('homepage.urls')),
-    path('character/', include('character.urls')),
-    path('group/', include('group.urls')),
-    path('coalition/', include('coalition.urls')),
-    path('teamspeak/', include('teamspeak.urls')),
-    path('discord/', include('discord.urls')),
+    path('', views.home, name='admin-home'),
 ]
