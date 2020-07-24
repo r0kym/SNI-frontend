@@ -96,3 +96,9 @@ def logout(request):
     """
     request.session.flush()
     return redirect('/')
+
+def no_perm(request):
+    """
+    General view when a user is trying something he shouldn't be able to do
+    """
+    return render(request, "403.html")
