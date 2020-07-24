@@ -19,4 +19,5 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='admin-home'),
+    path('submit', views.submit, name='admin-submit'),
 ]
