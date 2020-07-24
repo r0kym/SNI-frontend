@@ -273,9 +273,7 @@ def scopes(request, coalition_id):
     request_change_scopes = requests.put(url, headers=headers, data=data)
 
     if request_change_scopes.status_code != 200:
-        return HttpResponse(f"""
-        ERROR {request_change_scopes.status_code} <br>
-        {request_change_scopes.json()}""")
+        return render_error(request_change_scopes)
 
     params = urlencode({"changed_scopes": "true"})
     return_url = reverse("coalition-home") + coalition_id + "?" + params

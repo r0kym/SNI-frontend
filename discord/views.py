@@ -3,6 +3,7 @@ from django.shortcuts import render
 
 from utils import SNI_URL
 from SNI.check import check_tokens
+from SNI.error import render_error
 
 import requests
 
@@ -31,6 +32,4 @@ def home(request):
     elif request_auth_code.status_code == 404:
         return render(request, 'discord/notactive.html')
     else:
-        return HttpResponse(f"""
-        ERROR {request_auth_code.status_code} <br>
-        {request_auth_code.json()}""")
+        return render_error(request_auth_code)

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, Http404, HttpResponseBadRequest
+from django.http import HttpResponse
 from django.views.defaults import bad_request
 
 from character.models import CorporationName
@@ -51,7 +51,7 @@ def sheet(request, character_id):
 
     request_name = esi.get_character_information(character_id)
     if request_name.status_code != 200:
-        raise Http404(request_name.json()["error"])
+        return render_error(request_name)
 
     corp_history = esi.get_corporation_history(character_id).json()
     if len(corp_history) > CORPORATION_HISTORY_LIMIT:
@@ -88,7 +88,7 @@ def assets(request, character_id):
 
     request_name = esi.get_character_information(character_id)
     if request_name.status_code != 200:
-        raise Http404(request_name.json()["error"])
+        return render_error(request_name)
 
     return render(request, 'character/assets.html', {
         "character": request_name.json(),
@@ -103,7 +103,7 @@ def contracts(request, character_id):
 
     request_name = esi.get_character_information(character_id)
     if request_name.status_code != 200:
-        raise Http404(request_name.json()["error"])
+        return render_error(request_name)
 
     return render(request, 'character/contracts.html', {
         "character": request_name.json(),
@@ -118,7 +118,7 @@ def mails(request, character_id):
 
     request_name = esi.get_character_information(character_id)
     if request_name.status_code != 200:
-        raise Http404(request_name.json()["error"])
+        return render_error(request_name)
 
     return render(request, 'character/mails.html', {
         "character": request_name.json(),
@@ -133,7 +133,7 @@ def skills(request, character_id):
 
     request_name = esi.get_character_information(character_id)
     if request_name.status_code != 200:
-        raise Http404(request_name.json()["error"])
+        return render_error(request_name)
 
     return render(request, 'character/skills.html', {
         "character": request_name.json(),
@@ -148,7 +148,7 @@ def wallet(request, character_id):
 
     request_name = esi.get_character_information(character_id)
     if request_name.status_code != 200:
-        raise Http404(request_name.json()["error"])
+        return render_error(request_name)
 
     return render(request, 'character/wallet.html', {
         "character": request_name.json(),
