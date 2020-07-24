@@ -87,3 +87,10 @@ def sni_callback(request):
 
     else:
         redirect("/")
+
+def logout(request):
+    """
+    Will delete the current session and redirect toward the home page
+    """
+    request.session.flush()
+    return redirect('/')
