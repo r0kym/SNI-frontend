@@ -2,16 +2,17 @@
 Admin app views
 """
 
-
 from django.shortcuts import render
 
+from utils import SNI_URL
 from SNI.check import check_tokens
 from SNI.error import render_error
-from utils import SNI_URL
+from SNI.lib import global_headers
 
 import requests
 from urllib.parse import urlencode
 
+GLOBAL_URL = SNI_URL + "system/job"
 
 @check_tokens(10)
 def home(request):
@@ -19,13 +20,7 @@ def home(request):
     Home view for the administration part
     """
 
-    url = SNI_URL + "system/job"
-    headers = {
-        "accept": "application/json",
-        "Authorization": f"Bearer {request.session.get('user_token')}"
-    }
-
-    request_jobs = requests.get(url, headers=headers)
+    request_jobs = requests.get(GLOBAL_URL, headers=global_headers(request))
 
     if request_jobs.status_code != 200:
         return render_error(request_jobs)
@@ -41,14 +36,9 @@ def submit(request):
     """
 
     callable_name = request.POST["callable_name"]
-    url = SNI_URL + f"system/job/{callable_name}"
+    url = f"{GLOBAL_URL}/{callable_name}"
 
-    headers = {
-        "accept": "application/json",
-        "Authorization": f"Bearer {request.session['user_token']}"
-    }
-
-    request_submit = requests.post(url, headers=headers)
+    request_submit = requests.post(url, headers=global_headers(request))
 
     if request_submit.status_code != 200:
         return render_error(request_submit)

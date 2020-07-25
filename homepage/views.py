@@ -3,6 +3,7 @@ from SNI.esi import ESI_SCOPES
 
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
+from SNI.error import render_error
 
 import requests
 
@@ -16,9 +17,7 @@ def home(request):
         request_token = requests.get(url, headers=headers)
 
         if request_token.status_code != 200:
-            return HttpResponse(f"""
-            ERROR {request_token.status_code} <br>
-            {request_token.json()}""")
+            return render_error(request_token)
 
         return redirect(reverse("character-sheet", args=[request_token.json()["owner_character_id"]]))
 
@@ -34,14 +33,12 @@ def auth_public(request):
     url = SNI_URL + "token/use/from/dyn"
     r = requests.post(url, headers=headers, json=json)
 
-    if r.status_code == 200:
-        response = redirect(r.json()["login_url"])
-        response.set_cookie("state_code", r.json()["state_code"], max_age=300)  # the login must be made in 5 minutes
-        return response
-    else:
-        return HttpResponse(f"""T'rahk messed up (as usual) go and blame him pls <br>
-        <b>error code: {r.status_code} </b><br>
-        error message: {r.json()}""")
+    if r.status_code != 200:
+        return render_error(r)
+
+    response = redirect(r.json()["login_url"])
+    response.set_cookie("state_code", r.json()["state_code"], max_age=300)  # the login must be made in 5 minutes
+    return response
 
 def auth_full(request):
     """
@@ -53,14 +50,12 @@ def auth_full(request):
     url = SNI_URL + "token/use/from/dyn"
     r = requests.post(url, headers=headers, json=json)
 
-    if r.status_code == 200:
-        response = redirect(r.json()["login_url"])
-        response.set_cookie("state_code", r.json()["state_code"], max_age=300)  # the login must be made in 5 minutes
-        return response
-    else:
-        return HttpResponse(f"""T'rahk messed up (as usual) go and blame him pls <br>
-        <b>error code: {r.status_code} </b><br>
-        error message: {r.json()}""")
+    if r.status_code != 200:
+        return render_error(r)
+
+    response = redirect(r.json()["login_url"])
+    response.set_cookie("state_code", r.json()["state_code"], max_age=300)  # the login must be made in 5 minutes
+    return response
 
 def sni_callback(request):
     """

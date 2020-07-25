@@ -59,7 +59,9 @@
         <tr>
           <th scope="col" onclick="sortTable(0)">Logo</th>
           <th scope="col" onclick="sortTable(1)">Name</th>
-          <th scope="col" onclick="sortTable(2)">Delete</th>
+          {% if clearance_level >= 9 %}
+          <th scope="col">Delete</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -67,20 +69,22 @@
         <tr style="position:relative">
           <td><img src="https://images.evetech.net/alliances/{{ member.id }}/logo?size=32" alt="Alliance logo"></td>
           <td>{{ member.name }}</td>
+          {% if clearance_level >= 9 %}
           <td>
             <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#RemoveModal{{ member.id }}">
               Remove
             </button>
           </td>
+          {% endif %}
         </tr>
         {% endfor %}
       </tbody>
     </table>
-
+    {% if clearance_level >= 9 %}
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddAllianceModal">
       Add Alliance
     </button>
-
+    {% endif %}
     <div class="card">
       <div class="card-header text-dark">
         Required ESI scopes
@@ -92,9 +96,11 @@
           {% endfor %}
         </ul>
       </div>
+      {% if clearance_level >= 9 %}
       <div class="card-footer">
         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#ManageScopesModal">Manage scopes</button>
       </div>
+      {% endif %}
     </div>
 
 
@@ -122,7 +128,7 @@
   </div>
 {% endfor %}
 
-
+{% if clearance_level >= 9 %}
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModifyTickerModal">
   Modify Ticker
 </button>
@@ -130,7 +136,7 @@
 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#DeleteCoalitionModal">
   Delete Coaliton
 </button>
-
+{% endif %}
 
 <div class="modal fade" id="DeleteCoalitionModal" tabindex="-1" role="dialog" aria-labelledby="DeleteCoalitionModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">

@@ -28,7 +28,9 @@
     </div>
     <input type="text" id="nameInput" onkeyup="mySearchFunction()" placeholder="Search for name...">
   </div>
+  {% if clearance_level >= 9 %}
   <a class="btn btn-success" role="button" href="new">New</a>
+  {% endif %}
 </div>
 <br>
 <table id="coalitionList" class="table table-striped table-bordered table-sm table-hover" cellspacing="0" width="100%">

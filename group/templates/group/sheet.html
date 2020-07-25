@@ -32,11 +32,13 @@
       <h6 class="card-subtitle">Created:</h6> {{ group.created_on }}
       <h6 class="card-subtitle">Updated:</h6> {{ group.updated_on }}
     </div>
+    {% if clearance_level >= 9 %}
     <div class="card-footer">
       <a href="/group/{{ group.group_id }}/delete" class="stretched-link text-danger">
         Delete this group<button class="btn"><i class="fa fa-trash text-danger"></i></button>
       </a>
     </div>
+    {% endif %}
   </div>
 
   <div class="card">
@@ -49,19 +51,22 @@
           {% for member in group.members %}
           <tr style="position:relative">
             <td>{{ member }}</td>
+            {% if clearance_level >= 9 %}
             <td style="position:relative; border-left: 3px solid #e9ecef;">
               <button class="btn stretched-link" id="ButtonDeleteMember" data-toggle="modal" data-target="#ModalDeleteMember" data-member="{{ member }}">
                   <i class="fa fa-trash text-danger"></i>
               </button>
             </td>
+            {% endif %}
           </tr>
           {% endfor %}   
         </tbody>
       </table>
-
+      {% if clearance_level >= 9 %}
       <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAddMember">
         Add Member
       </button>
+      {% endif %}
     </div>
   </div>
 </div>
