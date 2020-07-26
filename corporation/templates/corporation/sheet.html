@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% if invalid_refresh_token.status_code == 200 %}
+    <h2>Invalid refresh token:</h2>
+    <ul>
+    {% for user in invalid_refresh_token %}
+      <li>{{ user.name }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if no_refresh_token.status_code == 200 %}
+    <h2>No refresh token:</h2>
+    <ul>
+    {% for user in no_refresh_token.json %}
+      <li>{{ user.name }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if valid_refresh_token.status_code == 200 %}
+    <h2>Valid refresh token:</h2>
+    <ul>
+    {% for user in valid_refresh_token.json %}
+      <li><a href="{% url 'character-sheet' user.id %}">{{ user.name }}</a></li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}
