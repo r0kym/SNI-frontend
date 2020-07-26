@@ -23,8 +23,8 @@
   <tbody>
     {% for character in character_list %}
     <tr>
-      <td>
-        <a href="{{ character.character_id }}">{{ character.character_name }}</a>
+      <td class="clickable" onclick="window.location='{{ character.character_id }}'">
+       <a href="{{ character.character_id }}">{{ character.character_name }}</a>
  	    </td>
     </tr>
     {% endfor %}
