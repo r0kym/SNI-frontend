@@ -8,7 +8,7 @@ def render_error(request):
         raise PermissionDenied
     elif request.status_code == 401:
         try:
-            del request.session['user_token']
+            return redirect("logout")
         except KeyError:
             pass
 
