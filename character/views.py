@@ -46,17 +46,12 @@ def sheet(request, character_id):
     Will display the main page for accessing charachter informations
     """
 
-    #Get data from SNI backend
-    url = f"{GLOBAL_URL}/{character_id}"
-    request_sni = requests.get(url, headers=global_headers(request))
-    if request_sni.status_code != 200:
-        return render_error(request_sni)
-    print(request_sni.json())
-
     # Get data from ESI
     request_name = esi.get_character_information(character_id)
     if request_name.status_code != 200:
         return render_error(request_name)
+
+    character = request_name.json()
 
     corp_history = esi.get_corporation_history(character_id).json()
     if len(corp_history) > CORPORATION_HISTORY_LIMIT:
@@ -79,9 +74,9 @@ def sheet(request, character_id):
         corp["start_date"] = f"{start_date.day}/{start_date.month}/{start_date.year} , {start_date.hour}:{start_date.minute}"
 
     return render(request, 'character/sheet.html', {
-        "character": request_name.json(),
-        "character_sni": request_sni.json(),
         "character_id": character_id,
+        "character_name": character["name"],
+        "character": character,
         "corp_history": corp_history,
         "shortend_corp_hist": shortend_corp_hist,
         "clearance_level": get_clearance_level(request)
@@ -98,11 +93,48 @@ def sni(request, character_id):
     request_sni = requests.get(url, headers=global_headers(request))
     if request_sni.status_code != 200:
         return render_error(request_sni)
-    print(request_sni.json())
+    
+    character = request_sni.json()
+
+    # Get corporation details
+    if (character["corporation"] != 0):
+        corp_id = character["corporation"]
+        try:
+            corp_name = CorporationName.objects.get(corporation_id=corp_id).corporation_name
+        except CorporationName.DoesNotExist:
+            corp_name_request = esi.post_universe_names(corp_id)
+            corp_name = corp_name_request.json()[0]["name"]
+            db_entry = CorporationName(corporation_id=corp_id, corporation_name=corp_name)
+            db_entry.save()
+        
+        character["corporation"] = corp_name
+    else:
+        character["corporation"] = ""
+
+    # Get alliance details
+    if (character["alliance"] != 0):
+        alliance_name_request = esi.post_universe_names(character["alliance"])
+        character["alliance"] = alliance_name_request.json()[0]["name"]
+    else:
+        character["alliance"] = ""
+
+    # Get coalition details
+    if character["coalitions"]:
+        resolved_coalition = list()
+        for coalition in character["coalitions"]:
+            url_coalition = f"{SNI_URL}coalition/{coalition}"
+            request_coalition = requests.get(url_coalition, headers=global_headers(request))
+            resolved_coalition.append(request_coalition.json()["coalition_name"])
+
+            #character["coalitions"][coalition] = request_coalition.json()["coalition_name"]
+        character["coalitions"] = resolved_coalition
+    else:
+        character["coalitions"] = ""
 
     return render(request, 'character/sni.html', {
-        "character_sni": request_sni.json(),
-        "character_id": character_id
+        "character_id": character_id,
+        "character_name": character["character_name"],
+        "character": character,
     })
 
 @check_tokens()

@@ -1,7 +1,7 @@
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="{% url 'character-sheet' character_id %}"><img src="https://images.evetech.net/characters/{{ character_id }}/portrait?size=32" alt="character_img" class="rounded-circle z-depth-0"> {{ character.name }}</a>
+  <a class="navbar-brand" href="{% url 'character-sheet' character_id %}"><img src="https://images.evetech.net/characters/{{ character_id }}/portrait?size=32" alt="character_img" class="rounded-circle z-depth-0"> {{ character_name }}</a>
 
   <div class="collapse navbar-collapse" id="characternavbar">
     <ul class="navbar-nav mr-auto">

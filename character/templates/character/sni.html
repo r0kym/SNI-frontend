@@ -3,6 +3,99 @@
 {% block content %}
 {% include "character/navbar.html" %}
 
-SNI informations
+<div class="card-columns">
+  <div class="card">
+    <div class="card-header">
+      Tickered name
+    </div>
+    <div class="card-body">
+      {{ character.tickered_name }}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      Authorized to login
+    </div>
+    <div class="card-body">
+      {{ character.authorized_to_login }}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      Corporation CEO
+    </div>
+    <div class="card-body">
+      {{ character.is_ceo_of_corporation }}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      Alliance CEO
+    </div>
+    <div class="card-body">
+      {{ character.is_ceo_of_alliance }}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      Clearance Level
+    </div>
+    <div class="card-body">
+      {{ character.clearance_level }}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      Corporation
+    </div>
+    <div class="card-body">
+      {{ character.corporation }}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      Alliance
+    </div>
+    <div class="card-body">
+      {{ character.alliance }}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      Coalitions
+    </div>
+    <div>
+      <ul class="list-group list-group-flush">
+        {% for coalition in character.coalitions %}
+        <li class="list-group-item">{{ coalition }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      Curent ESI Scopes
+    </div>
+    <div>
+      <ul class="list-group list-group-flush">
+        {% for available_scope in character.available_esi_scopes %}
+        <li class="list-group-item">{{ available_scope }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      Mandatory ESI Scopes
+    </div>
+    <div>
+      <ul class="list-group list-group-flush">
+        {% for mandatory_scope in character.cumulated_mandatory_esi_scopes %}
+        <li class="list-group-item">{{ mandatory_scope }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
