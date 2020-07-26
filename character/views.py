@@ -7,7 +7,7 @@ from character.models import CorporationName
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 import SNI.esi as esi
 from SNI.check import check_tokens
-from SNI.lib import global_headers
+from SNI.lib import global_headers, get_clearance_level
 
 import datetime
 import requests
@@ -46,6 +46,14 @@ def sheet(request, character_id):
     Will display the main page for accessing charachter informations
     """
 
+    #Get data from SNI backend
+    url = f"{GLOBAL_URL}/{character_id}"
+    request_sni = requests.get(url, headers=global_headers(request))
+    if request_sni.status_code != 200:
+        return render_error(request_sni)
+    print(request_sni.json())
+
+    # Get data from ESI
     request_name = esi.get_character_information(character_id)
     if request_name.status_code != 200:
         return render_error(request_name)
@@ -72,9 +80,29 @@ def sheet(request, character_id):
 
     return render(request, 'character/sheet.html', {
         "character": request_name.json(),
+        "character_sni": request_sni.json(),
         "character_id": character_id,
         "corp_history": corp_history,
         "shortend_corp_hist": shortend_corp_hist,
+        "clearance_level": get_clearance_level(request)
+    })
+
+@check_tokens()
+def sni(request, character_id):
+    """
+    Will display the SNI details for a character
+    """
+
+    #Get data from SNI backend
+    url = f"{GLOBAL_URL}/{character_id}"
+    request_sni = requests.get(url, headers=global_headers(request))
+    if request_sni.status_code != 200:
+        return render_error(request_sni)
+    print(request_sni.json())
+
+    return render(request, 'character/sni.html', {
+        "character_sni": request_sni.json(),
+        "character_id": character_id
     })
 
 @check_tokens()
