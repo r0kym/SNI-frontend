@@ -32,8 +32,10 @@ def home(request):
 
     character_list = request_characters.json()
 
-    if "root" in character_list:
-        character_list.remove("root")
+    # Remove root from the list as it is not a truly valid character
+    root = next((item for item in character_list if item["character_name"] == "root"), None)
+    if root != None:
+        character_list.remove(root)
 
     return render(request, 'character/home.html', {"character_list": character_list})
 
