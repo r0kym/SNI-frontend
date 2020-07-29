@@ -128,7 +128,7 @@ def delete(request, coalition_id):
     if request_coalition.status_code != 200:
         return render_error(request_coalition)
 
-    request_delete_coalition = requests.delete(url, headers=headers)
+    request_delete_coalition = requests.delete(url, headers=global_headers(request))
 
     if request_delete_coalition.status_code != 200:
         return render_error(request_delete_coalition)
