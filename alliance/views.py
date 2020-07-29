@@ -39,6 +39,6 @@ def sheet(request, ally_id):
     if request_track.status_code != 200:
         return render_error(request_track)
 
-    return render(request, "tracking.html", {
+    return render(request, "alliance/tracking.html", {
         "tracking": request_track.json(),
     })
