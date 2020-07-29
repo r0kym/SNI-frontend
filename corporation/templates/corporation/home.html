@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-List corporations
+  <ul>
+  {% for corporation in corporations %}
+    <li>
+      <a href="{% url 'corporation-sheet' corporation.corporation_id %}">
+        <img src="https://images.evetech.net/corporations/{{ corporation.corporation_id }}/logo?size=64" alt="{{ corporation.corporation_name }} logo">
+        {{ corporation.corporation_name }}
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
 {% endblock %}

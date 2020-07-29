@@ -17,12 +17,13 @@ def home(request):
     Corporation home
     """
 
-    # request_corp = requests.get(GLOBAL_URL, headers=global_headers(request))
-    # if request_corp.status_code != 200:
-    #     render_error(request_corp)
-    # not tested yet
+    request_corp = requests.get(GLOBAL_URL, headers=global_headers(request))
+    if request_corp.status_code != 200:
+        render_error(request_corp)
 
-    return render(request, "corporation/home.html")
+    return render(request, "corporation/home.html", {
+        "corporations": request_corp.json(),
+    })
 
 @check_tokens(1)
 def sheet(request, corp_id):
