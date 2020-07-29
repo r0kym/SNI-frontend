@@ -1,29 +1,35 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% if invalid_refresh_token.status_code == 200 %}
+  {% if tracking.invalid_refresh_token %}
     <h2>Invalid refresh token:</h2>
     <ul>
-    {% for user in invalid_refresh_token %}
-      <li>{{ user.name }}</li>
+    {% for user in tracking.invalid_refresh_token %}
+      <li><a href="{% url 'character-sheet' user.character_id %}">
+        {{ user.character_name  }}
+      </a></li>
     {% endfor %}
     </ul>
   {% endif %}
 
-  {% if no_refresh_token.status_code == 200 %}
+  {% if tracking.no_refresh_token %}
     <h2>No refresh token:</h2>
     <ul>
-    {% for user in no_refresh_token.json %}
-      <li>{{ user.name }}</li>
+    {% for user in tracking.no_refresh_token %}
+      <li><a href="{% url 'character-sheet' user.character_id %}">
+        {{ user.character_name  }}
+      </a></li>
     {% endfor %}
     </ul>
   {% endif %}
 
-  {% if valid_refresh_token.status_code == 200 %}
+  {% if tracking.valid_refresh_token %}
     <h2>Valid refresh token:</h2>
     <ul>
-    {% for user in valid_refresh_token.json %}
-      <li><a href="{% url 'character-sheet' user.id %}">{{ user.name }}</a></li>
+    {% for user in tracking.valid_refresh_token %}
+      <li><a href="{% url 'character-sheet' user.character_id %}">
+        {{ user.character_name  }}
+      </a></li>
     {% endfor %}
     </ul>
   {% endif %}

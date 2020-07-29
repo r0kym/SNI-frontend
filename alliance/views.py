@@ -38,7 +38,5 @@ def sheet(request, ally_id):
         return render_error(request_track)
 
     return render(request, "alliance/sheet.html", {
-        "invalid_refresh_token": post_universe_names(*request_track.json()["invalid_refresh_token"]),
-        "no_refresh_token": post_universe_names(*request_track.json()["no_refresh_token"]),
-        "valid_refresh_token": post_universe_names(*request_track.json()["valid_refresh_token"]),
+        "tracking": request_track.json(),
     })
