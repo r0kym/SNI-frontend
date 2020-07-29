@@ -37,8 +37,6 @@ def sheet(request, corp_id):
     if request_track.status_code != 200:
         return render_error(request_track)
 
-    return render(request, "corporation/sheet.html", {
-        "invalid_refresh_token": post_universe_names(*request_track.json()["invalid_refresh_token"]),
-        "no_refresh_token": post_universe_names(*request_track.json()["no_refresh_token"]),
-        "valid_refresh_token": post_universe_names(*request_track.json()["valid_refresh_token"]),
+    return render(request, "tracking.html", {
+        "tracking": request_track.json(),
     })
