@@ -153,10 +153,16 @@ def add(request, coalition_id):
 
     if request_alliance_id.status_code != 200:
         return render_error(request_alliance_id)
-
-    data = "{\"add_members\": [\"" + str(request_alliance_id.json()["alliances"][0]["id"]) + "\"]}"
+    alliance_id = request_alliance_id.json()["alliances"][0]["id"]
+    data = "{\"add_members\": [\"" + str(alliance_id) + "\"]}"
 
     request_new = requests.put(url, headers=headers, data=data)
+
+    if request_new.status_code == 404:  # case when the alliance isn't know by the backend yet
+        request_fetch = requests.post(SNI_URL+f"alliance/{alliance_id}", headers=global_headers(request))
+        if request_fetch.status_code != 200:
+            return render_error(request_fetch)
+        request_new = requests.put(url, headers=headers, data=data)  # tries again to add the alliance
 
     if request_new.status_code != 200:
         return render_error(request_new)
