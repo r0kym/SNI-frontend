@@ -109,11 +109,7 @@ def create(request):
     if request_create_coalition.status_code != 201:
         return render_error(request_create_coalition)
 
-    return_url = reverse("coalition-home")
-    params = urlencode({"new_coa":request.GET.get("name")})
-    url = f"{return_url}?{params}"
-
-    return redirect(url)
+    return redirect("coalition-sheet", coalition_id=request_create_coalition.json()["coalition_id"])
 
 @check_tokens()
 def delete(request, coalition_id):

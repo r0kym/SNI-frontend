@@ -2,15 +2,6 @@
 
 {% block content %}
 
-{% if new_coalition != None %}
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-  Coalition <strong>{{ new_coalition }}</strong> successfully created. Time to fill it.
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-{% endif %}
-
 {% if deleted_coalition != None %}
 <div class="alert alert-success alert-dismissible fade show" role="alert">
   Coalition <strong>{{ deleted_coalition }}</strong> successfully deleted.
