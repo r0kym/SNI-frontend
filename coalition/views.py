@@ -255,3 +255,23 @@ def scopes(request, coalition_id):
     params = urlencode({"changed_scopes": "true"})
     return_url = reverse("coalition-home") + coalition_id + "?" + params
     return redirect(return_url)
+
+@check_tokens(9)
+def tracking(request, coalition_id):
+    """
+    Display the tracking of the coalition members
+    """
+
+    request_coa = requests.get(GLOBAL_URL+f"/{coalition_id}", headers=global_headers(request))
+    if request_coa.status_code != 200:
+        return render_error(request_coa)
+
+    url = GLOBAL_URL + f"/{coalition_id}/tracking"
+    request_track = requests.get(url, headers=global_headers(request))
+    if request_track.status_code != 200:
+        return render_error(request_track)
+
+    return render(request, "coalition/tracking.html", {
+        "coalition": request_coa.json(),
+        "tracking": request_track.json(),
+    })
