@@ -31,7 +31,6 @@ def home(request):
     return render_error(request_coalitions)
 
   coalition_list = request_coalitions.json()
-  print(coalition_list)
   coalition_dict = {}
 
   for coalition in coalition_list:
@@ -61,8 +60,6 @@ def sheet(request, coalition_id):
     request_coalition = requests.get(url, headers=global_headers(request))
     if request_coalition.status_code != 200:
         return render_error(request_coalition)
-
-    print(request_coalition.json())
 
     if len(request_coalition.json()["members"]) != 0:
         coalition_members = [int(i) for  i in request_coalition.json()["members"]]
@@ -109,17 +106,10 @@ def create(request):
 
     request_create_coalition = requests.post(GLOBAL_URL, headers=headers, data=data)
 
-    print(request_create_coalition)
-    print(request_create_coalition.json())
-
     if request_create_coalition.status_code != 201:
         return render_error(request_create_coalition)
 
-    return_url = reverse("coalition-home")
-    params = urlencode({"new_coa":request.GET.get("name")})
-    url = f"{return_url}?{params}"
-
-    return redirect(url)
+    return redirect("coalition-sheet", coalition_id=request_create_coalition.json()["coalition_id"])
 
 @check_tokens()
 def delete(request, coalition_id):
@@ -134,7 +124,7 @@ def delete(request, coalition_id):
     if request_coalition.status_code != 200:
         return render_error(request_coalition)
 
-    request_delete_coalition = requests.delete(url, headers=headers)
+    request_delete_coalition = requests.delete(url, headers=global_headers(request))
 
     if request_delete_coalition.status_code != 200:
         return render_error(request_delete_coalition)
@@ -159,16 +149,19 @@ def add(request, coalition_id):
 
     if request_alliance_id.status_code != 200:
         return render_error(request_alliance_id)
-
-    data = "{\"add_members\": [\"" + str(request_alliance_id.json()["alliances"][0]["id"]) + "\"]}"
+    alliance_id = request_alliance_id.json()["alliances"][0]["id"]
+    data = "{\"add_members\": [\"" + str(alliance_id) + "\"]}"
 
     request_new = requests.put(url, headers=headers, data=data)
 
+    if request_new.status_code == 404:  # case when the alliance isn't know by the backend yet
+        request_fetch = requests.post(SNI_URL+f"alliance/{alliance_id}", headers=global_headers(request))
+        if request_fetch.status_code != 200:
+            return render_error(request_fetch)
+        request_new = requests.put(url, headers=headers, data=data)  # tries again to add the alliance
+
     if request_new.status_code != 200:
         return render_error(request_new)
-
-    print(request_new.status_code)
-    print(request_new.json())
 
     params = urlencode({"new_ally": request.POST.get("alliance")})
     return_url = reverse("coalition-home") + coalition_id + "?" + params
@@ -192,9 +185,6 @@ def remove_alliance(request, coalition_id, alliance_id):
 
     if request_remove.status_code != 200:
         return render_error(request_remove)
-
-    print(request_remove.status_code)
-    print(request_remove.json())
 
     request_alliance_name = post_universe_names(alliance_id)
 
@@ -255,3 +245,23 @@ def scopes(request, coalition_id):
     params = urlencode({"changed_scopes": "true"})
     return_url = reverse("coalition-home") + coalition_id + "?" + params
     return redirect(return_url)
+
+@check_tokens(9)
+def tracking(request, coalition_id):
+    """
+    Display the tracking of the coalition members
+    """
+
+    request_coa = requests.get(GLOBAL_URL+f"/{coalition_id}", headers=global_headers(request))
+    if request_coa.status_code != 200:
+        return render_error(request_coa)
+
+    url = GLOBAL_URL + f"/{coalition_id}/tracking"
+    request_track = requests.get(url, headers=global_headers(request))
+    if request_track.status_code != 200:
+        return render_error(request_track)
+
+    return render(request, "coalition/tracking.html", {
+        "coalition": request_coa.json(),
+        "tracking": request_track.json(),
+    })

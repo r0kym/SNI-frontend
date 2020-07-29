@@ -37,6 +37,20 @@
           {% endif %}
               <a href="/character/"><span class="fa fa-user mr-3"></span>Characters</a>
           </li>
+          {% if "corporation" in route %}
+          <li class="active">
+          {% else %}
+          <li>
+          {% endif %}
+            <a href="/corporation/"><span class="fa fa-group mr-3"></span>Corporations</a>
+          </li>
+          {% if "alliance" in route %}
+          <li class="active">
+          {% else %}
+          <li>
+          {% endif %}
+            <a href="/alliance/"><span class="fa fa-group mr-3"></span>Alliances</a>
+          </li>
           {% if "coalition" in route %}
           <li class="active">
           {% else %}

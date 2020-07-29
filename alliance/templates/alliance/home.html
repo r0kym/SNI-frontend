@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <ul>
+  {% for alliance in alliances %}
+    <li>
+      <a href="{% url 'alliance-sheet' alliance.alliance_id %}">
+        <img src="https://images.evetech.net/alliances/{{ alliance.alliance_id }}/logo?size=64" alt="{{ alliance.alliance_name }} logo">
+        {{ alliance.alliance_name }}
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
+{% endblock %}

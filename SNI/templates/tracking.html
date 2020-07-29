@@ -1,0 +1,32 @@
+{% if tracking.invalid_refresh_token %}
+  <h2>Invalid refresh token:</h2>
+  <ul>
+  {% for user in tracking.invalid_refresh_token %}
+    <li><a href="{% url 'character-sheet' user.character_id %}">
+      {{ user.character_name  }}
+    </a></li>
+  {% endfor %}
+  </ul>
+{% endif %}
+
+{% if tracking.no_refresh_token %}
+  <h2>No refresh token:</h2>
+  <ul>
+  {% for user in tracking.no_refresh_token %}
+    <li><a href="{% url 'character-sheet' user.character_id %}">
+      {{ user.character_name  }}
+    </a></li>
+  {% endfor %}
+  </ul>
+{% endif %}
+
+{% if tracking.valid_refresh_token %}
+  <h2>Valid refresh token:</h2>
+  <ul>
+  {% for user in tracking.valid_refresh_token %}
+    <li><a href="{% url 'character-sheet' user.character_id %}">
+      {{ user.character_name  }}
+    </a></li>
+  {% endfor %}
+  </ul>
+{% endif %}

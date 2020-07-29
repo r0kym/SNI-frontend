@@ -20,8 +20,10 @@ urlpatterns = [
     path('admin/', include('admin.urls')),
     path('', include('homepage.urls')),
     path('character/', include('character.urls')),
-    path('group/', include('group.urls')),
+    path('corporation/', include('corporation.urls')),
+    path('alliance/', include('alliance.urls')),
     path('coalition/', include('coalition.urls')),
+    path('group/', include('group.urls')),
     path('teamspeak/', include('teamspeak.urls')),
     path('discord/', include('discord.urls')),
 ]

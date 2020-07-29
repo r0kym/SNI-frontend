@@ -37,21 +37,22 @@ python3 manage.py runserver
 ```
 
 # TODO:
-- [ ] check that the callback is working (should deploy a live version to do this)
 - [x] `character/[player_id]` will diplay basic informations about a character
-  - [ ] check if the character is registered and send 404 if he's not
+  - [x] check if the character is registered and send 404 if he's not
   - [ ] fetch additional information through the ESI on the character
 - [x] `character/` should display the list of characters registered
   - [x] add ways to order the list
-  - [ ] deny the list for those that doesn't have a certain clearence level? (or just diplay a part of them)
+  - [ ] deny the list for those that doesn't have a certain clearence level? (or just display a part of them)
+- [ ] `corporation` add corporation management
+  - [x] `tracking` trackong of the tokens of the corporation members
+  - [ ] `ESI` access a corporation ESI
 - [x] `groups` add a full group management
   - [ ] Allow for existing characters to be selected when adding members (auto-completion)
   - [ ] When adding a new group, display sheet page rather than going back to main list
 - [x] `coalitions` add a full coalition management
   - [ ] Allow for existing alliances to be selected when adding to coalition (auto-completion)
-  - [ ] When adding a new coalition, display sheet page rather than going back to main list
+  - [x] When adding a new coalition, display sheet page rather than going back to main list
 - [x] `teamspeak` add a full teamspeak management
-- [ ] `alliance` add alliance management
 
 # Web config:
 

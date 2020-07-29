@@ -1,0 +1,12 @@
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+  <b class="navbar-brand">{{ coalition.coalition_name }}</b>
+  <div class="collapse navbar-collapse" id="coalitionnavbar">
+    <ul class="navbar-nav mr-auto">
+        <li><a class="nav-link" href="{% url 'coalition-sheet' coalition.coalition_id %}">Management</a></li>
+        <li><a class="nav-link" href="{% url 'coalition-tracking' coalition.coalition_id %}">Tracking</a></li>
+    </ul>
+  </div>
+</nav>
