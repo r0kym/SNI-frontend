@@ -18,12 +18,14 @@ def home(request):
     Alliance home view
     """
 
-    # request_ally = requests.get(url, headers=global_headers(request))
-    # if request_ally.status_code != 200:
-    #     return render_error(request_ally)
-    # get /alliance not tested yet
+    request_ally = requests.get(GLOBAL_URL, headers=global_headers(request))
 
-    return render(request, "alliance/home.html")
+    if request_ally.status_code != 200:
+        return render_error(request_ally)
+
+    return render(request, "alliance/home.html", {
+        "alliances": request_ally.json(),
+    })
 
 @check_tokens(3)
 def sheet(request, ally_id):
