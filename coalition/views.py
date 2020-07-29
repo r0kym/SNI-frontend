@@ -31,7 +31,6 @@ def home(request):
     return render_error(request_coalitions)
 
   coalition_list = request_coalitions.json()
-  print(coalition_list)
   coalition_dict = {}
 
   for coalition in coalition_list:
@@ -61,8 +60,6 @@ def sheet(request, coalition_id):
     request_coalition = requests.get(url, headers=global_headers(request))
     if request_coalition.status_code != 200:
         return render_error(request_coalition)
-
-    print(request_coalition.json())
 
     if len(request_coalition.json()["members"]) != 0:
         coalition_members = [int(i) for  i in request_coalition.json()["members"]]
@@ -108,9 +105,6 @@ def create(request):
     data = "{\"coalition_name\":\"" + request.GET.get("name") + "\",\"ticker\":\"" + request.GET.get("ticker") + "\"}"
 
     request_create_coalition = requests.post(GLOBAL_URL, headers=headers, data=data)
-
-    print(request_create_coalition)
-    print(request_create_coalition.json())
 
     if request_create_coalition.status_code != 201:
         return render_error(request_create_coalition)
@@ -167,9 +161,6 @@ def add(request, coalition_id):
     if request_new.status_code != 200:
         return render_error(request_new)
 
-    print(request_new.status_code)
-    print(request_new.json())
-
     params = urlencode({"new_ally": request.POST.get("alliance")})
     return_url = reverse("coalition-home") + coalition_id + "?" + params
 
@@ -192,9 +183,6 @@ def remove_alliance(request, coalition_id, alliance_id):
 
     if request_remove.status_code != 200:
         return render_error(request_remove)
-
-    print(request_remove.status_code)
-    print(request_remove.json())
 
     request_alliance_name = post_universe_names(alliance_id)
 
