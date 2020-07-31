@@ -19,21 +19,19 @@
     </div>
   </div>
 
+  {% if location.status_code == 200 %}
   <div class="card">
-    <!--To do -->
     <div class="card-header text-dark">
-      Real time informations:
+      Last known location:
     </div>
     <div class="card-body">
-      <h6 class="card-subtitle">Current ship:</h6>
-        ship_name
-      <h6 class="card-subtitle">Current position</h6>
-        position
-    </div>
-    <div class="card-footer text-muted">
-      update time
-    </div>
+      <h6 class="card-subtitle">Ship type:</h6>
+        {{ location.json.0.ship_type_name }} called "{{ location.json.0.ship_name }}"
+      <h6 class="card-subtitle">System:</h6>
+        {{ location.json.0.solar_system_name }}
+    </div>    
   </div>
+  {% endif %}
 
   <div class="card">
     <div class="card-header text-dark">

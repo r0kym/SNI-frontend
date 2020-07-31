@@ -73,13 +73,17 @@ def sheet(request, character_id):
         start_date = datetime.datetime.strptime(corp["start_date"], "%Y-%m-%dT%H:%M:%S%z")
         corp["start_date"] = f"{start_date.day}/{start_date.month}/{start_date.year} , {start_date.hour}:{start_date.minute}"
 
+    url = SNI_URL + f"esi/history/characters/{character_id}/location"
+    request_locations = requests.get(url, headers=global_headers(request))
+
     return render(request, 'character/sheet.html', {
         "character_id": character_id,
         "character_name": character["name"],
         "character": character,
         "corp_history": corp_history,
         "shortend_corp_hist": shortend_corp_hist,
-        "clearance_level": get_clearance_level(request)
+        "clearance_level": get_clearance_level(request),
+        "location": request_locations,
     })
 
 @check_tokens()
@@ -93,7 +97,7 @@ def sni(request, character_id):
     request_sni = requests.get(url, headers=global_headers(request))
     if request_sni.status_code != 200:
         return render_error(request_sni)
-    
+
     character = request_sni.json()
 
     # Get corporation details
@@ -106,7 +110,7 @@ def sni(request, character_id):
             corp_name = corp_name_request.json()[0]["name"]
             db_entry = CorporationName(corporation_id=corp_id, corporation_name=corp_name)
             db_entry.save()
-        
+
         character["corporation"] = corp_name
     else:
         character["corporation"] = ""
