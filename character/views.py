@@ -74,8 +74,8 @@ def sheet(request, character_id):
         start_date = datetime.datetime.strptime(corp["start_date"], "%Y-%m-%dT%H:%M:%S%z")
         corp["start_date"] = f"{start_date.day}/{start_date.month}/{start_date.year} , {start_date.hour}:{start_date.minute}"
 
-    url = SNI_URL + f"esi/history/characters/{character_id}/location"
-    request_locations = requests.get(url, headers=global_headers(request))
+    url = HISTORY_URL + f"{character_id}/location/now"
+    request_location = requests.post(url, headers=global_headers(request))
 
     return render(request, 'character/sheet.html', {
         "character_id": character_id,
@@ -84,7 +84,7 @@ def sheet(request, character_id):
         "corp_history": corp_history,
         "shortend_corp_hist": shortend_corp_hist,
         "clearance_level": get_clearance_level(request),
-        "location": request_locations,
+        "location": request_location,
     })
 
 @check_tokens()

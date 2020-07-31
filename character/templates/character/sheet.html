@@ -22,14 +22,14 @@
   {% if location.status_code == 200 %}
   <div class="card">
     <div class="card-header text-dark">
-      Last known location:
+      Current location:
     </div>
     <div class="card-body">
       <h6 class="card-subtitle">Ship type:</h6>
-        {{ location.json.0.ship_type_name }} called "{{ location.json.0.ship_name }}"
+        {{ location.json.ship_type_name }} called "{{ location.json.ship_name }}"
       <h6 class="card-subtitle">System:</h6>
-        {{ location.json.0.solar_system_name }}
-    </div>    
+        {{ location.json.solar_system_name }}
+    </div>
   </div>
   {% endif %}
 
