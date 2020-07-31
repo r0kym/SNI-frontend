@@ -3,8 +3,12 @@
 {% block content %}
 {% include "character/navbar.html" %}
 
+<link href="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.css" rel="stylesheet">
+
+<script src="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.js"></script>
+
 <div class="table-responsive">
-<table class="table">
+<table id="LocationsTable" class="table" data-pagination="true" data-toggle="table">
   <thead>
     <tr>
       <th>Online</th>

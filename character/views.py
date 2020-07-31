@@ -179,7 +179,8 @@ def locations(request, character_id):
     """
 
     url = HISTORY_URL + f"{character_id}/location"
-    request_locations = requests.get(url, headers=global_headers(request))
+    headers = global_headers(request)
+    request_locations = requests.get(url, headers=headers)
     if request_locations.status_code != 200:
         return render_error(request_locations)
 
