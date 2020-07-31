@@ -17,6 +17,7 @@ from SNI.error import render_error
 CORPORATION_HISTORY_LIMIT = 15  # for not overloading the page when people went in way too much corporations
 
 GLOBAL_URL = SNI_URL + "user"
+HISTORY_URL = SNI_URL + "esi/history/characters/"
 
 
 @check_tokens()
@@ -169,6 +170,27 @@ def contracts(request, character_id):
     return render(request, 'character/contracts.html', {
         "character": request_name.json(),
         "character_id": character_id,
+    })
+
+@check_tokens()
+def locations(request, character_id):
+    """
+    Displays characters location history
+    """
+
+    url = HISTORY_URL + f"{character_id}/location"
+    request_locations = requests.get(url, headers=global_headers(request))
+    if request_locations.status_code != 200:
+        return render_error(request_locations)
+
+    locations = [(
+        request_locations.json()[i],
+        datetime.datetime.strptime(request_locations.json()[i]["timestamp"][:-6], "%Y-%m-%dT%H:%M:%S.").__str__()
+    ) for i in range(len(request_locations.json()))]
+
+    return render(request, "character/locations.html",{
+        "character_id": character_id,
+        "locations": locations,
     })
 
 @check_tokens()
