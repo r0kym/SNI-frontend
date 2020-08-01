@@ -53,8 +53,9 @@
     </div>
     <div class="card-body">
       <ul>
-        <li>List of</li>
-        <li>stations</li>
+        {% for clone in clone_list %}
+        <li>{{ clone }}</li>
+        {% endfor %}
       </ul>
     </div>
   </div>
