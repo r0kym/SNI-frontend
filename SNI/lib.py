@@ -1,5 +1,6 @@
 
 from utils import SNI_URL
+from SNI.error import render_error
 
 import requests
 
