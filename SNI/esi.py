@@ -134,13 +134,27 @@ def get_character_information(character_id):
 
     return response
 
-
 def get_corporation_history(character_id):
     """
     Retrieve the character's corporation histoy
     """
 
     url = BASE_URL + f"characters/{character_id}/corporationhistory?datasource=tranquility"
+
+    headers = {
+        "accept": "application/json"
+    }
+
+    response = requests.get(url, headers=headers)
+
+    return response
+
+def get_corporations_corporation_id(corporation_id):
+    """
+    Retrives corporation public informations
+    """
+
+    url = BASE_URL + f"corporations/{corporation_id}/?datasource=tranquility"
 
     headers = {
         "accept": "application/json"

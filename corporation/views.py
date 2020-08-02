@@ -1,9 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 
 from SNI.check import check_tokens
 from SNI.error import render_error
-from SNI.esi import post_universe_names
+from SNI.esi import post_universe_names, get_corporations_corporation_id
 from SNI.lib import global_headers
 from utils import SNI_URL
 
@@ -31,7 +30,20 @@ def sheet(request, corp_id):
     """
     Information sheet on a corporation
     """
-    return HttpResponse("Corp sheet")
+
+    request_corp = requests.get(GLOBAL_URL+f"/{corp_id}", headers=global_headers(request))
+    if request_corp.status_code != 200:
+        render_error(request_corp)
+
+    esi_request_corp = get_corporations_corporation_id(corp_id)
+    if esi_request_corp.status_code != 200:
+        render_error(esi_request_corp)
+
+    return render(request, "corporation/sheet.html", {
+        "corporation": request_corp.json(),
+        "esi": esi_request_corp.json(),
+        "corporation_id": corp_id
+    })
 
 @check_tokens(1)
 def tracking(request, corp_id):
