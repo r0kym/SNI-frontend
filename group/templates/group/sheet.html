@@ -28,7 +28,7 @@
     </div>
     <div class="card-body">
       <h6 class="card-subtitle">Description:</h6> {{ group.description }}
-      <h6 class="card-subtitle">Owner:</h6> {{ group.owner }}
+      <h6 class="card-subtitle">Owner:</h6> {{ group.owner.character_name }}
       <h6 class="card-subtitle">Created:</h6> {{ group.created_on }}
       <h6 class="card-subtitle">Updated:</h6> {{ group.updated_on }}
     </div>
@@ -50,10 +50,10 @@
         <tbody>
           {% for member in group.members %}
           <tr style="position:relative">
-            <td>{{ member }}</td>
+            <td>{{ member.character_name }}</td>
             {% if clearance_level >= 9 %}
             <td style="position:relative; border-left: 3px solid #e9ecef;">
-              <button class="btn stretched-link" id="ButtonDeleteMember" data-toggle="modal" data-target="#ModalDeleteMember" data-member="{{ member }}">
+              <button class="btn stretched-link" id="ButtonDeleteMember" data-toggle="modal" data-target="#ModalDeleteMember" data-member_id="{{ member.character_id }} data-member_name="{{ member.character_name }}">
                   <i class="fa fa-trash text-danger"></i>
               </button>
             </td>
@@ -120,11 +120,12 @@
   /* Function to assign data into the modal popup */
   $(document).on("click", "#ButtonDeleteMember", function () {
       // Extract info from data-* attributes
-      var member = $(this).data('member')
+      var id = $(this).data('member_id')
+      var name = $(this).data('member_name')
       
       // Update the modal's content
-      $("#ModalDeleteMemberName").text(member)
-      $("#ModalDeleteGrouplLink").attr("href", "{{ group.group_id }}/remove/"+member)
+      $("#ModalDeleteMemberName").text(name)
+      $("#ModalDeleteGrouplLink").attr("href", "{{ group.group_id }}/remove/"+id)
   })
 </script>
 

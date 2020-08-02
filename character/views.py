@@ -100,6 +100,7 @@ def sni(request, character_id):
         return render_error(request_sni)
 
     character = request_sni.json()
+    print(character)
 
     # Get corporation details
     if (character["corporation"] != 0):
@@ -111,30 +112,38 @@ def sni(request, character_id):
             corp_name = corp_name_request.json()[0]["name"]
             db_entry = CorporationName(corporation_id=corp_id, corporation_name=corp_name)
             db_entry.save()
-
-        character["corporation"] = corp_name
+        
+        character["corporation"] = {
+            "id": character["corporation"],
+            "name": corp_name
+        }
+        
     else:
-        character["corporation"] = ""
+        character["corporation"] = {"name": ""}
 
     # Get alliance details
     if (character["alliance"] != 0):
         alliance_name_request = esi.post_universe_names(character["alliance"])
-        character["alliance"] = alliance_name_request.json()[0]["name"]
+        character["alliance"] = {
+            "id": character["alliance"],
+            "name": alliance_name_request.json()[0]["name"]
+        }
     else:
-        character["alliance"] = ""
+        character["alliance"] = {"name": ""}
 
     # Get coalition details
+    resolved_coalition = list()
     if character["coalitions"]:
-        resolved_coalition = list()
         for coalition in character["coalitions"]:
             url_coalition = f"{SNI_URL}coalition/{coalition}"
             request_coalition = requests.get(url_coalition, headers=global_headers(request))
-            resolved_coalition.append(request_coalition.json()["coalition_name"])
+            resolved_coalition.append({
+                "id": coalition,
+                "name": request_coalition.json()["coalition_name"]
+            })
 
             #character["coalitions"][coalition] = request_coalition.json()["coalition_name"]
-        character["coalitions"] = resolved_coalition
-    else:
-        character["coalitions"] = ""
+    character["coalitions"] = resolved_coalition
 
     return render(request, 'character/sni.html', {
         "character_id": character_id,
