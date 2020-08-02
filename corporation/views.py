@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 from SNI.check import check_tokens
 from SNI.error import render_error
@@ -30,7 +31,13 @@ def sheet(request, corp_id):
     """
     Information sheet on a corporation
     """
+    return HttpResponse("Corp sheet")
 
+@check_tokens(1)
+def tracking(request, corp_id):
+    """
+    Tracking of the corp membres tokens
+    """
     url = GLOBAL_URL + f"/{corp_id}/tracking"
     request_track = requests.get(url, headers=global_headers(request))
 
