@@ -32,7 +32,13 @@ def sheet(request, ally_id):
     """
     Alliance sheet
     """
-    return render(request, "alliance/sheet.html")
+    request_alliance = requests.get(GLOBAL_URL+f"/{ally_id}", headers=global_headers(request))
+    if request_alliance.status_code != 200:
+        return render_error(request_alliance)
+
+    return render(request, "alliance/sheet.html",{
+        "alliance": request_alliance.json(),
+    })
 
 @check_tokens(3)
 def tracking(request, ally_id):
