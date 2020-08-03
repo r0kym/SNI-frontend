@@ -37,6 +37,7 @@ def sheet(request, ally_id):
         return render_error(request_alliance)
 
     return render(request, "alliance/sheet.html",{
+        "alliance_id": ally_id,
         "alliance": request_alliance.json(),
     })
 
@@ -54,4 +55,5 @@ def tracking(request, ally_id):
 
     return render(request, "alliance/tracking.html", {
         "tracking": request_track.json(),
+        "alliance_id": ally_id,
     })
