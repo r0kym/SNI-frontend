@@ -164,7 +164,7 @@ def add(request, coalition_id):
         return render_error(request_new)
 
     params = urlencode({"new_ally": request.POST.get("alliance")})
-    return_url = reverse("coalition-home") + coalition_id + "?" + params
+    return_url = reverse("coalition-home", args=[coalition_id]) + "?" + params
 
     return redirect(return_url)
 
@@ -194,7 +194,7 @@ def remove_alliance(request, coalition_id, alliance_id):
     alliance_name = request_alliance_name.json()[0]["name"]
 
     params = urlencode({"rem_ally": alliance_name})
-    return_url = reverse("coalition-home") + coalition_id + "?" + params
+    return_url = reverse("coalition-home", args=[coalition_id]) + "?" + params
 
     return redirect(return_url)
 
@@ -216,7 +216,7 @@ def ticker(request, coalition_id):
         return render_error(request_ticker)
 
     params = urlencode({"new_ticker": request.POST.get("ticker")})
-    return_url = reverse("coalition-home") + coalition_id + "?" + params
+    return_url = reverse("coalition-home", args=[coalition_id]) + "?" + params
     return redirect(return_url)
 
 @check_tokens()
@@ -243,7 +243,7 @@ def scopes(request, coalition_id):
         return render_error(request_change_scopes)
 
     params = urlencode({"changed_scopes": "true"})
-    return_url = reverse("coalition-home") + coalition_id + "?" + params
+    return_url = reverse("coalition-home", args=[coalition_id]) + "?" + params
     return redirect(return_url)
 
 @check_tokens(9)

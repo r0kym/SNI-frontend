@@ -92,5 +92,5 @@ def change_scopes(request, corp_id):
         return render_error(request_change)
 
     params = urlencode({"changed_scopes": "true"})
-    return_url = reverse("corporation-home") + str(corp_id) + "?" + params
+    return_url = reverse("corporation-home", args=[corp_id]) + "?" + params
     return redirect(return_url)

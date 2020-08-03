@@ -86,5 +86,5 @@ def change_scopes(request, ally_id):
         return render_error(request_change)
 
     params = urlencode({"changed_scopes": "true"})
-    return_url = reverse("alliance-home") + str(ally_id) + "?" + params
+    return_url = reverse("alliance-sheet", args=[ally_id]) + "?" + params
     return redirect(return_url)
