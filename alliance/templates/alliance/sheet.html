@@ -1,8 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% include "alliance/navbar.html" %}
 
+{% if changed_scopes == "true" %}
+<div class="alert alert-success alert-dissmissible fade show" role="alert">
+  Scopes successfully eddited
+  <button type="button" class="close" data-dissmiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
+{% include "alliance/navbar.html" %}
+<br>
 <div class="row row-cols-1 row-cols-md-3">
   <div class="col mb-4">
     <div class="card">
@@ -18,6 +28,70 @@
       </div>
     </div>
   </div>
+  <div class="col mb-4">
+    <div class="col mb-2">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModifyAllyScopes">
+        Modify alliance scopes
+      </button>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        Alliance specific scopes:
+      </div>
+      <div class="card-body">
+        <ul>
+          {% for scope in alliance.mandatory_esi_scopes %}
+            <li>{{ scope }}</li>
+          {% empty %}
+            <li>No alliance specific scope</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col mb-4">
+    <div class="card">
+      <div class="card-header">
+        Cumulated scopes:
+      </div>
+      <div class="card-body">
+        <ul>
+          {% for scope in alliance.cumulated_mandatory_esi_scopes %}
+            <li>{{ scope }}</li>
+          {% empty %}
+            <li>No scopes required</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>
 
+<form class="ModifyAllyScopes" action="{% url 'alliance-change-scopes' alliance_id %}" method="post">{% csrf_token %}
+  <div class="modal fade" id="ModifyAllyScopes" tabindex="-1" role="dialog" aria-labelledby="ModifyAllyScopesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ModifyAllyScopes">Select scopes</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {% for scope in scopes %}
+            <div class="ManageScopes">
+              <div class="checkbox">
+                <label><input type="checkbox" name="{{ scope }}" value=""{% if scope in alliance.mandatory_esi_scopes %} checked {% endif %}> {{ scope }}</label>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" name="button" class="btn btn-success">Apply selection</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
 {% endblock %}
