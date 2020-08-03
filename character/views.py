@@ -17,6 +17,7 @@ from SNI.error import render_error
 CORPORATION_HISTORY_LIMIT = 15  # for not overloading the page when people went in way too much corporations
 
 GLOBAL_URL = SNI_URL + "user"
+HISTORY_URL = SNI_URL + "esi/history/characters/"
 
 
 @check_tokens()
@@ -73,13 +74,17 @@ def sheet(request, character_id):
         start_date = datetime.datetime.strptime(corp["start_date"], "%Y-%m-%dT%H:%M:%S%z")
         corp["start_date"] = f"{start_date.day}/{start_date.month}/{start_date.year} , {start_date.hour}:{start_date.minute}"
 
+    url = HISTORY_URL + f"{character_id}/location/now"
+    request_location = requests.post(url, headers=global_headers(request))
+
     return render(request, 'character/sheet.html', {
         "character_id": character_id,
         "character_name": character["name"],
         "character": character,
         "corp_history": corp_history,
         "shortend_corp_hist": shortend_corp_hist,
-        "clearance_level": get_clearance_level(request)
+        "clearance_level": get_clearance_level(request),
+        "location": request_location,
     })
 
 @check_tokens()
@@ -93,7 +98,7 @@ def sni(request, character_id):
     request_sni = requests.get(url, headers=global_headers(request))
     if request_sni.status_code != 200:
         return render_error(request_sni)
-    
+
     character = request_sni.json()
     print(character)
 
@@ -112,6 +117,7 @@ def sni(request, character_id):
             "id": character["corporation"],
             "name": corp_name
         }
+        
     else:
         character["corporation"] = {"name": ""}
 
@@ -173,6 +179,28 @@ def contracts(request, character_id):
     return render(request, 'character/contracts.html', {
         "character": request_name.json(),
         "character_id": character_id,
+    })
+
+@check_tokens()
+def locations(request, character_id):
+    """
+    Displays characters location history
+    """
+
+    url = HISTORY_URL + f"{character_id}/location"
+    headers = global_headers(request)
+    request_locations = requests.get(url, headers=headers)
+    if request_locations.status_code != 200:
+        return render_error(request_locations)
+
+    locations = [(
+        request_locations.json()[i],
+        datetime.datetime.strptime(request_locations.json()[i]["timestamp"][:-6], "%Y-%m-%dT%H:%M:%S.").__str__()
+    ) for i in range(len(request_locations.json()))]
+
+    return render(request, "character/locations.html",{
+        "character_id": character_id,
+        "locations": locations,
     })
 
 @check_tokens()

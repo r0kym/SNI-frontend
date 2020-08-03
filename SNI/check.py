@@ -34,7 +34,7 @@ def check_tokens(min_clearance=0):
                     if request_user.status_code == 401:
                         return redirect('logout')
                     elif request_user.json()["clearance_level"] < min_clearance:
-                        return redirect('no-premission')
+                        return redirect('no-permission')
                 return view(request, *args, **kwargs)
             return redirect("/")
         return inner
