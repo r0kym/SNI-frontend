@@ -75,7 +75,7 @@ def tracking(request, corp_id):
 @check_tokens(4)
 def change_scopes(request, corp_id):
     """
-    Changing corporation mandatory scopes
+    Changing corporation mandatory scopes with a specific list
     """
 
     scopes = []
@@ -87,6 +87,36 @@ def change_scopes(request, corp_id):
         data = "{\"mandatory_esi_scopes\": [\"" + "\",\"".join(scopes) + "\"]}"
     else:
         data = "{\"mandatory_esi_scopes\": []}"
+    request_change = requests.put(GLOBAL_URL+f"/{corp_id}", headers=global_headers(request, {"Content-type":"application/json"}), data=data)
+    if request_change.status_code != 200:
+        return render_error(request_change)
+
+    params = urlencode({"changed_scopes": "true"})
+    return_url = reverse("corporation-sheet", args=[corp_id]) + "?" + params
+    return redirect(return_url)
+
+@check_tokens(4)
+def change_scopes_all(request, corp_id):
+    """
+    Changing corporation mandatory scopes by applying them all
+    """
+
+    data = "{\"mandatory_esi_scopes\": [\"" + "\",\"".join(ESI_SCOPES) + "\"]}"
+    request_change = requests.put(GLOBAL_URL+f"/{corp_id}", headers=global_headers(request, {"Content-type":"application/json"}), data=data)
+    if request_change.status_code != 200:
+        return render_error(request_change)
+
+    params = urlencode({"changed_scopes": "true"})
+    return_url = reverse("corporation-sheet", args=[corp_id]) + "?" + params
+    return redirect(return_url)
+
+@check_tokens(4)
+def change_scopes_none(request, corp_id):
+    """
+    Changing corporation mandatory scopes by removing them all
+    """
+
+    data = "{\"mandatory_esi_scopes\": []}"
     request_change = requests.put(GLOBAL_URL+f"/{corp_id}", headers=global_headers(request, {"Content-type":"application/json"}), data=data)
     if request_change.status_code != 200:
         return render_error(request_change)

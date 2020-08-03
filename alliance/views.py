@@ -69,7 +69,7 @@ def tracking(request, ally_id):
 @check_tokens(4)
 def change_scopes(request, ally_id):
     """
-    Changing alliance mandatory scopes
+    Changing alliance mandatory scopes with a specific list
     """
 
     scopes = []
@@ -81,6 +81,36 @@ def change_scopes(request, ally_id):
         data = "{\"mandatory_esi_scopes\": [\"" + "\",\"".join(scopes) + "\"]}"
     else:
         data = "{\"mandatory_esi_scopes\": []}"
+    request_change = requests.put(GLOBAL_URL+f"/{ally_id}", headers=global_headers(request, {"Content-type":"application/json"}), data=data)
+    if request_change.status_code != 200:
+        return render_error(request_change)
+
+    params = urlencode({"changed_scopes": "true"})
+    return_url = reverse("alliance-sheet", args=[ally_id]) + "?" + params
+    return redirect(return_url)
+
+@check_tokens(4)
+def change_scopes_all(request, ally_id):
+    """
+    Changing alliance mandatory scopes by applying them all
+    """
+
+    data = "{\"mandatory_esi_scopes\": [\"" + "\",\"".join(ESI_SCOPES) + "\"]}"
+    request_change = requests.put(GLOBAL_URL+f"/{ally_id}", headers=global_headers(request, {"Content-type":"application/json"}), data=data)
+    if request_change.status_code != 200:
+        return render_error(request_change)
+
+    params = urlencode({"changed_scopes": "true"})
+    return_url = reverse("alliance-sheet", args=[ally_id]) + "?" + params
+    return redirect(return_url)
+
+@check_tokens(4)
+def change_scopes_none(request, ally_id):
+    """
+    Changing alliance mandatory scopes by removing them all
+    """
+
+    data = "{\"mandatory_esi_scopes\": []}"
     request_change = requests.put(GLOBAL_URL+f"/{ally_id}", headers=global_headers(request, {"Content-type":"application/json"}), data=data)
     if request_change.status_code != 200:
         return render_error(request_change)

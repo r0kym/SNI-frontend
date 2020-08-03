@@ -222,7 +222,7 @@ def ticker(request, coalition_id):
 @check_tokens()
 def scopes(request, coalition_id):
     """
-    Update coalition required scopes
+    Update coalition required scopes with a specific set of scopes
     """
 
     scopes = []
@@ -232,13 +232,44 @@ def scopes(request, coalition_id):
 
     url = f"{GLOBAL_URL}/{coalition_id}"
 
-    headers = global_headers(request)
-    headers.update({"Content-type": "application/json"})
+    headers = global_headers(request, {"Content-type": "application/json"})
 
     data = "{\"mandatory_esi_scopes\": [\"" + "\",\"".join(scopes) + "\"]}"
 
     request_change_scopes = requests.put(url, headers=headers, data=data)
 
+    if request_change_scopes.status_code != 200:
+        return render_error(request_change_scopes)
+
+    params = urlencode({"changed_scopes": "true"})
+    return_url = reverse("coalition-sheet", args=[coalition_id]) + "?" + params
+    return redirect(return_url)
+
+@check_tokens()
+def scopes_all(request, coalition_id):
+    """
+    Update coalition required scopes with all scopes
+    """
+
+    headers = global_headers(request, {"Content-type": "application/json"})
+    data = "{\"mandatory_esi_scopes\": [\"" + "\",\"".join(ESI_SCOPES) + "\"]}"
+    request_change_scopes = requests.put(GLOBAL_URL+f"/{coalition_id}", headers=headers, data=data)
+    if request_change_scopes.status_code != 200:
+        return render_error(request_change_scopes)
+
+    params = urlencode({"changed_scopes": "true"})
+    return_url = reverse("coalition-sheet", args=[coalition_id]) + "?" + params
+    return redirect(return_url)
+
+@check_tokens()
+def scopes_none(request, coalition_id):
+    """
+    Update coalition required scopes by removing them all
+    """
+
+    headers = global_headers(request, {"Content-type": "application/json"})
+    data = "{\"mandatory_esi_scopes\": []}"
+    request_change_scopes = requests.put(GLOBAL_URL+f"/{coalition_id}", headers=headers, data=data)
     if request_change_scopes.status_code != 200:
         return render_error(request_change_scopes)
 
