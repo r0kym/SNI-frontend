@@ -17,7 +17,7 @@
 Login with this username: <b>{{ teamspeak_auth.challenge_nickname }}</b><br/>
 Once you logged in, click here to complete the process<br/>
 <div class="text-center"><div id="countdown"></div>
-<progress value="0" max="59" id="progressBar" class="w-75"></progress>
+<progress value="0" max="119" id="progressBar" class="w-75"></progress>
 <br><br>
 <div class="row">
     
@@ -39,7 +39,7 @@ Once you logged in, click here to complete the process<br/>
 
 
 
-<script>var timeleft = 60;
+<script>var timeleft = 120;
 var downloadTimer = setInterval(function(){
   if(timeleft <= 0){
     clearInterval(downloadTimer);
@@ -49,11 +49,11 @@ var downloadTimer = setInterval(function(){
     document.getElementById("processValidation").setAttribute("disabled","");
   }
   else {
-    if(timeleft <= 20 && timeleft > 0 ){
+    if(timeleft <= 40 && timeleft > 0 ){
       document.getElementById("countdown").classList.remove("text-warning");
     document.getElementById("countdown").classList.add("text-danger");
     }
-    if(timeleft <= 40 && timeleft > 20 ){
+    if(timeleft <= 80 && timeleft > 40 ){
     document.getElementById("countdown").classList.add("text-warning");
   }
     document.getElementById("countdown").innerHTML = timeleft + " seconds remaining to complete the process";
@@ -61,12 +61,12 @@ var downloadTimer = setInterval(function(){
   timeleft -= 1;
 }, 1000);
 
-var timeleftProgress = 60;
+var timeleftProgress = 120;
 var downloadTimer = setInterval(function(){
   if(timeleftProgress <= 0){
     clearInterval(downloadTimer);
   }
-  document.getElementById("progressBar").value = 60 - timeleftProgress;
+  document.getElementById("progressBar").value = 120 - timeleftProgress;
   timeleftProgress -= 1;
 }, 1000);
 </script>
