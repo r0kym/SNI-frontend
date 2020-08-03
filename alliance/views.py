@@ -32,6 +32,13 @@ def sheet(request, ally_id):
     """
     Alliance sheet
     """
+    return render(request, "alliance/sheet.html")
+
+@check_tokens(3)
+def tracking(request, ally_id):
+    """
+    Alliance tracking
+    """
 
     url = GLOBAL_URL+f"/{ally_id}/tracking"
     request_track = requests.get(url, headers=global_headers(request))
