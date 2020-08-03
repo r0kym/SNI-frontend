@@ -219,6 +219,8 @@
           </button>
         </div>
         <div class="modal-body">
+          <a href="{% url 'coalition-scopes-all' coalition.coalition_id %}" class="btn btn-info">Select all</a>
+          <a href="{% url 'coalition-scopes-none' coalition.coalition_id %}" class="btn btn-info">Remove all</a>
           {% for scope in scopes %}
             <div class="ManageScopes">
               <div class="checkbox">

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if changed_scopes == "true" %}
+<div class="alert alert-success alert-dissmissible fade show" role="alert">
+  Scopes successfully eddited
+  <button type="button" class="close" data-dissmiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
+{% include "corporation/navbar.html" %}
+
+<div class="row row-cols-1 row-cols-md-3">
+  <div class="col mb-4">
+    <div class="card">
+      <div class="card-header">
+        Basic informations:
+      </div>
+      <div class="card-body">
+        <ul>
+          <li><h6 class="card-title">Corporation CEO: <a href="{% url 'character-sheet' corporation.ceo_character_id %}">{{ corporation.ceo_character_name }}</a></h6></li>
+          <li><b>Ticker:</b>{{ corpoation.ticker }}</li>
+          <li><b>Tax rate:</b> {{ esi.tax_rate }}% <br></li>
+          <li><b>Member count:</b> {{ esi.member_count }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% if corporation.alliance_id %}
+  <div class="col mb-4">
+    <div class="card">
+      <div class="card-header">
+        Alliance:
+      </div>
+      <div class="card-body">
+        <ul>
+          <b class="card-title">Member of: </b><a href="{% url 'alliance-sheet' corporation.alliance_id %}">{{ corporation.alliance_name }}</a>
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <div class="col mb-4">
+    <div class="col mb-2">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModifyCorpScopes">
+        Modify corproation scopes
+      </button>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        Corporation specific scopes:
+      </div>
+      <div class="card-body">
+        <ul>
+          {% for scope in corporation.mandatory_esi_scopes %}
+            <li>{{ scope }}</li>
+          {% empty %}
+            <li>No corporation specific scope</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col mb-4">
+    <div class="card">
+      <div class="card-header">
+        Cumulated scopes:
+      </div>
+      <div class="card-body">
+        <ul>
+          {% for scope in corporation.cumulated_mandatory_esi_scopes %}
+            <li>{{ scope }}</li>
+          {% empty %}
+            <li>No scopes required</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form class="ModifyCorpScopes" action="{% url 'corpoation-change-scopes' corporation_id %}" method="post">{% csrf_token %}
+  <div class="modal fade" id="ModifyCorpScopes" tabindex="-1" role="dialog" aria-labelledby="ModifyCorpScopesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ModifyCorpScopes">Select scopes</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <a href="{% url 'corporation-change-scopes-all' corporation_id %}" class="btn btn-info">Select all</a>
+          <a href="{% url 'corporation-change-scopes-none' corporation_id %}" class="btn btn-info">Remove all</a>
+          {% for scope in scopes %}
+            <div class="ManageScopes">
+              <div class="checkbox">
+                <label><input type="checkbox" name="{{ scope }}" value=""{% if scope in corporation.mandatory_esi_scopes %} checked {% endif %}> {{ scope }}</label>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" name="button" class="btn btn-success">Apply selection</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}

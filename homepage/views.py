@@ -21,7 +21,25 @@ def home(request):
 
         return redirect(reverse("character-sheet", args=[request_token.json()["owner_character_id"]]))
 
-    return render(request, 'home.html', {})
+    return render(request, 'home.html', {
+        "scopes": ESI_SCOPES,
+    })
+
+def auth(request):
+    """
+    Ask SNI for a login url with eve online with a specific set of scopes and then redirect to it.
+    """
+
+    headers = {"Authorization": f"Bearer {SNI_DYNAMIC_TOKEN}"}
+    json = {"scopes": [scope for scope in request.POST if scope in ESI_SCOPES]}
+    r = requests.post(SNI_URL+"token/use/from/dyn", headers=headers, json=json)
+
+    if r.status_code != 200:
+        return render_error(r)
+
+    response = redirect(r.json()["login_url"])
+    response.set_cookie("state_code", r.json()["state_code"], max_age=300)  # the login must be made in 5 minutes
+    return response
 
 def auth_public(request):
     """
