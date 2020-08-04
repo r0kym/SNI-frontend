@@ -103,7 +103,7 @@ def sni(request, character_id):
     print(character)
 
     # Get corporation details
-    if (character["corporation"] != 0):
+    if character["corporation"]:
         corp_id = character["corporation"]
         try:
             corp_name = CorporationName.objects.get(corporation_id=corp_id).corporation_name
@@ -122,7 +122,7 @@ def sni(request, character_id):
         character["corporation"] = {"name": ""}
 
     # Get alliance details
-    if (character["alliance"] != 0):
+    if character["alliance"]:
         alliance_name_request = esi.post_universe_names(character["alliance"])
         character["alliance"] = {
             "id": character["alliance"],
