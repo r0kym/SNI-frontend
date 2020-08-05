@@ -72,7 +72,7 @@ def tracking(request, corp_id):
         "corporation_name": request_corp.json()["name"],
     })
 
-@check_tokens(4)
+@check_tokens(2)
 def change_scopes(request, corp_id):
     """
     Changing corporation mandatory scopes with a specific list
@@ -95,7 +95,7 @@ def change_scopes(request, corp_id):
     return_url = reverse("corporation-sheet", args=[corp_id]) + "?" + params
     return redirect(return_url)
 
-@check_tokens(4)
+@check_tokens(2)
 def change_scopes_all(request, corp_id):
     """
     Changing corporation mandatory scopes by applying them all
@@ -110,7 +110,7 @@ def change_scopes_all(request, corp_id):
     return_url = reverse("corporation-sheet", args=[corp_id]) + "?" + params
     return redirect(return_url)
 
-@check_tokens(4)
+@check_tokens(2)
 def change_scopes_none(request, corp_id):
     """
     Changing corporation mandatory scopes by removing them all
