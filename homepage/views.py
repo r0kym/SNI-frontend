@@ -97,3 +97,9 @@ def no_perm(request):
     General view when a user is trying something he shouldn't be able to do
     """
     return render(request, "403.html")
+
+def not_found(request):
+    """
+    General view when a user is trying to get an element not found
+    """
+    return render(request, "404.html")
