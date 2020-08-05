@@ -82,7 +82,7 @@ def sheet(request, coalition_id):
         "clearance_level": get_clearance_level(request)
     })
 
-@check_tokens()
+@check_tokens(9)
 def new(request):
     """
     Display tools to create a new coalition
@@ -90,7 +90,7 @@ def new(request):
 
     return render(request, 'coalition/new.html', {})
 
-@check_tokens()
+@check_tokens(9)
 def create(request):
     """
     Create a new coalition
@@ -111,7 +111,7 @@ def create(request):
 
     return redirect("coalition-sheet", coalition_id=request_create_coalition.json()["coalition_id"])
 
-@check_tokens()
+@check_tokens(9)
 def delete(request, coalition_id):
     """
     Deletes a coaliton
@@ -134,7 +134,7 @@ def delete(request, coalition_id):
 
     return redirect(return_url)
 
-@check_tokens()
+@check_tokens(9)
 def add(request, coalition_id):
     """
     Add an alliance to the coalition
@@ -168,7 +168,7 @@ def add(request, coalition_id):
 
     return redirect(return_url)
 
-@check_tokens()
+@check_tokens(9)
 def remove_alliance(request, coalition_id, alliance_id):
     """
     Removes an alliance from the coalition
@@ -198,7 +198,7 @@ def remove_alliance(request, coalition_id, alliance_id):
 
     return redirect(return_url)
 
-@check_tokens()
+@check_tokens(9)
 def ticker(request, coalition_id):
     """
     Change a coalition ticker
@@ -219,7 +219,7 @@ def ticker(request, coalition_id):
     return_url = reverse("coalition-sheet", args=[coalition_id]) + "?" + params
     return redirect(return_url)
 
-@check_tokens()
+@check_tokens(9)
 def scopes(request, coalition_id):
     """
     Update coalition required scopes with a specific set of scopes
@@ -245,7 +245,7 @@ def scopes(request, coalition_id):
     return_url = reverse("coalition-sheet", args=[coalition_id]) + "?" + params
     return redirect(return_url)
 
-@check_tokens()
+@check_tokens(9)
 def scopes_all(request, coalition_id):
     """
     Update coalition required scopes with all scopes
@@ -261,7 +261,7 @@ def scopes_all(request, coalition_id):
     return_url = reverse("coalition-sheet", args=[coalition_id]) + "?" + params
     return redirect(return_url)
 
-@check_tokens()
+@check_tokens(9)
 def scopes_none(request, coalition_id):
     """
     Update coalition required scopes by removing them all
