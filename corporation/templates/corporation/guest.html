@@ -14,8 +14,11 @@
 {% include "corporation/navbar.html" %}
 <br>
 <a class="btn btn-primary" href="{% url 'corporation-guest-new' corporation_id %}"><i class="fa fa-plus" aria-hidden="true"></i> Add a guest</a>
-<button type="button" class="btn btn-lg btn-info" data-toggle="popover" title="Guest codes" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>
-
+<span title="You can create an invitation code that you'll give to new members so that you have an access to their informations event if they are not in your corporation.
+Codes can only be used once and in the 24 hours following their creation.
+Guests will be listed underneath.">
+  <i class="fa fa-question-circle fa-fw fa-lg" aria-hidden="true"></i>
+</span>
 <hr>
 
 {% if guests %}
