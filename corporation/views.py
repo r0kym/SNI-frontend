@@ -167,7 +167,7 @@ def guest_delete(request, corp_id, user_id):
     """
 
     request_delete = requests.delete(GLOBAL_URL+f"/{corp_id}/guest/{user_id}", headers=global_headers(request))
-    if request_delete != 200:
+    if request_delete.status_code != 200:
         return render_error(request_delete)
 
     params = urlencode({"delete_guest": "true"})
