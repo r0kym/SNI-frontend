@@ -124,3 +124,52 @@ def change_scopes_none(request, corp_id):
     params = urlencode({"changed_scopes": "true"})
     return_url = reverse("corporation-sheet", args=[corp_id]) + "?" + params
     return redirect(return_url)
+
+@check_tokens(1)
+def guest(request, corp_id):
+    """
+    Displays the guest users of the corporation
+    """
+
+    request_guest = requests.get(GLOBAL_URL+f"/{corp_id}/guest", headers=global_headers(request))
+    if request_guest.status_code != 200:
+        return render_error(request_guest)
+
+    request_corp_name = post_universe_names(corp_id)
+    if request_corp_name.status_code != 200:
+        return render_error(request_corp_name)
+
+    return render(request, "corporation/guest.html", {
+        "guests": request_guest.json(),
+        "corporation_id": corp_id,
+        "corporation_name": request_corp_name.json()[0]["name"],
+        "state_code": request.GET.get("state_code")
+    })
+
+@check_tokens(1)
+def guest_new(request, corp_id):
+    """
+    Will issue a state code that can be used to authentificate and be recognized as a guest of the corproation
+    """
+    request_code = requests.post(GLOBAL_URL+f"/{corp_id}/guest", headers=global_headers(request))
+    if request_code.status_code != 200:
+        return render_error(request_code)
+
+    print(request_code.json()["state_code"])
+    params = urlencode({"state_code": request_code.json()["state_code"]})
+    return_url = reverse("corporation-guest", args=[corp_id]) + "?" + params
+    return redirect(return_url)
+
+@check_tokens(1)
+def guest_delete(request, corp_id, user_id):
+    """
+    Delete a user from the guests of a corporation
+    """
+
+    request_delete = requests.delete(GLOBAL_URL+f"/{corp_id}/guest/{user_id}", headers=global_headers(request))
+    if request_delete != 200:
+        return render_error(request_delete)
+
+    params = urlencode({"delete_guest": "true"})
+    return_url = reverse("corporation-guest", args=[corp_id]) + "?" + params
+    return redirect(return_url)

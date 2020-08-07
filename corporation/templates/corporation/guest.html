@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if state_code != None %}
+<div class="alert alert-success alert-dissmissible fade show" role="alert">
+  Invite code created: <b>{{ state_code }}</b>
+  <button type="button" class="close" data-dissmiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
+{% include "corporation/navbar.html" %}
+<br>
+<a class="btn btn-primary" href="{% url 'corporation-guest-new' corporation_id %}"><i class="fa fa-plus" aria-hidden="true"></i> Add a guest</a>
+<button type="button" class="btn btn-lg btn-info" data-toggle="popover" title="Guest codes" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>
+
+<hr>
+
+{% if guests %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Delete guest</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for guest in guests %}
+      <tr>
+        <td>
+          <a href="{% url 'character-sheet' guest.character_id %}">
+            <img src="https://images.evetech.net/characters/{{ guest.character_id }}/portrait?size=32" style="border-radius: 50%;" alt="">
+            {{ guest.character_name }}
+          </a>
+        </td>
+        <td><a class="btn btn-danger" href="{% url 'corporation-guest-delete' corporation_id guest.character_id %}"><i class="fa fa-trash-o fa-lg"></i> Delete</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  This corporation has no guests
+{% endif %}
+
+
+{% endblock %}
