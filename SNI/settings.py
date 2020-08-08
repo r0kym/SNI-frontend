@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'corporation.apps.CorporationConfig',
     'alliance.apps.AllianceConfig',
     'bootstrap4',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
