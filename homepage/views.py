@@ -1,9 +1,10 @@
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN
 from SNI.esi import ESI_SCOPES
+from SNI.error import render_error
+from SNI.lib import global_headers
 
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
-from SNI.error import render_error
 
 import requests
 
@@ -65,6 +66,36 @@ def auth_full(request):
 
     headers = {"Authorization": f"Bearer {SNI_DYNAMIC_TOKEN}"}
     json = {"scopes": ESI_SCOPES}
+    url = SNI_URL + "token/use/from/dyn"
+    r = requests.post(url, headers=headers, json=json)
+
+    if r.status_code != 200:
+        return render_error(r)
+
+    response = redirect(r.json()["login_url"])
+    response.set_cookie("state_code", r.json()["state_code"], max_age=300)  # the login must be made in 5 minutes
+    return response
+
+def auth_invite(request):
+    """
+    Retrives a state code, deduct scopes from it and ask for a login url with the specific scopes
+    """
+
+    esi_scopes = ESI_SCOPES
+    esi_scopes.sort()
+    code = request.POST.get("code")
+    hex_scopes = int(code.split(":")[0], 16)
+
+    # stolen from https://github.com/altaris/seat-navy-issue/blob/master/sni/esi/scope.py
+    scopes = set()
+    index = 0
+    for scope in esi_scopes:
+        if hex_scopes & (2 ** index) > 0:
+            scopes.add(scope)
+        index += 1
+
+    headers = {"Authorization": f"Bearer {SNI_DYNAMIC_TOKEN}"}
+    json = {"scopes": list(scopes), "state_code": code}
     url = SNI_URL + "token/use/from/dyn"
     r = requests.post(url, headers=headers, json=json)
 
