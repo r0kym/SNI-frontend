@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block content %}
+{% include "character/navbar.html" %}
+
+<link href="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.css" rel="stylesheet">
+
+<script src="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.js"></script>
+
+<div class="table-responsive">
+<table id="JournalTable" class="table" data-pagination="true" data-toggle="table">
+  <thead>
+    <tr>
+      <th>Amount</th>
+      <th>New balance</th>
+      <th>Reason</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in journal %}
+    <tr>
+      <td><span style="color: {% if entry.amount < 0 %}red{% elif entry.amount > 0 %}blue{% endif %}">{{ entry.amount|intcomma }}</span></td>
+      <td>{{ entry.balance|intcomma }}</td>
+      <td>{{ entry.description }}</td>
+      <td>{{ entry.date }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

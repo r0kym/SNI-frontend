@@ -11,7 +11,14 @@
         <li><a class="nav-link" href="{% url 'character-locations' character_id %}">Locations</a></li>
         <li><a class="nav-link" href="{% url 'character-mails' character_id %}">Mails</a></li>
         <li><a class="nav-link" href="{% url 'character-skills' character_id %}">Skills</a></li>
-        <li><a class="nav-link" href="{% url 'character-wallet' character_id %}">Wallet</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Wallet
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'character-wallet-journal' character_id %}">Journal</a>
+          </div>
+        </li>
     </ul>
   </div>
 </nav>
