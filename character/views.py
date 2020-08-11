@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.defaults import bad_request
 
-from character.models import CorporationName
+from character.models import IdToName
 
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 import SNI.esi as esi
@@ -62,13 +62,7 @@ def sheet(request, character_id):
 
     for corp in corp_history:
         corp_id = corp["corporation_id"]
-        try:
-            corp_name = CorporationName.objects.get(corporation_id=corp["corporation_id"]).corporation_name
-        except CorporationName.DoesNotExist:
-            corp_name_request = esi.post_universe_names(corp_id)
-            corp_name = corp_name_request.json()[0]["name"]
-            db_entry = CorporationName(corporation_id=corp_id, corporation_name=corp_name)
-            db_entry.save()
+        corp_name = IdToName.get_name(corp_id, "corporations")
         corp["corporation_name"] = corp_name
         start_date = datetime.datetime.strptime(corp["start_date"], "%Y-%m-%dT%H:%M:%S%z")
         corp["start_date"] = f"{start_date.day}/{start_date.month}/{start_date.year} , {start_date.hour}:{start_date.minute}"
@@ -104,13 +98,7 @@ def sni(request, character_id):
     # Get corporation details
     if character["corporation"]:
         corp_id = character["corporation"]
-        try:
-            corp_name = CorporationName.objects.get(corporation_id=corp_id).corporation_name
-        except CorporationName.DoesNotExist:
-            corp_name_request = esi.post_universe_names(corp_id)
-            corp_name = corp_name_request.json()[0]["name"]
-            db_entry = CorporationName(corporation_id=corp_id, corporation_name=corp_name)
-            db_entry.save()
+        corp_name = IdToName(corp_id, "corporations")
 
         character["corporation"] = {
             "id": character["corporation"],
