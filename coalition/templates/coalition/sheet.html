@@ -38,6 +38,15 @@
 </div>
 {% endif %}
 
+{% if not_found != None %}
+<div class="alert alert-danger alert-dissmissible fade show" role="alert">
+  The alliance <b>{{ not_found }}</b> wasn't found.
+  <button type="button" class="close" data-dissmiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
 {% include 'coalition/navbar.html' %}
 
 <div class="card-columns">

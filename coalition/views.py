@@ -77,6 +77,7 @@ def sheet(request, coalition_id):
         "new_alliance": request.GET.get("new_ally"),
         "removed_alliance": request.GET.get("rem_ally"),
         "new_ticker": request.GET.get("new_ticker"),
+        "not_found": request.GET.get("not_found"),
         "members_names": members_names,
         "scopes": ESI_SCOPES,
         "clearance_level": get_clearance_level(request)
@@ -149,7 +150,12 @@ def add(request, coalition_id):
 
     if request_alliance_id.status_code != 200:
         return render_error(request_alliance_id)
-    alliance_id = request_alliance_id.json()["alliances"][0]["id"]
+    try:
+        alliance_id = request_alliance_id.json()["alliances"][0]["id"]
+    except KeyError:
+        params = urlencode({"not_found": request.POST.get("alliance")})
+        return_url = reverse("coalition-sheet", args=[coalition_id]) + "?" + params
+        return redirect(return_url)
     data = "{\"add_members\": [\"" + str(alliance_id) + "\"]}"
 
     request_new = requests.put(url, headers=headers, data=data)
