@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load id2name %}
+
+{% block content %}
+{% include "character/navbar.html" %}
+
+<link href="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.css" rel="stylesheet">
+
+<script src="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.js"></script>
+
+<div class="table-responsive">
+<table id="TransactionsTable" class="table" data-pagination="true" data-toggle="table">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Personnal</th>
+      <th>Item</th>
+      <th>Unit price</th>
+      <th>Quantity</th>
+      <th>Location</th>
+      <th>Client</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in transactions %}
+    <tr>
+      <td>{% if entry.is_buy %}Buy{% else %}Sell{% endif %}</td>
+      <td>
+        {% if entry.is_personal %}
+          <i class="fa fa-check text-success" aria-hidden="true"></i>
+        {% else %}
+          <i class="fa fa-times text-danger" aria-hidden="true"></i>
+        {% endif %}
+      </td>
+      <td>{% esi_name entry.type_id 'universe/types' %}</td>
+      <td><span style="color: {% if entry.is_buy %}red{% else %}blue{% endif %}">{{ entry.unit_price|intcomma }}</span></td>
+      <td>{{ entry.quantity }}</td>
+      <td>{% esi_name entry.location_id 'universe/stations' request %}</td>
+      <td>{% esi_name entry.client_id 'characters' %}</td>
+      <td>{{ entry.date }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

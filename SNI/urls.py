@@ -16,6 +16,7 @@ Including another URLconf
 
 from django.urls import include, path
 
+handeler404 = "homepage.views.not_found"
 urlpatterns = [
     path('admin/', include('admin.urls')),
     path('', include('homepage.urls')),

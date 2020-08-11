@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.defaults import bad_request
 
-from character.models import CorporationName
+from character.models import IdToName
 
 from utils import SNI_URL, SNI_DYNAMIC_TOKEN, SNI_TEMP_USER_TOKEN
 import SNI.esi as esi
@@ -40,7 +40,6 @@ def home(request):
 
     return render(request, 'character/home.html', {"character_list": character_list})
 
-
 @check_tokens()
 def sheet(request, character_id):
     """
@@ -63,13 +62,7 @@ def sheet(request, character_id):
 
     for corp in corp_history:
         corp_id = corp["corporation_id"]
-        try:
-            corp_name = CorporationName.objects.get(corporation_id=corp["corporation_id"]).corporation_name
-        except CorporationName.DoesNotExist:
-            corp_name_request = esi.post_universe_names(corp_id)
-            corp_name = corp_name_request.json()[0]["name"]
-            db_entry = CorporationName(corporation_id=corp_id, corporation_name=corp_name)
-            db_entry.save()
+        corp_name = IdToName.get_name(corp_id, "corporations")
         corp["corporation_name"] = corp_name
         start_date = datetime.datetime.strptime(corp["start_date"], "%Y-%m-%dT%H:%M:%S%z")
         corp["start_date"] = f"{start_date.day}/{start_date.month}/{start_date.year} , {start_date.hour}:{start_date.minute}"
@@ -105,19 +98,13 @@ def sni(request, character_id):
     # Get corporation details
     if character["corporation"]:
         corp_id = character["corporation"]
-        try:
-            corp_name = CorporationName.objects.get(corporation_id=corp_id).corporation_name
-        except CorporationName.DoesNotExist:
-            corp_name_request = esi.post_universe_names(corp_id)
-            corp_name = corp_name_request.json()[0]["name"]
-            db_entry = CorporationName(corporation_id=corp_id, corporation_name=corp_name)
-            db_entry.save()
-        
+        corp_name = IdToName(corp_id, "corporations")
+
         character["corporation"] = {
             "id": character["corporation"],
             "name": corp_name
         }
-        
+
     else:
         character["corporation"] = {"name": ""}
 
@@ -234,16 +221,45 @@ def skills(request, character_id):
     })
 
 @check_tokens()
-def wallet(request, character_id):
+def wallet_journal(request, character_id):
     """
-    Displays character wallet
+    Displays character journal
     """
 
     request_name = esi.get_character_information(character_id)
     if request_name.status_code != 200:
         return render_error(request_name)
 
-    return render(request, 'character/wallet.html', {
+    journal_url = SNI_URL + f"esi/latest/characters/{character_id}/wallet/journal/"
+    data = {"all_pages": True, "on_behalf_of": request.session.get("user_id")}
+    request_wallet_journal = requests.get(journal_url, headers=global_headers(request), json=data)
+    if request_wallet_journal.status_code != 200:
+        return render_error(request_wallet_journal)
+
+    return render(request, 'character/journal.html', {
         "character": request_name.json(),
         "character_id": character_id,
+        "journal": request_wallet_journal.json()["data"],
+    })
+
+@check_tokens()
+def wallet_transactions(request, character_id):
+    """
+    Displays a character transactions list
+    """
+
+    request_name = esi.get_character_information(character_id)
+    if request_name.status_code != 200:
+        return render_error(request_name)
+
+    transactions_url = SNI_URL + f"esi/latest/characters/{character_id}/wallet/transactions/"
+    json = {"all_pages": True, "on_behalf_of": request.session.get("user_id")}
+    request_wallet_transactions = requests.get(transactions_url, headers=global_headers(request), json=json)
+    if request_wallet_transactions.status_code != 200:
+        return render_error(request_wallet_transactions)
+
+    return render(request, 'character/transactions.html', {
+        "character": request_name.json(),
+        "character_id": character_id,
+        "transactions": request_wallet_transactions.json()["data"],
     })
