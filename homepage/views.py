@@ -4,7 +4,8 @@ from SNI.error import render_error
 from SNI.lib import global_headers
 
 from django.shortcuts import render, redirect, reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
+from django.template import loader
 
 import requests
 
@@ -147,7 +148,7 @@ def no_perm(request):
     """
     return render(request, "403.html")
 
-def not_found(request):
+def not_found(request, exception):
     """
     General view when a user is trying to get an element not found
     """
