@@ -27,4 +27,5 @@ urlpatterns = [
     path('<int:character_id>/mails', views.mails, name='character-mails'),
     path('<int:character_id>/skills', views.skills, name='character-skills'),
     path('<int:character_id>/wallet/journal', views.wallet_journal, name='character-wallet-journal'),
+    path('<int:character_id>/wallet/transactions', views.wallet_transactions, name='character-wallet-transactions'),
 ]

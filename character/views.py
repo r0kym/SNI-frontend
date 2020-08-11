@@ -241,3 +241,25 @@ def wallet_journal(request, character_id):
         "character_id": character_id,
         "journal": request_wallet_journal.json()["data"],
     })
+
+@check_tokens()
+def wallet_transactions(request, character_id):
+    """
+    Displays a character transactions list
+    """
+
+    request_name = esi.get_character_information(character_id)
+    if request_name.status_code != 200:
+        return render_error(request_name)
+
+    transactions_url = SNI_URL + f"esi/latest/characters/{character_id}/wallet/transactions/"
+    json = {"all_pages": True, "on_behalf_of": request.session.get("user_id")}
+    request_wallet_transactions = requests.get(transactions_url, headers=global_headers(request), json=json)
+    if request_wallet_transactions.status_code != 200:
+        return render_error(request_wallet_transactions)
+
+    return render(request, 'character/transactions.html', {
+        "character": request_name.json(),
+        "character_id": character_id,
+        "transactions": request_wallet_transactions.json()["data"],
+    })
