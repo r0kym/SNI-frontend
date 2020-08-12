@@ -21,8 +21,8 @@
       </div>
       <div class="card-body">
         <ul>
-          <li><h6 class="card-title">Alliance executor: <a href="{% url 'character-sheet' alliance.ceo_character_id %}">{{ alliance.ceo_character_name }}</a></h6></li>
-          <li><b>Executor corp: </b><a href="{% url 'corporation-sheet' alliance.executor_corporation_id %}">{{ alliance.executor_corporation_name }}</a></li>
+          <li><h6 class="card-title">Alliance executor: <a href="{% url 'character-sheet' alliance.ceo.character_id %}">{{ alliance.ceo.character_name }}</a></h6></li>
+          <li><b>Executor corp: </b><a href="{% url 'corporation-sheet' alliance.executor_corporation.corporation_id %}">{{ alliance.executor_corporation.corporation_name }}</a></li>
           <li><b>Ticker: </b>{{ alliance.ticker }}</li>
         </ul>
       </div>

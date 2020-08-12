@@ -21,7 +21,7 @@
       </div>
       <div class="card-body">
         <ul>
-          <li><h6 class="card-title">Corporation CEO: <a href="{% url 'character-sheet' corporation.ceo_character_id %}">{{ corporation.ceo_character_name }}</a></h6></li>
+          <li><h6 class="card-title">Corporation CEO: <a href="{% url 'character-sheet' corporation.ceo.character_id %}">{{ corporation.ceo.character_name }}</a></h6></li>
           <li><b>Ticker:</b>{{ corpoation.ticker }}</li>
           <li><b>Tax rate:</b> {{ esi.tax_rate }}% <br></li>
           <li><b>Member count:</b> {{ esi.member_count }}</li>
@@ -29,7 +29,7 @@
       </div>
     </div>
   </div>
-  {% if corporation.alliance_id %}
+  {% if corporation.alliance != {} %}
   <div class="col mb-4">
     <div class="card">
       <div class="card-header">
@@ -37,7 +37,7 @@
       </div>
       <div class="card-body">
         <ul>
-          <b class="card-title">Member of: </b><a href="{% url 'alliance-sheet' corporation.alliance_id %}">{{ corporation.alliance_name }}</a>
+          <b class="card-title">Member of: </b><a href="{% url 'alliance-sheet' corporation.alliance.alliance_id %}">{{ corporation.alliance.alliance_name }}</a>
         </ul>
       </div>
     </div>
