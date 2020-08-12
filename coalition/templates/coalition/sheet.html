@@ -2,9 +2,18 @@
 
 {% block content %}
 
-{% if new_alliance != None %}
+{% if new_member != None %}
 <div class="alert alert-success alert-dismissible fade show" role="alert">
-  Alliance <strong>{{ new_alliance }}</strong> successfully added.
+  <strong>{{ new_member }}</strong> successfully added in the coalition.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
+{% if removed_corporation != None %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  Corporation <strong>{{ removed_corporation }}</strong> successfully removed.
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -74,15 +83,26 @@
         </tr>
       </thead>
       <tbody>
-        {% for member in members_names %}
+        {% for alliance in coalition.member_alliances %}
         <tr style="position:relative">
-          <td><img src="https://images.evetech.net/alliances/{{ member.id }}/logo?size=32" alt="Alliance logo"></td>
-          <td>{{ member.name }}</td>
+          <td><img src="https://images.evetech.net/alliances/{{ alliance.alliance_id }}/logo?size=32" alt="{{ alliance.alliance_name}} logo"></td>
+          <td>{{ alliance.alliance_name }}</td>
           {% if clearance_level >= 9 %}
           <td>
-            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#RemoveModal{{ member.id }}">
+            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#RemoveModal{{ alliance.alliance_id }}">
               Remove
             </button>
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+        {% for corporation in coalition.member_corporations %}
+        <tr style="position:relative">
+          <td><img src="https://images.evetech.net/corporations/{{ member.corporation_id }}/logo?size=32" alt="{{ corporation.corporation_name }} logo"></td>
+          <td>{{ corporation.corporation_name }}</td>
+          {% if clearance_level >= 9 %}
+          <td>
+            <button type="button" class="btn btn-warning" data-toogle="modal" data-target="#RemoveModal{{ corporation.corporation_id }}"></button>
           </td>
           {% endif %}
         </tr>
@@ -115,27 +135,50 @@
 
   </div>
 
-{% for member in members_names %}
-  <div class="modal fade" id="RemoveModal{{ member.id }}" tabindex="-1" role="dialog" aria-labelledby="{{ member.id }}ModalLabel" aria-hidden="true">
+{% for alliance in coalition.member_alliances %}
+  <div class="modal fade" id="RemoveModal{{ alliance.alliance_id }}" tabindex="-1" role="dialog" aria-labelledby="{{ alliance.alliance_id }}ModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="{{ member.id }}ModalLabel">Remove alliance</h5>
+          <h5 class="modal-title" id="{{ alliance.alliance_id }}ModalLabel">Remove alliance</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          Are you sure you want to remove <b>{{ member.name }}</b> from <b>{{ coalition.coalition_name }}</b>?
+          Are you sure you want to remove <b>{{ alliance.alliance_name }}</b> from <b>{{ coalition.coalition_name }}</b>?
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <a class="btn btn-warning" href="{{ coalition.coalition_id }}/remove/{{ member.id}}" role="button">Confirm</a>
+          <a class="btn btn-warning" href="{{ coalition.coalition_id }}/remove/alliance/{{ alliance.alliance_id}}" role="button">Confirm</a>
         </div>
       </div>
     </div>
   </div>
 {% endfor %}
+
+{% for coproation in coalition.member_coproations %}
+  <div class="modal fade" id="RemoveModal{{ coproation.coproation_id }}" tabindex="-1" role="dialog" aria-labelledby="{{ coproation.coproation_id }}ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="{{ coproation.coproation_id }}ModalLabel">Remove coproation</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to remove <b>{{ coproation.coproation_name }}</b> from <b>{{ coalition.coalition_name }}</b>?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <a class="btn btn-warning" href="{{ coalition.coalition_id }}/remove/corporation/{{ coproation.coproation_id}}" role="button">Confirm</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
 
 {% if clearance_level >= 9 %}
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModifyTickerModal">
@@ -167,20 +210,20 @@
   </div>
 </div>
 
-<form class="AddAlliance" action="{{ coalition.coalition_id }}/add" method="post">{% csrf_token %}
-  <div class="modal fade" id="AddAllianceModal" tabindex="-1" role="dialog" aria-labelledby="AddAllianceModalLabel" aria-hidden="true">
+<form class="AddMember" action="{{ coalition.coalition_id }}/add" method="post">{% csrf_token %}
+  <div class="modal fade" id="AddMemberModal" tabindex="-1" role="dialog" aria-labelledby="AddMemberModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="AddAllianceModalLabel">Add alliance</h5>
+          <h5 class="modal-title" id="AddMemberModalLabel">Add member</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-            <div class="AddAlliance">
-              <label for="Alliance">New alliance: </label>
-              <input type="text" name="alliance" required>
+            <div class="AddMember">
+              <label for="Member">New member: </label>
+              <input type="text" name="member" required>
             </div>
         </div>
         <div class="modal-footer">
