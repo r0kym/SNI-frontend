@@ -135,7 +135,7 @@ def add(request, coalition_id):
     headers = global_headers(request)
     headers.update({"Content-type": "application/json"})
 
-    request_alliance_id = post_universe_ids(request.POST.get("member"))
+    request_member_id = post_universe_ids(request.POST.get("member"))
     if request_member_id.status_code != 200:
         return render_error(request_alliance_id)
 
@@ -146,7 +146,7 @@ def add(request, coalition_id):
     elif "corporations" in request_member_id.json():
         t = "coproration"
         corporation_id = request_member_id.json()["corporations"][0]["id"]
-        data = "{\"add_member_corporations\": [\"" + str(alliance_id) + "\"]}"
+        data = "{\"add_member_corporations\": [\"" + str(corporation_id) + "\"]}"
     else:
         params = urlencode({"not_found": request.POST.get("alliance")})
         return_url = reverse("coalition-sheet", args=[coalition_id]) + "?" + params
@@ -219,7 +219,7 @@ def remove_corporation(request, coalition_id, corporation_id):
     if request_remove.status_code != 200:
         return render_error(request_remove)
 
-    request_corporation_name = post_universe_names(corporation)
+    request_corporation_name = post_universe_names(corporation_id)
 
     if request_corporation_name.status_code != 200:
         return render_error(request_corporation_name)

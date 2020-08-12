@@ -98,11 +98,13 @@
         {% endfor %}
         {% for corporation in coalition.member_corporations %}
         <tr style="position:relative">
-          <td><img src="https://images.evetech.net/corporations/{{ member.corporation_id }}/logo?size=32" alt="{{ corporation.corporation_name }} logo"></td>
+          <td><img src="https://images.evetech.net/corporations/{{ corporation.corporation_id }}/logo?size=32" alt="{{ corporation.corporation_name }} logo"></td>
           <td>{{ corporation.corporation_name }}</td>
           {% if clearance_level >= 9 %}
           <td>
-            <button type="button" class="btn btn-warning" data-toogle="modal" data-target="#RemoveModal{{ corporation.corporation_id }}"></button>
+            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#RemoveModal{{ corporation.corporation_id }}">
+              Remove
+            </button>
           </td>
           {% endif %}
         </tr>
@@ -110,8 +112,8 @@
       </tbody>
     </table>
     {% if clearance_level >= 9 %}
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddAllianceModal">
-      Add Alliance
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddMemberModal">
+      Add Member
     </button>
     {% endif %}
     <div class="card">
@@ -157,22 +159,22 @@
   </div>
 {% endfor %}
 
-{% for coproation in coalition.member_coproations %}
-  <div class="modal fade" id="RemoveModal{{ coproation.coproation_id }}" tabindex="-1" role="dialog" aria-labelledby="{{ coproation.coproation_id }}ModalLabel" aria-hidden="true">
+{% for corporation in coalition.member_corporations %}
+  <div class="modal fade" id="RemoveModal{{ corporation.corporation_id }}" tabindex="-1" role="dialog" aria-labelledby="{{ corporation.corporation_id }}ModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="{{ coproation.coproation_id }}ModalLabel">Remove coproation</h5>
+          <h5 class="modal-title" id="{{ corporation.corporation_id }}ModalLabel">Remove corporation</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          Are you sure you want to remove <b>{{ coproation.coproation_name }}</b> from <b>{{ coalition.coalition_name }}</b>?
+          Are you sure you want to remove <b>{{ corporation.corporation_name }}</b> from <b>{{ coalition.coalition_name }}</b>?
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <a class="btn btn-warning" href="{{ coalition.coalition_id }}/remove/corporation/{{ coproation.coproation_id}}" role="button">Confirm</a>
+          <a class="btn btn-warning" href="{{ coalition.coalition_id }}/remove/corporation/{{ corporation.corporation_id}}" role="button">Confirm</a>
         </div>
       </div>
     </div>

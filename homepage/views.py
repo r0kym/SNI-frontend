@@ -127,10 +127,10 @@ def sni_callback(request):
 
         if request_token.status_code != 200:
             return render_error(request_token)
+        print(request_token.json())
+        request.session["user_id"] = request_token.json()["owner"]["character_id"]
 
-        request.session["user_id"] = request_token.json()["owner_character_id"]
-
-        return redirect(f"/character/{request_token.json()['owner_character_id']}")
+        return redirect(f"/character/{request_token.json()['owner']['character_id']}")
 
     else:
         redirect("/")
