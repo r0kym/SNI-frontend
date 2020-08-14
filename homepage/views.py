@@ -21,7 +21,7 @@ def home(request):
         if request_token.status_code != 200:
             return render_error(request_token)
 
-        return redirect(reverse("character-sheet", args=[request_token.json()["owner_character_id"]]))
+        return redirect(reverse("character-sheet", args=[request_token.json()["owner"]["character_id"]]))
 
     return render(request, 'home.html', {
         "scopes": ESI_SCOPES,
