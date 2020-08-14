@@ -163,10 +163,48 @@ def contracts(request, character_id):
     if request_name.status_code != 200:
         return render_error(request_name)
 
+    url = SNI_URL + f"esi/latest/characters/{character_id}/contracts/"
+    json = {"on_behalf_of": request.session["user_id"], "all_pages": True}
+    request_contracts = requests.get(url, headers=global_headers(request), json=json)
+    if request_contracts.status_code != 200:
+        return render_error(request_contracts)
+
     return render(request, 'character/contracts.html', {
         "character": request_name.json(),
         "character_id": character_id,
+        "contracts": request_contracts.json()["data"],
     })
+
+@check_tokens()
+def contracts_details(request, character_id, contract_id):
+    """
+    Displays informations on a contract
+    """
+
+    request_name = esi.get_character_information(character_id)
+    if request_name.status_code != 200:
+        return render_error(request_name)
+
+    url = SNI_URL + f"esi/latest/characters/{character_id}/contracts/"
+    json = {"on_behalf_of": request.session["user_id"], "all_pages": True}
+    request_contracts = requests.get(url, headers=global_headers(request), json=json)
+    if request_contracts.status_code != 200:
+        return render_error(request_contracts)
+
+    for contract in request_contracts.json()["data"]:
+        if contract["contract_id"] == contract_id:
+            if contract["type"] != "courier":
+                request_contract_items = requests.get(url+f"{contract_id}/items/", headers=global_headers(request), json=json)
+                if request_contract_items.status_code != 200:
+                    return render_error(request_contract_items)
+                contract["contract_items"] = request_contract_items.json()["data"]
+            return render(request, 'character/contracts-details.html', {
+                "character": request_name.json(),
+                "character_id": character_id,
+                "contract": contract,
+            })
+    return render(request, "404.html")
+
 
 @check_tokens()
 def locations(request, character_id):

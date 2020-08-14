@@ -1,8 +1,55 @@
 {% extends "base.html" %}
+{% load humanize %}
+{% load id2name %}
 
 {% block content %}
 {% include "character/navbar.html" %}
 
-Contracts informations
+<link href="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.css" rel="stylesheet">
+<script src="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.js"></script>
 
+<div class="table-responsive">
+<table id="ContractsTable" class="table" data-pagination="true" data-toggle="table">
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Type</th>
+      <th>Assigned to</th>
+      <th>Price</th>
+      <th>Comment</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for contract in contracts reversed %}
+    <tr>
+      <td>
+        {% if contract.status == "finished" %}
+          <i class="fa fa-check text-success mr-2" aria-hidden="true"></i>Finished
+        {% elif contract.status == "cancelled" or contract.status == "rejected" or contract.status == "deleted" %}
+          <i class="fa fa-times text-danger mr-2" aria-hidden="true"></i>{{ contract.status|capfirst }}
+        {% else %}
+          {{ contract.status }}
+        {% endif %}
+      </td>
+      <td>
+        {% if contract.type == "item_exchange" %}
+          <i class="fa fa-arrows-alt text-primary mr-2" aria-hidden="true"></i>Item exchange
+        {% elif contract.type == "courier" %}
+          <i class="fa fa-truck text-primary mr-2" aria-hidden="true"></i>Courier
+        {% elif contract.type == "auction" %}
+          <i class="fa fa-line-chart text-primary mr-2"></i>Auction
+        {% elif contract.type == "outstanding" %}
+          <i class="fa fa-hourglass text-primary mr-2"></i>Outstanding
+        {% endif %}
+      </td>
+      <td>{% if contract.assignee_id == 0 %}Public{% else %}{% esi_name contract.assignee_id 'characters' %}{% endif %}</td>
+      <td>{% if contract.type == "courrier" %}{{ contract.reward|intcomma }}{% else %}{{ contract.price|intcomma }}{% endif %}</td>
+      <td>{{ contract.title }}</td>
+      <td><a href="{% url 'character-contracts-details' character_id contract.contract_id %}"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
 {% endblock %}

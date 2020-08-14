@@ -23,6 +23,7 @@ urlpatterns = [
     path('<int:character_id>/sni', views.sni, name='character-sni'),
     path('<int:character_id>/assets', views.assets, name='character-assets'),
     path('<int:character_id>/contracts', views.contracts, name='character-contracts'),
+    path('<int:character_id>/contracts/<int:contract_id>', views.contracts_details, name='character-contracts-details'),
     path('<int:character_id>/locations', views.locations, name='character-locations'),
     path('<int:character_id>/mails', views.mails, name='character-mails'),
     path('<int:character_id>/skills', views.skills, name='character-skills'),

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load id2name %}
+{% load humanize %}
+
+{% block content %}
+{% include 'character/navbar.html' %}
+<br>
+<h5>{% if contract.title %}Contract name: {{ contract.title }}{% else %}Contract {{ contract.contract_id }}{% endif %}</h5>
+<br>
+<ul>
+  <li>Contract type: <b>{% if contract.type == "item_exchange" %}Item exchange{% else %}{{ contract.type|capfirst }}{% endif %}</b></li>
+  <li>Status: <b>{{ contract.status|capfirst }}</b></li>
+  <li>Assigned to: <b>
+    {% if contract.assignee_id == 0 %}
+      Public
+    {% else %}
+      <a href="{% url 'character-sheet' contract.assignee_id %}">{% esi_name contract.assignee_id 'characters' %}</a>
+    {% endif %}
+  </b></li>
+  <li>Date created: <b>{{ contract.date_issued }}</b></li>
+  {% if contract.status == "finished" %}<li>Completed at: <b>{{ contract.date_completed }}</b></li>{% endif %}
+  {% if contract.type == "courier" %}
+    <li>Accepted at: <b>{{ contract.date_accepted }}</b></li>
+    <li>Accepted by: <b>{% esi_name contract.acceptor_id 'characters' %}</b></li>
+    <li>Collateral: <b>{{ contract.collateral|intcomma }} ISK</b></li>
+    <li>Days to complete: <b>{{ contract.days_to_complete }} days</b></li>
+    <li>Volume: <b>{{ contract.volume|intcomma }} m3</b></li>
+    <li>Reward: <b>{{contract.reward|intcomma }} ISK</b></li>
+    <li>Starts from: <b>{% esi_name contract.start_location_id 'universe/stations' %}</b></li>
+    <li>Ends at: <b>{% esi_name contract.end_location_id 'universe/stations' %}</b></li
+  {% else %}
+    <li>Price: <b>{{ contract.price|intcomma }} ISK</b></li>
+    <li>
+    <u>Seller asks for:</u>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Quantity</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in contract.contract_items %}{% if item.is_included == False %}
+        <tr>
+          <th><img src="https://images.evetech.net/types/{{ item.type_id }}/icon" alt="{{ item.type_id }} logo"></th>
+          <th>{% if item.is_singleton == True %}{{ item.quantitiy }}{% endif %}</th>
+          <th>{% esi_name item.type_id 'universe/types' %}</th>
+        </tr>
+        {% endif %}{% endfor %}
+      </tbody>
+    </table>
+    </li>
+    <li>
+    <u>Buyer will get:</u>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Quantity</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in contract.contract_items %}{% if item.is_included == True %}
+        <tr>
+          <th><img src="https://images.evetech.net/types/{{ item.type_id }}/icon?size=32" alt="{{ item.type_id }} logo"></th>
+          <th>{% if item.is_singleton == False %}{{ item.quantity }}{% endif %}</th>
+          <th>{% esi_name item.type_id 'universe/types' %}</th>
+        </tr>
+        {% endif %}{% endfor %}
+      </tbody>
+    </table>
+    </li>
+  {% endif %}
+
+</ul>
+{% endblock %}
