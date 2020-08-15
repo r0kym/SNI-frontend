@@ -54,9 +54,11 @@ def sheet(request, character_id):
 
     character = request_name.json()
 
-    corp_history = esi.get_corporation_history(character_id).json()
-    if len(corp_history) > CORPORATION_HISTORY_LIMIT:
-        corp_history = corp_history[0:CORPORATION_HISTORY_LIMIT-1]
+    corp_history = esi.get_corporation_history(character_id)
+    if corp_history.status_code != 200:
+        return render_error(corp_history)
+    if len(corp_history.json()) > CORPORATION_HISTORY_LIMIT:
+        corp_history = corp_history.json()[0:CORPORATION_HISTORY_LIMIT-1]
         shortend_corp_hist = True
     else:
         shortend_corp_hist = False
@@ -94,12 +96,11 @@ def sni(request, character_id):
         return render_error(request_sni)
 
     character = request_sni.json()
-    print(character)
 
     # Get corporation details
     if character["corporation"]:
         corp_id = character["corporation"]
-        corp_name = IdToName(corp_id, "corporations")
+        corp_name = IdToName.get_name(corp_id, 'corporations')
 
         character["corporation"] = {
             "id": character["corporation"],
@@ -111,10 +112,10 @@ def sni(request, character_id):
 
     # Get alliance details
     if character["alliance"]:
-        alliance_name_request = esi.post_universe_names(character["alliance"])
+        alliance_name = IdToName.get_name(character["alliance"], 'alliances')
         character["alliance"] = {
             "id": character["alliance"],
-            "name": alliance_name_request.json()[0]["name"]
+            "name": alliance_name,
         }
     else:
         character["alliance"] = {"name": ""}
