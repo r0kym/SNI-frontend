@@ -11,6 +11,7 @@ from SNI.lib import global_headers, get_clearance_level
 
 import datetime
 import requests
+from bs4 import BeautifulSoup
 
 from SNI.error import render_error
 
@@ -53,9 +54,11 @@ def sheet(request, character_id):
 
     character = request_name.json()
 
-    corp_history = esi.get_corporation_history(character_id).json()
-    if len(corp_history) > CORPORATION_HISTORY_LIMIT:
-        corp_history = corp_history[0:CORPORATION_HISTORY_LIMIT-1]
+    corp_history = esi.get_corporation_history(character_id)
+    if corp_history.status_code != 200:
+        return render_error(corp_history)
+    if len(corp_history.json()) > CORPORATION_HISTORY_LIMIT:
+        corp_history = corp_history.json()[0:CORPORATION_HISTORY_LIMIT-1]
         shortend_corp_hist = True
     else:
         shortend_corp_hist = False
@@ -93,12 +96,11 @@ def sni(request, character_id):
         return render_error(request_sni)
 
     character = request_sni.json()
-    print(character)
 
     # Get corporation details
     if character["corporation"]:
         corp_id = character["corporation"]
-        corp_name = IdToName(corp_id, "corporations")
+        corp_name = IdToName.get_name(corp_id, 'corporations')
 
         character["corporation"] = {
             "id": character["corporation"],
@@ -110,10 +112,10 @@ def sni(request, character_id):
 
     # Get alliance details
     if character["alliance"]:
-        alliance_name_request = esi.post_universe_names(character["alliance"])
+        alliance_name = IdToName.get_name(character["alliance"], 'alliances')
         character["alliance"] = {
             "id": character["alliance"],
-            "name": alliance_name_request.json()[0]["name"]
+            "name": alliance_name,
         }
     else:
         character["alliance"] = {"name": ""}
@@ -163,10 +165,47 @@ def contracts(request, character_id):
     if request_name.status_code != 200:
         return render_error(request_name)
 
+    url = SNI_URL + f"esi/latest/characters/{character_id}/contracts/"
+    json = {"on_behalf_of": request.session["user_id"], "all_pages": True}
+    request_contracts = requests.get(url, headers=global_headers(request), json=json)
+    if request_contracts.status_code != 200:
+        return render_error(request_contracts)
+
     return render(request, 'character/contracts.html', {
         "character": request_name.json(),
         "character_id": character_id,
+        "contracts": request_contracts.json()["data"],
     })
+
+@check_tokens()
+def contracts_details(request, character_id, contract_id):
+    """
+    Displays informations on a contract
+    """
+
+    request_name = esi.get_character_information(character_id)
+    if request_name.status_code != 200:
+        return render_error(request_name)
+
+    url = SNI_URL + f"esi/latest/characters/{character_id}/contracts/"
+    json = {"on_behalf_of": request.session["user_id"], "all_pages": True}
+    request_contracts = requests.get(url, headers=global_headers(request), json=json)
+    if request_contracts.status_code != 200:
+        return render_error(request_contracts)
+
+    for contract in request_contracts.json()["data"]:
+        if contract["contract_id"] == contract_id:
+            if contract["type"] != "courier":
+                request_contract_items = requests.get(url+f"{contract_id}/items/", headers=global_headers(request), json=json)
+                if request_contract_items.status_code != 200:
+                    return render_error(request_contract_items)
+                contract["contract_items"] = request_contract_items.json()["data"]
+            return render(request, 'character/contracts-details.html', {
+                "character": request_name.json(),
+                "character_id": character_id,
+                "contract": contract,
+            })
+    return render(request, "404.html")
 
 @check_tokens()
 def locations(request, character_id):
@@ -200,9 +239,36 @@ def mails(request, character_id):
     if request_name.status_code != 200:
         return render_error(request_name)
 
+    request_mails = requests.get(SNI_URL+f"esi/history/characters/{character_id}/mail", headers=global_headers(request))
+    if request_mails.status_code != 200:
+        return render_error(request_mails)
+
     return render(request, 'character/mails.html', {
         "character": request_name.json(),
         "character_id": character_id,
+        "mails": request_mails.json(),
+    })
+
+@check_tokens()
+def mails_details(request, character_id, mail_id):
+    """
+    Displays informations on a mail
+    """
+
+    request_name = esi.get_character_information(character_id)
+    if request_name.status_code != 200:
+        return render_error(request_name)
+
+    json = {"on_behalf_of": request.session["user_id"]}
+    request_mail_info = requests.get(SNI_URL+f"esi/latest/characters/{character_id}/mail/{mail_id}/", headers=global_headers(request), json=json)
+    if request_mail_info.status_code != 200:
+        return render_error(request_mail_info)
+    mail = BeautifulSoup(request_mail_info.json()["data"]["body"].replace("<br>", "\n"), "html.parser")
+
+    return render(request, 'character/mails-details.html', {
+        "character": request_name.json(),
+        "character_id": character_id,
+        "mail": mail.get_text(),
     })
 
 @check_tokens()
