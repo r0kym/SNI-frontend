@@ -57,8 +57,9 @@
 {% endif %}
 
 {% include 'coalition/navbar.html' %}
-
-<div class="card-columns">
+<br>
+<div class="row row-cols-1 row-cols-md-2">
+  <div class="col mb-4">
     <div class="card">
       <!--To do -->
       <div class="card-header text-dark">
@@ -70,6 +71,27 @@
         <h6 class="card-subtitle">Created:</h6> {{ coalition.created_on }}
         <h6 class="card-subtitle">Updated:</h6> {{ coalition.updated_on }}
       </div>
+      {% if clearance_level >= 9 %}
+      <div class="card-footer">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModifyTickerModal">
+          Modify Ticker
+        </button>
+
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#DeleteCoalitionModal">
+          Delete Coaliton
+        </button>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+  <div class="col mb-4">
+    <div class="col mb-2">
+      {% if clearance_level >= 9 %}
+      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddMemberModal">
+        Add Member
+      </button>
+      {% endif %}
     </div>
 
     <table id="memberList" class="table table-striped table-bordered table-sm table-hover" cellspacing="0" width="100%">
@@ -111,11 +133,9 @@
         {% endfor %}
       </tbody>
     </table>
-    {% if clearance_level >= 9 %}
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddMemberModal">
-      Add Member
-    </button>
-    {% endif %}
+  </div>
+
+  <div class="col mb-4">
     <div class="card">
       <div class="card-header text-dark">
         Required ESI scopes
@@ -133,9 +153,8 @@
       </div>
       {% endif %}
     </div>
-
-
   </div>
+</div>
 
 {% for alliance in coalition.member_alliances %}
   <div class="modal fade" id="RemoveModal{{ alliance.alliance_id }}" tabindex="-1" role="dialog" aria-labelledby="{{ alliance.alliance_id }}ModalLabel" aria-hidden="true">
@@ -180,17 +199,6 @@
     </div>
   </div>
 {% endfor %}
-
-
-{% if clearance_level >= 9 %}
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModifyTickerModal">
-  Modify Ticker
-</button>
-
-<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#DeleteCoalitionModal">
-  Delete Coaliton
-</button>
-{% endif %}
 
 <div class="modal fade" id="DeleteCoalitionModal" tabindex="-1" role="dialog" aria-labelledby="DeleteCoalitionModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
