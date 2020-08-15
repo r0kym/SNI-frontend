@@ -2,3 +2,4 @@ django
 requests
 django-bootstrap4
 beautifulsoup4
+sentry-sdk
