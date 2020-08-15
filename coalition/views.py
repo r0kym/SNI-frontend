@@ -41,6 +41,7 @@ def home(request):
 
     coalition_details = request_coalition_details.json()
     coalition_dict[coalition['coalition_id']] = coalition_details
+    coalition_dict[coalition['coalition_id']]['members'] = len(coalition_details['member_alliances'] + coalition_details['member_corporations'])
 
   return render(request, 'coalition/home.html', {
     "coalition_list": coalition_dict,
