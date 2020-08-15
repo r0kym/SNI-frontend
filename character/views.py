@@ -11,6 +11,7 @@ from SNI.lib import global_headers, get_clearance_level
 
 import datetime
 import requests
+from bs4 import BeautifulSoup
 
 from SNI.error import render_error
 
@@ -205,7 +206,6 @@ def contracts_details(request, character_id, contract_id):
             })
     return render(request, "404.html")
 
-
 @check_tokens()
 def locations(request, character_id):
     """
@@ -238,9 +238,36 @@ def mails(request, character_id):
     if request_name.status_code != 200:
         return render_error(request_name)
 
+    request_mails = requests.get(SNI_URL+f"esi/history/characters/{character_id}/mail", headers=global_headers(request))
+    if request_mails.status_code != 200:
+        return render_error(request_mails)
+
     return render(request, 'character/mails.html', {
         "character": request_name.json(),
         "character_id": character_id,
+        "mails": request_mails.json(),
+    })
+
+@check_tokens()
+def mails_details(request, character_id, mail_id):
+    """
+    Displays informations on a mail
+    """
+
+    request_name = esi.get_character_information(character_id)
+    if request_name.status_code != 200:
+        return render_error(request_name)
+
+    json = {"on_behalf_of": request.session["user_id"]}
+    request_mail_info = requests.get(SNI_URL+f"esi/latest/characters/{character_id}/mail/{mail_id}/", headers=global_headers(request), json=json)
+    if request_mail_info.status_code != 200:
+        return render_error(request_mail_info)
+    mail = BeautifulSoup(request_mail_info.json()["data"]["body"].replace("<br>", "\n"), "html.parser")
+
+    return render(request, 'character/mails-details.html', {
+        "character": request_name.json(),
+        "character_id": character_id,
+        "mail": mail.get_text(),
     })
 
 @check_tokens()
