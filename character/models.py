@@ -49,32 +49,28 @@ class IdToName(models.Model):
             else:
                 r = post_universe_names(id)
 
-            return r
+            if r.status_code == 200:
+                if "name" in r.json():
+                    return r.json()["name"]
+                elif "data" in r.json() and "name" in r.json()["data"]:
+                    return  r.json()["data"]["name"]
+                else:
+                    return f"Couldn't find {id} name"
+            else:
+                return f"Couldn't find {id} name"
 
         try:
             obj = cls.objects.get(id=id)
         except cls.DoesNotExist:
-            r = find_name(id, route, request)
-            if r.status_code == 200:
-                if "name" in r.json():
-                    obj = cls(name=r.json()["name"], id=id)
-                    obj.save()
-                elif "data" in r.json() and "name" in r.json()["data"]:
-                    obj = cls(name=r.json()["data"]["name"], id=id)
-                    obj.save()
-                else:
-                    return f"Couldn't resolve {id} name"
-            else:
-                return f"Couldn't find {id} name"
+            name = find_name(id, route, request)
+            obj = cls(name=name, id=id)
+            obj.save()
         else:
             delta = obj.timestamp - date.today()
             if delta.days > 2:  # checks the name again
-                r = find_name(id, route, request)
-                if r.status_code == 200:
-                    obj.name = r.json()["name"]
-                    obj.save()
-                else:
-                    return f"Couldn't find {id} name"
+                name = find_name(id, route, request)
+                obj = cls(name=name, id=id)
+                obj.save()
 
         return obj.name
 
