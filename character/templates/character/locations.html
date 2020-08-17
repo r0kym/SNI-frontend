@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% include "character/navbar.html" %}
+
+<link href="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.css" rel="stylesheet">
+
+<script src="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.js"></script>
+
+<div class="table-responsive">
+<table id="LocationsTable" class="table" data-pagination="true" data-toggle="table">
+  <thead>
+    <tr>
+      <th>Online</th>
+      <th>Ship</th>
+      <th>Ship name</th>
+      <th>System</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry, timestamp in locations %}
+    <tr>
+      {% if entry.online == True %}
+      <td><i class="fa fa-check text-success" aria-hidden="true"></i></td>
+      {% else %}
+      <td><i class="fa fa-times text-danger" aria-hidden="true"></i></td>
+      {% endif %}
+      <td>{{ entry.ship_type_name }}</td>
+      <td>{{ entry.ship_name }}</td>
+      <td>{{ entry.solar_system_name }}</td>
+      <td>{{ timestamp }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

@@ -12,3 +12,16 @@ SNI_DYNAMIC_TOKEN = "token_template"
 
 # to use before there's a live version and cookies can be used correctly
 SNI_TEMP_USER_TOKEN = ""
+
+#email related thingies so that you receive informations when you have an error 500
+EMAIL_USE_TLS = False
+EMAIL_HOST = ''
+EMAIL_PORT = 25
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+
+ADMINS = [('admin 1 name', 'email@example.com'), ('admin 2 name', 'email@example.com')]
+
+# set to true if you wish to enable sentry: https://docs.sentry.io/enriching-error-data/user-feedback/?platform=django
+USE_SENTRY = False
+SENTRY_DNS = "https://examplePublicKey@o0.ingest.sentry.io/0"

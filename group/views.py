@@ -142,7 +142,7 @@ def add_member(request, group_id):
     print(request_new.json())
 
     params = urlencode({"new_member": request.POST.get("member")})
-    return_url = reverse("group-home") + group_id + "?" + params
+    return_url = reverse("group-home", args=[group_id]) + "?" + params
 
     return redirect(return_url)
 
@@ -168,6 +168,6 @@ def remove_member(request, group_id, member):
     print(request_remove.json())
 
     params = urlencode({"rem_member": member})
-    return_url = reverse("group-home") + group_id + "?" + params
+    return_url = reverse("group-home", args=[group_id]) + "?" + params
 
     return redirect(return_url)

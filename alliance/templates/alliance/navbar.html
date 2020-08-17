@@ -1,0 +1,11 @@
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+<a class="navbar-brand" href="{% url 'alliance-sheet' alliance_id %}"><img src="https://images.evetech.net/alliances/{{ alliance_id }}/logo?size=64" alt="alliance_logo" class="rounded-circle z-depth-0"> {{ alliance_name }}</a>  <div class="collapse navbar-collapse" id="coalitionnavbar">
+    <ul class="navbar-nav mr-auto">
+        <li><a class="nav-link" href="{% url 'alliance-sheet' alliance_id %}">Sheet</a></li>
+        <li><a class="nav-link" href="{% url 'alliance-tracking' alliance_id %}">Tracking</a></li>
+    </ul>
+  </div>
+</nav>

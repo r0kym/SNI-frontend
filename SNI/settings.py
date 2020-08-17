@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
-from utils import SECRET_KEY, DEBUG, ALLOWED_HOSTS
+from utils import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,6 +27,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # DEBUG = True   go to utils.py to modify it
 
 # ALLOWED_HOSTS = [] go in utils.py to modify it
+
+
+if USE_SENTRY:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=SENTRY_DNS,
+        integrations=[DjangoIntegration()],
+
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=False
+    )
 
 
 # Application definition
@@ -47,6 +61,7 @@ INSTALLED_APPS = [
     'corporation.apps.CorporationConfig',
     'alliance.apps.AllianceConfig',
     'bootstrap4',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [

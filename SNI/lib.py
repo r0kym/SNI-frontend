@@ -4,13 +4,16 @@ from SNI.error import render_error
 
 import requests
 
-def global_headers(request):
+def global_headers(request, additional_headers={}):
     """Give the headers that can be used everywhere here"""
 
-    return {
+    headers = {
         "accept": "application/json",
         "Authorization": f"Bearer {request.session.get('user_token')}"
     }
+    headers.update(additional_headers)
+
+    return headers
 
 def get_clearance_level(request):
     """Return the clearance level for curent user"""

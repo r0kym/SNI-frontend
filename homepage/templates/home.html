@@ -23,19 +23,80 @@
     <div class="container" style="display: flex; justify-content: center; align-items: center; height: 90vh">
       <div class="d-flex flex-column">
         <div class="p-2">
-          <h2>Public:</h2>
+          <h2>Select scopes and login:</h2>
         </div>
-        <div class="p-2">
-          <a href="{% url 'auth-public' %}"><img src="https://web.ccpgamescdn.com/eveonlineassets/developers/eve-sso-login-white-large.png" alt=""></a>
-        </div>
-        <div class="p-2">
-          <h2>Full ESI:</h2>
-        </div>
-        <div class="p-2">
-          <a href="{% url 'auth-full' %}"><img src="https://web.ccpgamescdn.com/eveonlineassets/developers/eve-sso-login-white-large.png" alt=""></a>
-        </div>
+        <button type="button" data-toggle="modal" data-target="#SelectScopes">
+          <img src="https://web.ccpgamescdn.com/eveonlineassets/developers/eve-sso-login-white-large.png" alt="">
+        </button>
       </div>
     </div>
 
+    <form class="SelectScopes" action="{% url 'auth' %}" method="post">{% csrf_token %}
+      <div class="modal fade" id="SelectScopes" tabindex="-1" role="dialog" aria-labelledby="SelectScopesLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="SelectScopes">Select scopes</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="modal-body">
+              <u>Scopes macros:</u><br>
+              <a href="{% url 'auth-public' %}" class="btn btn-info">Public scopes </a>
+              <a href="{% url 'auth-full' %}" class="btn btn-info">Full ESI </a>
+              <button class="btn btn-info" type="button" data-toggle="modal" data-target="#AuthInvite">Invite code</button>
+              <hr>
+              <u>Custom scopes:</u><br>
+              {% for scope in scopes %}
+                <div class="ManageScopes">
+                  <div class="checkbox">
+                    <label><input type="checkbox" name="{{ scope }}" value=""> {{ scope }}</label>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" name="button" class="btn btn-success">Select</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <form class="AuthInvite" action="{% url 'auth-invite' %}" method="post">{% csrf_token %}
+      <div class="modal fade" id="AuthInvite" tabindex="-1" role="dialog" aria-labelledby="AuthInviteLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h5 class="modal-title" id="AuthInvite">Enter your invite code</h5>
+              <button type="button" class="close" data-dismiss="modal" arial-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="modal-body">
+              <label for="code">Code: </label>
+              <input type="text" name="code" id="cdoe" required>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </form>
   </body>
+  <style media="screen">
+  button {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+  }
+  </style>
 </html>

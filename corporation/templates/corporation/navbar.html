@@ -1,0 +1,12 @@
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+<a class="navbar-brand" href="{% url 'corporation-sheet' corporation_id %}"><img src="https://images.evetech.net/corporations/{{ corporation_id }}/logo?size=64" alt="corporation_logo" class="rounded-circle z-depth-0"> {{ corporation_name }}</a>  <div class="collapse navbar-collapse" id="coalitionnavbar">
+    <ul class="navbar-nav mr-auto">
+        <li><a class="nav-link" href="{% url 'corporation-sheet' corporation_id %}">Sheet</a></li>
+        <li><a class="nav-link" href="{% url 'corporation-guest' corporation_id %}">Guest</a></li>
+        <li><a class="nav-link" href="{% url 'corporation-tracking' corporation_id %}">Tracking</a></li>
+    </ul>
+  </div>
+</nav>

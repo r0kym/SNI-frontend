@@ -29,8 +29,8 @@
     <tr>
       <th scope="col" onclick="sortTable(0)">Coalition</th>
       <th scope="col" onclick="sortTable(1)">Ticker</th>
-      <th scope="col" onclick="sortTable(2)">Owner</th>
-      <th scope="col" onclick="sortTable(3)">Members</th>
+      <th scope="col" onclick="sortTable(2)">Members</th>
+      <th scope="col" onclick="sortTable(3)">Last modification</th>
     </tr>
   </thead>
   <tbody>
@@ -38,8 +38,8 @@
     <tr class="clickable" onclick="window.location='/coalition/{{ details.coalition_id }}'">
       <td>{{ details.coalition_name }}</td>
       <td>{{ details.ticker }}</td>
-      <td>{{ details.owner }}</td>
-      <td>{{ details.members|length }}</td>
+      <td>{{ details.members }}</td>
+      <td>{{ details.updated_on }}</td>
     </tr>
     {% endfor %}
   </tbody>

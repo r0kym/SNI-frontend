@@ -3,6 +3,28 @@
 {% block content %}
 {% include "character/navbar.html" %}
 
-Mails informations
-
+<table class="table">
+  <thead>
+    <tr>
+      <td>Subject</td>
+      <td>From</td>
+      <td>To</td>
+      <td>Details</td>
+    </tr>
+  </thead>
+  <tbody>
+    {% for mail in mails %}
+      <tr>
+      <td>{{ mail.subject }}</td>
+      <td><a href="{% url 'character-sheet' mail.from_character.character_id %}">{{ mail.from_character.character_name }}</a></td>
+      <td>
+        {% for recipient in mail.recipients %}
+          <a href="{% url 'character-sheet' recipient.recipient_id %}">{{ recipient.recipient_name }}</a>
+        {% endfor %}
+      </td>
+      <td><a href="{% url 'character-mails-details' character_id mail.mail_id %}"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
