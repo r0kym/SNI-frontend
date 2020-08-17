@@ -62,6 +62,7 @@ def sheet(request, character_id):
         shortend_corp_hist = True
     else:
         shortend_corp_hist = False
+    corp_history = corp_history.json()
 
     for corp in corp_history:
         corp_id = corp["corporation_id"]
