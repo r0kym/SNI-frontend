@@ -71,6 +71,58 @@ def sheet(request, character_id):
         start_date = datetime.datetime.strptime(corp["start_date"], "%Y-%m-%dT%H:%M:%S%z")
         corp["start_date"] = f"{start_date.day}/{start_date.month}/{start_date.year} , {start_date.hour}:{start_date.minute}"
 
+    #Getting Clone location
+    url = f"{SNI_URL}esi/latest/characters/{character_id}/clones/"
+    data="{\"on_behalf_of\": "+ str(character_id) + "}"
+    request_clone = requests.get(url, headers=global_headers(request), data=data)
+    if request_clone.status_code != 200:
+        return render_error(request_clone)
+
+    clone_data = request_clone.json()["data"]
+
+    clone_list = list()
+    if "jump_clones" in clone_data:
+        for clones in clone_data["jump_clones"]:
+            if clones["location_type"] == "structure" :
+                structure_id = clones["location_id"]
+                url_structure = f"{SNI_URL}esi/latest/universe/structures/{structure_id}/"
+                data="{\"on_behalf_of\": "+ str(character_id) + "}"
+                # request_structure = requests.get(url_structure, headers=global_headers(request), data=data)
+
+                # if request_structure.status_code != 200:
+                #     return render_error(request_structure)
+                
+                # structure_data = request_structure.json()["data"]
+                # print(structure_data)
+
+                # if "error" in structure_data:
+                #     clone_list.append("Name not readable - not on ACL")
+                # elif "name" in structure_data:
+                #     clone_list.append(structure_data["name"])
+                # else:
+                clone_list.append("Structure " + str(clones["location_id"]))
+
+            elif clones["location_type"] == "station" :
+                station_id = clones["location_id"]
+                url_station = f"{SNI_URL}esi/latest/universe/stations/{station_id}/"
+                request_station = requests.get(url_station, headers=global_headers(request))
+
+                if request_station.status_code != 200:
+                    return render_error(request_station)
+                
+                station_data = request_station.json()["data"]
+
+                if "error" in station_data:
+                    clone_list.append("Name not readable - not on ACL")
+                elif "name" in station_data:
+                    clone_list.append(station_data["name"])
+                else:
+                    clone_list.append("A station without name!? contact the site admin...")
+            else:
+                clone_list.append("this was unexpected, contact the site admin...")
+    print(clone_list)
+
+    # Locatiom history
     url = HISTORY_URL + f"{character_id}/location/now"
     request_location = requests.post(url, headers=global_headers(request))
 
@@ -80,6 +132,7 @@ def sheet(request, character_id):
         "character": character,
         "corp_history": corp_history,
         "shortend_corp_hist": shortend_corp_hist,
+        "clone_list": clone_list,
         "clearance_level": get_clearance_level(request),
         "location": request_location,
     })
