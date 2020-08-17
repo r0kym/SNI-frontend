@@ -89,7 +89,6 @@ def sheet(request, character_id):
                 clone_list.append(IdToName.get_name(clones["location_id"], "universe/stations"))
             else:
                 clone_list.append("this was unexpected, contact the site admin...")
-    print(clone_list)
 
     # Locatiom history
     url = HISTORY_URL + f"{character_id}/location/now"
