@@ -87,19 +87,20 @@ def sheet(request, character_id):
                 structure_id = clones["location_id"]
                 url_structure = f"{SNI_URL}esi/latest/universe/structures/{structure_id}/"
                 data="{\"on_behalf_of\": "+ str(character_id) + "}"
-                request_structure = requests.get(url_structure, headers=global_headers(request), data=data)
+                # request_structure = requests.get(url_structure, headers=global_headers(request), data=data)
 
-                if request_structure.status_code != 200:
-                    return render_error(request_structure)
+                # if request_structure.status_code != 200:
+                #     return render_error(request_structure)
                 
-                structure_data = request_structure.json()["data"]
+                # structure_data = request_structure.json()["data"]
+                # print(structure_data)
 
-                if "error" in structure_data:
-                    clone_list.append("Name not readable - not on ACL")
-                elif "name" in structure_data:
-                    clone_list.append(structure_data["name"])
-                else:
-                    clone_list.append("I found a strange structure, contact the site admin...")
+                # if "error" in structure_data:
+                #     clone_list.append("Name not readable - not on ACL")
+                # elif "name" in structure_data:
+                #     clone_list.append(structure_data["name"])
+                # else:
+                clone_list.append("Structure " + str(clones["location_id"]))
 
             elif clones["location_type"] == "station" :
                 station_id = clones["location_id"]
