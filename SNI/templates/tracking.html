@@ -1,32 +1,50 @@
-{% if tracking.invalid_refresh_token %}
-  <h2>Invalid refresh token:</h2>
-  <ul>
-  {% for user in tracking.invalid_refresh_token %}
-    <li><a href="{% url 'character-sheet' user.character_id %}">
-      {{ user.character_name  }}
-    </a></li>
-  {% endfor %}
-  </ul>
-{% endif %}
-
-{% if tracking.no_refresh_token %}
-  <h2>No refresh token:</h2>
-  <ul>
-  {% for user in tracking.no_refresh_token %}
-    <li><a href="{% url 'character-sheet' user.character_id %}">
-      {{ user.character_name  }}
-    </a></li>
-  {% endfor %}
-  </ul>
-{% endif %}
-
-{% if tracking.valid_refresh_token %}
-  <h2>Valid refresh token:</h2>
-  <ul>
-  {% for user in tracking.valid_refresh_token %}
-    <li><a href="{% url 'character-sheet' user.character_id %}">
-      {{ user.character_name  }}
-    </a></li>
-  {% endfor %}
-  </ul>
-{% endif %}
+<div class="row row-cols-1 row-cols-md-3">
+  <div class="col mb-4">
+    <div class="card">
+      <div class="card-header">
+        Invalid refresh token:
+      </div>
+      <div class="card-body">
+        <div class="list-group">
+          {% for user in tracking.invalid_refresh_token %}
+          <a href="{% url 'character-sheet' user.character_id %}" class="list-group-item">{{ user.character_name }}</a>
+          {% empty %}
+          No user with invalid token
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col mb-4">
+    <div class="card">
+      <div class="card-header">
+        No refresh token:
+      </div>
+      <div class="card-body">
+        <div class="list-group">
+          {% for user in tracking.no_refresh_token %}
+          <a href="{% url 'character-sheet' user.character_id %}" class="list-group-item">{{ user.character_name }}</a>
+          {% empty %}
+          No user without token
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col mb-4">
+    <div class="card">
+      <div class="card-header">
+        Valid token:
+      </div>
+      <div class="card-body">
+        <div class="list-group">
+          {% for user in tracking.valid_refresh_token %}
+          <a href="{% url 'character-sheet' user.character_id %}" class="list-group-item">{{ user.character_name }}</a>
+          {% empty %}
+          No user with a token
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
