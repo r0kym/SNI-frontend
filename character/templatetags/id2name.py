@@ -10,12 +10,15 @@ def esi_name(id, route=None, request=None):
     """
     Will use the model IdToName to get the name of something
     """
-    try:
-        name = IdToName.get_name(id, route, request)
-        if "Couldn't find" in name and route == "universe/stations":
-            name = IdToName.get_name(id, "universe/structures", request)
-        elif "Couldn't find" in name and route == "universe/structures":
-            name = IdToName.get_name(id, "universe/stations", request)
-        return name
-    except:
-        return f"Error when loading the name of {id}"
+    if route in ("universe/stations", "universe/structures"):
+        choices = ("universe/stations", "universe/structures")
+    elif route in ("characters", "corporations", "alliances"):
+        choices = ("characters", "corporations", "alliances")
+    else:
+        choices = (route,)
+
+    for choice in choices:
+        name = IdToName.get_name(id, choice, request)
+        if name != f"Couldn't resolve {id} name":
+            break
+    return name

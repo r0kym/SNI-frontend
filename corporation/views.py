@@ -40,10 +40,12 @@ def sheet(request, corp_id):
     esi_request_corp = get_corporations_corporation_id(corp_id)
     if esi_request_corp.status_code != 200:
         return render_error(esi_request_corp)
+    esi_corp = esi_request_corp.json()
+    esi_corp["tax_rate"] *= 100
 
     return render(request, "corporation/sheet.html", {
         "corporation": request_corp.json(),
-        "esi": esi_request_corp.json(),
+        "esi": esi_corp,
         "corporation_id": corp_id,
         "corporation_name": esi_request_corp.json()["name"],
         "scopes": ESI_SCOPES,

@@ -151,3 +151,4 @@ STATICFILES_DIRS = [
 # Sessions
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+SESSION_COOKIE_AGE = 86400  # cookies will expire after 24 hours

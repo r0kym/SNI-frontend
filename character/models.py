@@ -54,23 +54,26 @@ class IdToName(models.Model):
                     return r.json()["name"]
                 elif "data" in r.json() and "name" in r.json()["data"]:
                     return  r.json()["data"]["name"]
-                else:
-                    return f"Couldn't find {id} name"
-            else:
-                return f"Couldn't find {id} name"
+            return None
 
         try:
             obj = cls.objects.get(id=id)
         except cls.DoesNotExist:
             name = find_name(id, route, request)
-            obj = cls(name=name, id=id)
-            obj.save()
+            if name:
+                obj = cls(name=name, id=id)
+                obj.save()
+            else:
+                return f"Couldn't resolve {id} name"
         else:
             delta = obj.timestamp - date.today()
             if delta.days > 2:  # checks the name again
                 name = find_name(id, route, request)
-                obj = cls(name=name, id=id)
-                obj.save()
+                if name:
+                    obj = cls(name=name, id=id)
+                    obj.save()
+                else:
+                    return f"Couldn't resolve {id} name"
 
         return obj.name
 
