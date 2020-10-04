@@ -9,4 +9,7 @@ def render_error(request):
     elif request.status_code == 401:
         return redirect("logout")
     else:
-        return HttpResponse(f"""<pre>ERROR {request.status_code}<br>{json.dumps(request.json(), indent=1)}</pre>""")
+        try:
+            return HttpResponse(f"""<pre>ERROR {request.status_code}<br>{json.dumps(request.json(), indent=1)}</pre>""")
+        except json.decoder.JSONDecodeError:
+            return HttpResponse(f"""<pre>ERROR {request.status_code}<br>{request.text}</pre>""")
