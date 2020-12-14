@@ -14,37 +14,45 @@ GLOBAL_URL = SNI_URL + "teamspeak"
 
 @check_tokens()
 def home(request):
-  """
-  Will start authentictaion to TeamSpeak
-  """
+    """
+    Will start authentictaion to TeamSpeak
+    """
 
-  url = GLOBAL_URL + "/auth/start"
+    url = GLOBAL_URL + "/auth/start"
 
-  request_teamspeak_auth = requests.post(url, headers=global_headers(request))
+    request_teamspeak_auth = requests.post(url, headers=global_headers(request))
 
-  if request_teamspeak_auth.status_code != 200:
-    return render_error(request_teamspeak_auth)
+    if request_teamspeak_auth.status_code != 200:
+        return render_error(request_teamspeak_auth)
 
 
-  teamspeak_auth = request_teamspeak_auth.json()
+    teamspeak_auth = request_teamspeak_auth.json()
 
-  return render(request, 'teamspeak/home.html', {"teamspeak_auth": teamspeak_auth})
+    return render(request, 'teamspeak/home.html', {"teamspeak_auth": teamspeak_auth})
 
 @check_tokens()
 def completed(request):
-  """
-  Will complete authentictaion to TeamSpeak
-  """
+    """
+    Will complete authentictaion to TeamSpeak
+    """
 
-  url = GLOBAL_URL + "/auth/complete"
+    url = GLOBAL_URL + "/auth/complete"
 
-  request_teamspeak_auth = requests.post(url, headers=global_headers(request))
+    request_teamspeak_auth = requests.post(url, headers=global_headers(request))
 
-  if request_teamspeak_auth.status_code != 201:
-    return render_error(request_teamspeak_auth)
+    if request_teamspeak_auth.status_code == 404:
+        try:
+            detail = request.json()["detail"]
+        except KeyError:
+            pass
+        else:
+            if detail == "Could not find corresponding teamspeak client":
+                return render(request, "teamspek/notfound.html", {})
+
+    if request_teamspeak_auth.status_code != 201:
+        return render_error(request_teamspeak_auth)
 
 
-  teamspeak_auth = request_teamspeak_auth.json()
-  print(teamspeak_auth)
+    teamspeak_auth = request_teamspeak_auth.json()
 
-  return render(request, 'teamspeak/completed.html')
+    return render(request, 'teamspeak/completed.html', {"teamspeak_auth": teamspeak_auth})
