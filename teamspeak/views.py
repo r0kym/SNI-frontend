@@ -47,12 +47,9 @@ def completed(request):
             pass
         else:
             if detail == "Could not find corresponding teamspeak client":
-                return render(request, "teamspek/notfound.html", {})
+                return render(request, "teamspek/notfound.html")
 
     if request_teamspeak_auth.status_code != 201:
         return render_error(request_teamspeak_auth)
 
-
-    teamspeak_auth = request_teamspeak_auth.json()
-
-    return render(request, 'teamspeak/completed.html', {"teamspeak_auth": teamspeak_auth})
+    return render(request, 'teamspeak/completed.html')
