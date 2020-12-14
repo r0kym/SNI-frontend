@@ -53,7 +53,7 @@ def completed(request):
         return render_error(request_teamspeak_auth)
 
     request_character_url = GLOBAL_URL + "/user/" + str(request.session["user_id"])
-    request_character = request.get(request_character_url, headers=global_headers(request))
+    request_character = requests.get(request_character_url, headers=global_headers(request))
     if request_character.status_code != 200:
         return render_error(request_character)
 
