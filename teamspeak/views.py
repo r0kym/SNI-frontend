@@ -52,4 +52,9 @@ def completed(request):
     if request_teamspeak_auth.status_code != 201:
         return render_error(request_teamspeak_auth)
 
-    return render(request, 'teamspeak/completed.html')
+    request_character_url = GLOBAL_URL + "/user/" + request.session["user_id"]
+    request_character = request.get(request_character_url, headers=global_headers(request))
+    if request_character.status_code != 200:
+        return render_error(request_character)
+
+    return render(request, 'teamspeak/completed.html', {"tickered_name": request_character.json()["tickered_name"]})
