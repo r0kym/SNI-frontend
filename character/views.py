@@ -240,10 +240,15 @@ def locations(request, character_id):
     if request_locations.status_code != 200:
         return render_error(request_locations)
 
-    locations = [(
-        request_locations.json()[i],
-        datetime.datetime.strptime(request_locations.json()[i]["timestamp"][:-6], "%Y-%m-%dT%H:%M:%S.").__str__()
-    ) for i in range(len(request_locations.json()))]
+    locations = list()
+    for i in range(len(request_locations.json())):
+        if len(request_locations.json()[i]["timestamp"]) == 26:
+            date_str = datetime.datetime.strptime(request_locations.json()[i]["timestamp"][:-7], "%Y-%m-%dT%H:%M:%S").__str__()
+        elif len(request_locations.json()[i]["timestamp"]) == 19:
+            date_str = datetime.datetime.strptime(request_locations.json()[i]["timestamp"], "%Y-%m-%dT%H:%M:%S").__str__()
+        else:
+            data_str = request_locations.json()[i]["timestamp"]
+        locations.append((request_locations.json()[i], date_str))
 
     return render(request, "character/locations.html",{
         "character_id": character_id,
