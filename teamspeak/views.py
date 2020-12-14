@@ -42,7 +42,7 @@ def completed(request):
 
     if request_teamspeak_auth.status_code == 404:
         try:
-            detail = request.json()["detail"]
+            detail = request_teamspeak_auth.json()["detail"]
         except KeyError:
             pass
         else:
