@@ -9,6 +9,6 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.home, name='teampseak-home'),
-    path('completed', views.completed, name='teampseak-completed')
+    path('', views.home, name='teamspeak-home'),
+    path('completed', views.completed, name='teamspeak-completed')
 ]
