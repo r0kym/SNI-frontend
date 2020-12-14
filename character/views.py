@@ -76,19 +76,18 @@ def sheet(request, character_id):
     data="{\"on_behalf_of\": "+ str(character_id) + "}"
     request_clone = requests.get(url, headers=global_headers(request), data=data)
     if request_clone.status_code != 200:
-        return render_error(request_clone)
-
-    clone_data = request_clone.json()["data"]
-
-    clone_list = list()
-    if "jump_clones" in clone_data:
-        for clones in clone_data["jump_clones"]:
-            if clones["location_type"] == "structure" :
-                clone_list.append(IdToName.get_name(clones["location_id"], "universe/structures", request))
-            elif clones["location_type"] == "station" :
-                clone_list.append(IdToName.get_name(clones["location_id"], "universe/stations"))
-            else:
-                clone_list.append("this was unexpected, contact the site admin...")
+        clone_list = ["Can't read jump clones"]
+    else:
+        clone_data = request_clone.json()["data"]
+        clone_list = list()
+        if "jump_clones" in clone_data:
+            for clones in clone_data["jump_clones"]:
+                if clones["location_type"] == "structure" :
+                    clone_list.append(IdToName.get_name(clones["location_id"], "universe/structures", request))
+                elif clones["location_type"] == "station" :
+                    clone_list.append(IdToName.get_name(clones["location_id"], "universe/stations"))
+                else:
+                    clone_list.append("this was unexpected, contact the site admin...")
 
     # Locatiom history
     url = HISTORY_URL + f"{character_id}/location/now"
